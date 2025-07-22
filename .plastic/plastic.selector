@@ -1,0 +1,4 @@
+repository "FumoRescuer-Rework/FumoRescuer-Rework@18966936745129@cloud"
+  path "/"
+    br "/main"
+    co "/main"
