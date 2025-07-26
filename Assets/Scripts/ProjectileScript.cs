@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class ProjectileScript : MonoBehaviour
@@ -8,13 +9,15 @@ public class ProjectileScript : MonoBehaviour
 	[HideInInspector] public EntityBase ProjectileFirer;
 	protected EntityBase ProjectileDestination = null;
 	protected Type ProjectileTargetedType = null;
+    protected float ProjectileLifespan = 8f;
 
-	public DamageInstance DamageInstance;
+    public DamageInstance DamageInstance;
 	[HideInInspector] public string displayMsg = string.Empty;
 	[HideInInspector] public Vector3 msgDisplayOffset = Vector3.zero;
 	public bool doesDamage = true;
 
-	public float travelSpeed = 25f;
+	public float TravelSpeed = 25f;
+    public float Acceleration = 0f;
 
     Vector3 targetDirection;
     protected Collider2D Target = null;
@@ -36,20 +39,39 @@ public class ProjectileScript : MonoBehaviour
 
 	public void ShootTowards(EntityBase enemy, ProjectileType projectileType)
 	{
-		ShootTowards(enemy.transform.position, enemy, projectileType);
+		ShootTowards(enemy.transform.position, enemy, projectileType, ProjectileLifespan);
     }
 
-    public void ShootTowards(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType)
+    public void ShootTowards(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType, float ProjectileLifespan)
     {
         this.projectileType = projectileType;
 
-        ProjectileDestination = enemy;
-        Target = enemy.GetComponent<Collider2D>();
+        if (enemy)
+        {
+            ProjectileDestination = enemy;
+            Target = enemy.GetComponent<Collider2D>();
+        }
 
         ProjectileTargetedType = enemy.GetType();
         targetDirection = (targetPosition - transform.position).normalized;
 
-        Destroy(gameObject, 8); 
+        Destroy(gameObject, ProjectileLifespan); 
+
+        float desiredZRotation = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90;
+
+        transform.rotation = Quaternion.Euler(0f, 0f, desiredZRotation);
+
+        allowingUpdate = true;
+    }
+
+    public void ShootTowards(Vector3 targetPosition, Type enemy, ProjectileType projectileType, float ProjectileLifespan)
+    {
+        this.projectileType = projectileType;
+
+        ProjectileTargetedType = enemy;
+        targetDirection = (targetPosition - transform.position).normalized;
+
+        Destroy(gameObject, ProjectileLifespan);
 
         float desiredZRotation = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90;
 
@@ -68,12 +90,14 @@ public class ProjectileScript : MonoBehaviour
 		if (projectileType == ProjectileType.HOMING_TO_SPECIFIC_TARGET && ProjectileDestination != null)
         {
             Vector3 direction = (ProjectileDestination.transform.position - transform.position).normalized;
-            rb2d.velocity = direction * travelSpeed;
+            rb2d.velocity = direction * TravelSpeed;
         }
         else
         {
-            rb2d.velocity = targetDirection * travelSpeed;
+            rb2d.velocity = targetDirection * TravelSpeed;
         }
+
+        TravelSpeed += Acceleration * Time.fixedDeltaTime;
     }
 
 	public virtual void OnHitEvent(EntityBase target)

@@ -116,7 +116,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.027848765, y: 0.21282792}
+  m_Offset: {x: -0.02784877, y: 0.2128279}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -127,7 +127,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.80708456, y: 2.8146396}
+  m_Size: {x: 0.8070846, y: 2.81464}
   m_EdgeRadius: 0
 --- !u!50 &7243432407170544928
 Rigidbody2D:
@@ -179,20 +179,20 @@ MonoBehaviour:
   resPen: 0
   resIgn: 0
   lifeSteal: 0
-  bmSpd: 25
-  baRng: 40
-  baInt: 1
-  baSpd: 3
+  b_moveSpeed: 0
+  b_attackRange: 0
+  b_attackSpeed: 0
+  b_attackInterval: 0
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 0
   atk: 0
   def: 0
   res: 0
-  mSpd: 0
-  aRng: 0
-  aInt: 0
-  aSpd: 0
+  moveSpeed: 0
+  attackRange: 0
+  attackSpeed: 0
+  attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
   isInvisible: 0
@@ -207,7 +207,11 @@ MonoBehaviour:
   TooltipsHoldtime: 6
   DetectionRange: 30
   DangerRange_RatioOfAttackRange: 0.75
+  MinimumDistanceFromPlayer: 20
   showTooltips: 0
+  OverridePositionCheckRadius: 100
+  MoveToOverridePositionSpeedMultiplier: 1.25
+  MoveToOverridePositionSpeedMultiplierJump: 0.35
   WaitTimes:
   - 2
   - 5
@@ -284,8 +288,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1922547537
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 117f740de090dca45b84a06bd48128da, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -854,8 +858,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: '!'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5e61686ba236ff04b8632d6a26736acd, type: 2}
+  m_sharedMaterial: {fileID: 2509212030381675100, guid: 5e61686ba236ff04b8632d6a26736acd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -980,8 +984,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1883581215
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &4776326168447163200
 MonoBehaviour:
@@ -1042,6 +1046,10 @@ PrefabInstance:
     - target: {fileID: 3796585483394813323, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845791576688044181, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5198508908010210492, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}
       propertyPath: m_Pivot.x

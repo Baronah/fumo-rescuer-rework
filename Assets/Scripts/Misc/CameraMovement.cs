@@ -5,25 +5,15 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private Camera Camera;
-    public Transform player;
-
     public float moveTime;
     public Vector3 offset;
     public int size;
 
-    // Start is called before the first frame update
-    void Start()
+    public void UpdatePlayerMovement(Transform targetTransform)
     {
-        Camera = GetComponent<Camera>();
-    }
+        if (targetTransform == null) return;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (player == null) return;
-
-        Vector3 finalPosition = player.position + offset;
+        Vector3 finalPosition = targetTransform.position + offset;
         transform.position = Vector3.Lerp(transform.position, finalPosition, moveTime * Time.deltaTime);
     }
 }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4004963995291353158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1440802399349756502}
+  m_Layer: 6
+  m_Name: ProjectilePosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1440802399349756502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4004963995291353158}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.51, y: 0.27, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5868672906707442847}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &903654197162275747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45,9 +76,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 867cbe9a4924e5442ba8f5e5f02ca69c, type: 2}
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5d1fe4eaa8390b34694838f8cb95858f, type: 3}
+      objectReference: {fileID: 21300000, guid: 95e502d057da66b48b73cd9d61d4fb83, type: 3}
     - target: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -373.5
@@ -91,7 +126,10 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1440802399349756502}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 712479229275404704, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       insertIndex: -1
@@ -117,7 +155,7 @@ MonoBehaviour:
   Name: Matterllurgist
   Icon: {fileID: 21300000, guid: e2c9872dc1e75ed40af900904592a547, type: 3}
   mHealth: 100
-  bAtk: 30
+  bAtk: 25
   bDef: 0
   bRes: 0
   defPen: 0
@@ -125,20 +163,20 @@ MonoBehaviour:
   resPen: 0
   resIgn: 0
   lifeSteal: 0
-  bmSpd: 85
-  baRng: 400
-  baInt: 0.36
-  baSpd: 3
+  b_moveSpeed: 115
+  b_attackRange: 420
+  b_attackSpeed: 0.28
+  b_attackInterval: 1.8
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 0
   atk: 0
   def: 0
   res: 0
-  mSpd: 0
-  aRng: 0
-  aInt: 0
-  aSpd: 0
+  moveSpeed: 0
+  attackRange: 0
+  attackSpeed: 0
+  attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
   isInvisible: 0
@@ -152,10 +190,17 @@ MonoBehaviour:
   TooltipsPriority: 0
   TooltipsHoldtime: 6
   DetectionRange: -1
-  DangerRange_RatioOfAttackRange: 0.5
+  DangerRange_RatioOfAttackRange: 0.75
+  MinimumDistanceFromPlayer: 20
   showTooltips: 1
   WaitTimes:
   - 5
   - 5
   - 5
   InitWaittime: 10
+  ProjectilePosition: {fileID: 1440802399349756502}
+--- !u!4 &5868672906707442847 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 903654197162275747}
+  m_PrefabAsset: {fileID: 0}

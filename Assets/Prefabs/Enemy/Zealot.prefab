@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1883581215
-  m_SortingLayer: 1
+  m_SortingLayer: 4
   m_SortingOrder: 300
   m_Sprite: {fileID: 21300000, guid: 62bb70d5ff6402c4298ac70258b75138, type: 3}
   m_Color: {r: 0.4264151, g: 0, b: 0, a: 1}
@@ -109,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 3735165395167939942}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.57, y: -0.22, z: 0}
+  m_LocalPosition: {x: 1.26, y: -0.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1333956751212545712, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Size.x
-      value: 0.95722514
+      value: 0.9572251
       objectReference: {fileID: 0}
     - target: {fileID: 1333956751212545712, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Size.y
@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 15cc2c21cab5b0c438494bf804bef74b, type: 2}
+    - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -325,29 +329,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Zealot
   Icon: {fileID: 21300000, guid: 727115dcf85547a49b8c33392336b1e2, type: 3}
-  mHealth: 150
-  bAtk: 40
-  bDef: 0
+  mHealth: 160
+  bAtk: 65
+  bDef: 5
   bRes: 0
   defPen: 0
   defIgn: 0
   resPen: 0
   resIgn: 0
   lifeSteal: 0
-  bmSpd: 90
-  baRng: 105
-  baInt: 0.55
-  baSpd: 3.25
+  b_moveSpeed: 100
+  b_attackRange: 105
+  b_attackSpeed: 0.55
+  b_attackInterval: 3
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 0
   atk: 0
   def: 0
   res: 0
-  mSpd: 0
-  aRng: 0
-  aInt: 0
-  aSpd: 0
+  moveSpeed: 0
+  attackRange: 0
+  attackSpeed: 0
+  attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
   isInvisible: 0
@@ -362,6 +366,7 @@ MonoBehaviour:
   TooltipsHoldtime: 9
   DetectionRange: 200
   DangerRange_RatioOfAttackRange: 0.85
+  MinimumDistanceFromPlayer: 20
   showTooltips: 1
   WaitTimes:
   - 5
@@ -370,8 +375,7 @@ MonoBehaviour:
   InitWaittime: 0
   barrierEffect: {fileID: 4804839738491929246}
   barrierMaxHealth: 100
-  speedMultuplierOnBarrierBreak: 1.5
-  speedMultuplierOnAlert: 2.3
+  speedMultuplierOnBarrierBreak: 1.75
 --- !u!4 &6717527081346786045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}

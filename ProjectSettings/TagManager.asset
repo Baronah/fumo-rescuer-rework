@@ -42,6 +42,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Entities Effects Down
+    uniqueID: 3682154073
+    locked: 0
+  - name: Entities
+    uniqueID: 2372419759
+    locked: 0
+  - name: Entities Effects Up
+    uniqueID: 2465748463
+    locked: 0
   - name: UI
     uniqueID: 2411386081
     locked: 0

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class EnemyTooltipsScript : MonoBehaviour
 {
+    private static List<EnemyTooltipsScript> ActiveTooltips = new();
+
     [SerializeField] RectTransform tooltipsTransform;
     [SerializeField] float showUpTime = 0.5f, holdTime = 8f;
     [SerializeField] Vector2 targetposition = new(-320, -125);
@@ -40,12 +42,10 @@ public class EnemyTooltipsScript : MonoBehaviour
 
     IEnumerator ShowUp()
     {
-        while (enemyTooltipsScripts.Any(tt => tt && tt.isShowing))
-        {
-            enemyTooltipsScripts.RemoveAll(tt => !tt || !tt.isShowing);
+        while (ActiveTooltips.Any(tt => tt != this && tt.isShowing))
             yield return null;
-        }
 
+        ActiveTooltips.Add(this);
         isShowing = true;
         float elapsedTime = 0f;
         while (elapsedTime < showUpTime)
@@ -64,6 +64,7 @@ public class EnemyTooltipsScript : MonoBehaviour
     IEnumerator Disappear()
     {
         isShowing = false;
+        ActiveTooltips.Remove(this);
         float elapsedTime = 0f;
         while (elapsedTime < showUpTime)
         {

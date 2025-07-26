@@ -15,10 +15,18 @@ public class EnemyBase : EntityBase
     protected string TooltipsDescription = "the thing to appear on tooltips";
     [SerializeField] protected float DetectionRange = -1f;
     [SerializeField] protected float DangerRange_RatioOfAttackRange = 0.75f;
+    [SerializeField] protected float MinimumDistanceFromPlayer = 20f;
     [SerializeField] private bool showTooltips = false;
 
     private Transform CheckpointTransform;
     protected List<Transform> Checkpoints;
+
+    [SerializeField] private float OverridePositionCheckRadius = 25f;
+    private Vector2 OverridePosition;
+    [SerializeField] private float MoveToOverridePositionSpeedMultiplier = 1.5f, MoveToOverridePositionSpeedMultiplierJump = 0.35f;
+    private short MoveToOverridePositionJumpCnt = 0;
+    private bool MoveToOverridePosition = false;
+
     [SerializeField] private List<float> WaitTimes;
     [SerializeField] private float InitWaittime = 0f;
     protected PlayerBase SpottedPlayer, RecentlyScannedPlayer;
@@ -42,7 +50,7 @@ public class EnemyBase : EntityBase
             WaitTimes.Insert(0, InitWaittime);
         }
 
-        if (DetectionRange <= 0) DetectionRange = baRng;
+        if (DetectionRange <= 0) DetectionRange = b_attackRange;
         WriteStats();
     }
 
@@ -52,13 +60,23 @@ public class EnemyBase : EntityBase
         if (DetectSymbol)
         {
             DetectSymbol.color = RecentlyScannedPlayer ? Color.red : Color.yellow;
-            DetectSymbol.gameObject.SetActive(IsAlive() && SpottedPlayer && SpottedPlayer.IsAlive());
+
+            bool isPlayerSpotted = SpottedPlayer && SpottedPlayer.IsAlive();
+
+            DetectSymbol.text = isPlayerSpotted ? "!" : "?";
+            DetectSymbol.gameObject.SetActive(IsAlive() && (isPlayerSpotted || MoveToOverridePosition));
         }
 
         base.FixedUpdate();
 
         ScanPlayer();
         Move();
+    }
+
+    public override Vector2 CalculateMovement(Vector2 normalizedMovementVector, float speed)
+    {
+        var result = base.CalculateMovement(normalizedMovementVector, speed);
+        return MoveToOverridePosition ? result * (MoveToOverridePositionSpeedMultiplier + Mathf.Min(MoveToOverridePositionSpeedMultiplierJump * MoveToOverridePositionJumpCnt, 0.5f)) : result;
     }
 
     public virtual Vector3 GetCurrentDestination()
@@ -68,10 +86,14 @@ public class EnemyBase : EntityBase
             switch (attackPattern)
             {
                 case AttackPattern.MELEE:
-                    return SpottedPlayer.transform.position;
+                    if (Vector3.Distance(AttackPosition.position, SpottedPlayer.transform.position) <= Mathf.Min(attackRange * DangerRange_RatioOfAttackRange / 2, MinimumDistanceFromPlayer))
+                    {
+                        return AttackPosition.position;
+                    }
+                    else return SpottedPlayer.transform.position;
 
                 case AttackPattern.RANGED:
-                    bool PlayerIsNearby = DetectPlayer(DangerRange_RatioOfAttackRange * aRng, false) != null;
+                    bool PlayerIsNearby = DetectPlayer(DangerRange_RatioOfAttackRange * attackRange, false) != null;
                     Vector3 dirToPlayer = (SpottedPlayer.transform.position - transform.position).normalized;
 
                     if (PlayerIsNearby)
@@ -86,22 +108,28 @@ public class EnemyBase : EntityBase
             }
         }
 
-        return Checkpoints[CurrentCheckpointIndex].transform.position;
+        return MoveToOverridePosition ? OverridePosition : Checkpoints[CurrentCheckpointIndex].transform.position;
     }
 
     public override void Move()
     {
-        if (MoveCnt < 10)
+        if (MoveCnt < 15)
         {
             MoveCnt++;
             return;
         }
         MoveCnt = 0;
 
+        if (!SpottedPlayer && MoveToOverridePosition && Vector3.Distance(AttackPosition.position, OverridePosition) <= OverridePositionCheckRadius)
+        {
+            MoveToOverridePosition = false;
+            StartCoroutine(StartMovementLockout(UnityEngine.Random.Range(2f, 6f)));
+        }
+
         if (IsMovementLocked) return;
 
         Vector3 destination = GetCurrentDestination();
-        Vector2 direction = destination - transform.position;
+        Vector2 direction = destination - AttackPosition.position;
 
         if (Mathf.Abs(direction.x) <= 0.3f && Mathf.Abs(direction.y) <= 0.3f)
         {
@@ -120,16 +148,30 @@ public class EnemyBase : EntityBase
     public void ScanPlayer()
     {
         SearchCnt++;
-        if (SearchCnt < 10) return;
+        if (SearchCnt < 15) return;
 
         SearchCnt = 0;
+
+        if (SpottedPlayer && SpottedPlayer.IsAlive())
+        {
+            var enemies = SearchForEntitiesAroundSelf(DetectionRange, typeof(EnemyBase), true);
+            foreach (var e in enemies)
+            {
+                EnemyBase enemy = e as EnemyBase;
+
+                if (!enemy || !enemy.IsAlive() || enemy.SpottedPlayer) continue;
+                    enemy.SpottedPlayer = SpottedPlayer;
+                    enemy.OnFirsttimePlayerSpot();
+            }
+        }
+
         RecentlyScannedPlayer =
             attackPattern == AttackPattern.MELEE && SpottedPlayer
             ?
-            DetectPlayer(DangerRange_RatioOfAttackRange * aRng, true)
+            DetectPlayer(DangerRange_RatioOfAttackRange * attackRange, true)
             :
             DetectPlayer();
-        if (!RecentlyScannedPlayer) return;
+        if (!RecentlyScannedPlayer || !RecentlyScannedPlayer.IsAlive()) return;
 
         if (!SpottedPlayer)
         {
@@ -139,16 +181,19 @@ public class EnemyBase : EntityBase
         }
         else
         {
-            StartCoroutine(Attack());
+            AttackCoroutine = StartCoroutine(Attack());
         }
     }
 
     public virtual void OnFirsttimePlayerSpot(bool viaAlert = false)
     {
-        PrevPosition = new(SpottedPlayer.transform.position.x * (SpriteInitialFlipX ? 1 : -1), SpottedPlayer.transform.position.y);
+        MoveToOverridePosition = false;
+        MoveToOverridePositionJumpCnt = 0;
+        FaceToward(SpottedPlayer.transform.position);
         IsGuarding = false;
         MovementLockout = 0;
-        if (MovelockoutCoroutine != null) StopCoroutine(MovelockoutCoroutine);
+        DetectionRange = Mathf.Max(DetectionRange * 0.5f, 200);
+
         if (attackPattern == AttackPattern.NONE)
         {
             List<EnemyBase> enemies = FindObjectsOfType<EnemyBase>().Where(e => e && e.IsAlive() && !e.SpottedPlayer).ToList();
@@ -170,7 +215,9 @@ public class EnemyBase : EntityBase
         if (attackPattern == AttackPattern.RANGED)
         {
             var target = SearchForNearestEntityAroundSelf(typeof(PlayerBase));
-            yield return new WaitForSeconds(aInt);
+            FaceToward(target.transform.position);
+
+            yield return new WaitForSeconds(attackSpeed);
 
             if (target)
             {
@@ -183,7 +230,7 @@ public class EnemyBase : EntityBase
         }
         else if (attackPattern == AttackPattern.MELEE)
         {
-            yield return new WaitForSeconds(aInt);
+            yield return new WaitForSeconds(attackSpeed);
 
             var target = SearchForNearestEntityAroundSelf(typeof(PlayerBase));
             if (target) DealDamage(target, atk);
@@ -198,7 +245,7 @@ public class EnemyBase : EntityBase
 
     public PlayerBase DetectPlayer(bool catchInvisible = false)
     {
-        return (PlayerBase)SearchForNearestEntityAroundCertainPoint(typeof(PlayerBase), SpottedPlayer ? AttackPosition.position : transform.position, SpottedPlayer ? aRng : DetectionRange, catchInvisible);
+        return (PlayerBase)SearchForNearestEntityAroundCertainPoint(typeof(PlayerBase), SpottedPlayer ? AttackPosition.position : transform.position, SpottedPlayer ? attackRange : DetectionRange, catchInvisible);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -211,7 +258,7 @@ public class EnemyBase : EntityBase
 
     protected virtual void OnCheckpointReach()
     {
-        if (SpottedPlayer && SpottedPlayer.IsAlive()) return;
+        if (MoveToOverridePosition || (SpottedPlayer && SpottedPlayer.IsAlive())) return;
 
         StopMovement();
         MovelockoutCoroutine = StartCoroutine(StartMovementLockout(WaitTimes[CurrentCheckpointIndex]));
@@ -219,10 +266,36 @@ public class EnemyBase : EntityBase
         if (CurrentCheckpointIndex >= Checkpoints.Count) CurrentCheckpointIndex = 0;
     }
 
+    public override void TakeDamage(DamageInstance damage, EntityBase source)
+    {
+        OnAttackReceive(source);
+
+        base.TakeDamage(damage, source);
+    }
+
+    public override void OnAttackReceive(EntityBase source)
+    {
+        if (source as PlayerBase && !SpottedPlayer)
+        {
+            MoveToOverridePositionJumpCnt++;
+            FaceToward(source.transform.position);
+            MovementLockout = 0;
+            if (MovelockoutCoroutine != null) StopCoroutine(MovelockoutCoroutine);
+            MoveToOverridePosition = true;
+            OverridePosition = source.transform.position;
+        }
+    }
+
     public override void OnDeath()
     {
         base.OnDeath();
         DetectSymbol.gameObject.SetActive(false);
+    }
+
+    public void ChangeAggro(PlayerBase player)
+    {
+        if (!SpottedPlayer) return;
+        SpottedPlayer = player;
     }
 
     public virtual void WriteStats()
@@ -232,7 +305,7 @@ public class EnemyBase : EntityBase
 
     IEnumerator ShowTooltips()
     {
-        for (int i = 0; i < TooltipsPriority; ++i) yield return new WaitForEndOfFrame();
+        for (int i = 0; i < TooltipsPriority; ++i) yield return null;
         Instantiate(TooltipsPrefab, Vector3.zero, Quaternion.identity, transform);
     }
 
@@ -253,9 +326,12 @@ public class EnemyBase : EntityBase
         Gizmos.DrawWireSphere(transform.position, DetectionRange);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(AttackPosition ? AttackPosition.position : transform.position, aRng);
+        Gizmos.DrawWireSphere(AttackPosition ? AttackPosition.position : transform.position, attackRange);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(AttackPosition ? AttackPosition.position : transform.position, aRng * DangerRange_RatioOfAttackRange);
+        Gizmos.DrawWireSphere(AttackPosition ? AttackPosition.position : transform.position, attackRange * DangerRange_RatioOfAttackRange);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(OverridePosition, OverridePositionCheckRadius);
     }
 }

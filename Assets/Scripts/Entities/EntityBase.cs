@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using static ProjectileScript;
+using static UnityEngine.GraphicsBuffer;
 
 public class EntityBase : MonoBehaviour
 {
@@ -15,12 +16,16 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected int mHealth;
     [SerializeField] protected short bAtk, bDef, bRes;
     [SerializeField] protected short defPen, defIgn, resPen, resIgn, lifeSteal;
-    [SerializeField] protected float bmSpd, baRng, baInt, baSpd;
+    [SerializeField] protected float b_moveSpeed, b_attackRange, b_attackSpeed, b_attackInterval;
     public float MIN_PHYSICAL_DMG = 0.05F, MIN_MAGICAL_DMG = 0.1F;
 
     [HideInInspector] public int health;
     [HideInInspector] public short atk, def, res;
-    [HideInInspector] public float mSpd, aRng, aInt, aSpd;
+    [HideInInspector] public float moveSpeed, attackRange, attackSpeed, attackInterval;
+
+    public int GetMaxHealth() => mHealth; 
+    public short GetHealthPercentage() => (short) Mathf.Max(1, health * 100 / mHealth);
+    public short GetMissingealthPercentage() => (short) Mathf.Max(1, (mHealth - health) * 100 / mHealth);
 
     public bool canRevive = false, isInvulnerable = false, isInvisible = false;
 
@@ -33,17 +38,19 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected ProjectileType ProjectileType = ProjectileType.CATCH_FIRST_TARGET_OF_TYPE;   
 
     [SerializeField] private GameObject DamagePopup;
-
+    
     protected HealthBar healthBar;
 
     protected Transform AttackPosition;
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
     protected Rigidbody2D rb2d;
-    protected Collider2D collider;
+    protected Collider2D[] colliders;
     protected AudioSource[] sfxs;
 
-    protected bool SpriteInitialFlipX = false, useTransformAsAttackPosition = false;
+    public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
+
+    protected bool useTransformAsAttackPosition = false;
     protected Vector3 PrevPosition;
     protected Color InitSpriteColor;
 
@@ -54,6 +61,17 @@ public class EntityBase : MonoBehaviour
     private bool TriggeredOnDeath = false;
 
     [SerializeField] private float preferredMoveAnimationPlaySpeed = 1.0f;
+
+    private short UpdateCounter = 0;
+    private EntityManager EntityManager;
+
+    protected Coroutine AttackCoroutine = null, LockoutMovementOnAttackCoroutine = null;
+
+    public Vector3 GetAttackPosition()
+    {
+        if (useTransformAsAttackPosition) return transform.position;
+        return AttackPosition ? AttackPosition.position : transform.position;
+    }
 
     public virtual void Start()
     {
@@ -66,21 +84,20 @@ public class EntityBase : MonoBehaviour
         spriteRenderer = Sprite.GetComponent<SpriteRenderer>();
         animator = Sprite.GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        colliders = GetComponents<Collider2D>();
         sfxs = GetComponents<AudioSource>();
 
         InitSpriteColor = spriteRenderer.color;
         PrevPosition = transform.position;
-        SpriteInitialFlipX = spriteRenderer.flipX;
 
         health = mHealth;
         atk = bAtk; 
         def = bDef; 
         res = bRes;
-        mSpd = bmSpd;
-        aRng = baRng;
-        aInt = baInt;
-        aSpd = baSpd;
+        moveSpeed = b_moveSpeed;
+        attackRange = b_attackRange;
+        attackSpeed = b_attackSpeed;
+        attackInterval = b_attackInterval;
 
         AttackPosition = transform.Find("AttackPosition");
         if (!AttackPosition)
@@ -88,8 +105,16 @@ public class EntityBase : MonoBehaviour
             AttackPosition = transform;
             useTransformAsAttackPosition = true;
         }
+        if (spriteRenderer.flipX) FlipAttackPosition();
+
         healthBar = GetComponentInChildren<HealthBar>();
         healthBar.SetMaxHealth(mHealth);
+
+        EntityManager = FindObjectOfType<EntityManager>();
+        if (EntityManager)
+        {
+            EntityManager.OnEntitySpawn(this);
+        }
     }
 
     public virtual void FixedUpdate()
@@ -107,23 +132,38 @@ public class EntityBase : MonoBehaviour
         bool PrevFlipX = spriteRenderer.flipX;
         if (Mathf.Abs(deltaX) > Mathf.Epsilon)
         {
-            if (SpriteInitialFlipX)
-            {
-                spriteRenderer.flipX = deltaX < 0 ? SpriteInitialFlipX : !SpriteInitialFlipX;
-            }
-            else
-            {
-                spriteRenderer.flipX = deltaX < 0 ? !SpriteInitialFlipX : SpriteInitialFlipX;
-            }
+            spriteRenderer.flipX = deltaX <= 0;
         }
 
-        if (PrevFlipX != spriteRenderer.flipX && !useTransformAsAttackPosition)
-            AttackPosition.localPosition = new Vector3(
-                -AttackPosition.localPosition.x, 
-                AttackPosition.localPosition.y, 
-                AttackPosition.localPosition.z
-            );
+        if (PrevFlipX != spriteRenderer.flipX)
+            FlipAttackPosition();
+
         PrevPosition = CurrentPos;
+    }
+
+    public virtual void FlipAttackPosition()
+    {
+        if (useTransformAsAttackPosition) return;
+
+        AttackPosition.localPosition = new Vector3(
+            -AttackPosition.localPosition.x,
+            AttackPosition.localPosition.y,
+            AttackPosition.localPosition.z
+        );
+    }
+
+    public virtual void FaceToward(Vector2 position)
+    {
+        float deltaX = position.x - transform.position.x;
+
+        bool PrevFlipX = spriteRenderer.flipX;
+        if (Mathf.Abs(deltaX) > Mathf.Epsilon)
+        {
+            spriteRenderer.flipX = deltaX <= 0;
+        }
+
+        if (PrevFlipX != spriteRenderer.flipX)
+            FlipAttackPosition();
     }
 
     public virtual void HandleAnimationSpeed()
@@ -131,7 +171,7 @@ public class EntityBase : MonoBehaviour
          float MIN_SPEED = preferredMoveAnimationPlaySpeed * 0.2f, 
                 MAX_SPEED = preferredMoveAnimationPlaySpeed * 2, 
                 X_MULTIPLIER = preferredMoveAnimationPlaySpeed - MIN_SPEED;
-        animator.SetFloat("speed_value", Mathf.Lerp(MIN_SPEED, MAX_SPEED, mSpd * (X_MULTIPLIER / (MAX_SPEED - MIN_SPEED)) / bmSpd)); 
+        animator.SetFloat("speed_value", Mathf.Lerp(MIN_SPEED, MAX_SPEED, moveSpeed * (X_MULTIPLIER / (MAX_SPEED - MIN_SPEED)) / b_moveSpeed)); 
     }
 
     public virtual IEnumerator StartMovementLockout(float m)
@@ -139,14 +179,14 @@ public class EntityBase : MonoBehaviour
         StopMovement();
         MovementLockout++;
         yield return new WaitForSeconds(m);
-        MovementLockout--;
+        if (MovementLockout > 0) MovementLockout--;
     }
 
     public virtual IEnumerator StartAttackLockout(float m)
     {
         AttackLockout++;
         yield return new WaitForSeconds(m);
-        AttackLockout--;
+        if (AttackLockout > 0) AttackLockout--;
     }
 
     public virtual DamageInstance DamageOutput(EntityBase target, int pDmg, int mDmg, int tDmg)
@@ -192,7 +232,7 @@ public class EntityBase : MonoBehaviour
 
     public virtual void DealDamage(EntityBase target, int pDmg, int mDmg, int tDmg)
     {
-        if (!target || !target.IsAlive()) return;
+        if (!target || !target.IsAlive() || target.isInvulnerable) return;
 
         var calcDamage = DamageOutput(target, pDmg, mDmg, tDmg);
         if (calcDamage.TotalDamage <= 0) return;
@@ -202,9 +242,17 @@ public class EntityBase : MonoBehaviour
 
     public virtual void TakeDamage(DamageInstance damage, EntityBase source)
     {
+        if (!this || !this.IsAlive() || this.isInvulnerable) return;
+
+        OnAttackReceive(source);
         ShowDamageDealt(damage);
         AdjustHealthOnDamageReceive(damage);
         if (damage.TotalDamage > 0) StartCoroutine(PulseSprite());
+    }
+
+    public virtual void OnAttackReceive(EntityBase source)
+    {
+
     }
 
     public void ShowDamageDealt(DamageInstance damage)
@@ -220,6 +268,12 @@ public class EntityBase : MonoBehaviour
         healthBar?.SetHealth(health); 
         
         if (health <= 0) OnDeath();
+    }
+
+    public void SetHealth(int health)
+    {
+        this.health = health;
+        if (healthBar) healthBar.SetHealth(health);
     }
 
     public IEnumerator PulseSprite()
@@ -267,7 +321,8 @@ public class EntityBase : MonoBehaviour
         animator.SetFloat("move", 0);
     }
 
-    public Vector2 CalculateMovement(Vector2 normalizedMovementVector) => normalizedMovementVector * mSpd;
+    public virtual Vector2 CalculateMovement(Vector2 normalizedMovementVector) => CalculateMovement(normalizedMovementVector, moveSpeed);
+    public virtual Vector2 CalculateMovement(Vector2 normalizedMovementVector, float speed) => normalizedMovementVector * speed;
 
     public virtual void OnDeath()
     {
@@ -275,26 +330,71 @@ public class EntityBase : MonoBehaviour
         animator.SetTrigger("die");
         healthBar.SetHealth(0);
         healthBar.gameObject.SetActive(false);
-        collider.enabled = false;
+        foreach (var c in colliders)
+        {
+            c.enabled = false;
+        }
         rb2d.velocity = Vector2.zero;
         StopAllCoroutines();
         StartCoroutine(StartMovementLockout(999));
         StartCoroutine(StartAttackLockout(999));
+
+        if (EntityManager)
+        {
+            EntityManager.OnEntityDeath(this);
+        }
         Destroy(this.gameObject, 5);
     }
 
     public virtual IEnumerator Attack()
     {
+        if (IsAttackLocked) yield break;
+        LockoutMovementOnAttackCoroutine = StartCoroutine(LockoutMovementsOnAttack());
+        yield break;
+    }
+
+    public virtual IEnumerator LockoutMovementsOnAttack()
+    {
         // base example
         if (IsAttackLocked) yield break;
 
-        StartCoroutine(StartMovementLockout(aInt * 1.5f));
-        StartCoroutine(StartAttackLockout(aSpd));
+        StartCoroutine(StartMovementLockout(attackSpeed * 1.5f));
+        StartCoroutine(StartAttackLockout(Mathf.Max(attackInterval, attackSpeed)));
 
         // as enemy and player unit have different attack method,
         // overrides will handle this
 
         yield return null;
+    }
+
+    public virtual void CancelAttack()
+    {
+        if (AttackCoroutine != null)
+        {
+            StopCoroutine(AttackCoroutine);
+            AttackCoroutine = null;
+            AttackLockout = (short)Mathf.Max(AttackLockout - 1, 0);
+        }
+
+        if (LockoutMovementOnAttackCoroutine != null)
+        {
+            StopCoroutine(LockoutMovementOnAttackCoroutine);
+            LockoutMovementOnAttackCoroutine = null;
+        }
+    }
+
+    public virtual void Heal(float amount, bool healThroughDead = false)
+    {
+        Heal(amount, this, healThroughDead);
+    }
+
+    public virtual void Heal(float amount, EntityBase target, bool healThroughDead = false)
+    {
+        if (amount <= 0 || (!target.IsAlive() && !healThroughDead)) return;
+        target.DisplayDamage("<color=green>+" + (int)amount + "</color>", new Vector3(0, 55));
+        target.health += (int)amount;
+        if (target.health > target.mHealth) target.health = target.mHealth;
+        target.healthBar.SetHealth(target.health);
     }
 
     public virtual IEnumerator Revive()
@@ -316,45 +416,72 @@ public class EntityBase : MonoBehaviour
         yield return null;
     }
 
-    public void CreateProjectileAndShootToward(EntityBase target, ProjectileScript.ProjectileType projectileType)
+    public void CreateProjectileAndShootToward(EntityBase target, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0)
     {
-        CreateProjectileAndShootToward(ProjectilePrefab, GetInstanceBasedOnDamagetype(), target, target.transform.position, projectileType);
+        CreateProjectileAndShootToward(ProjectilePrefab, GetInstanceBasedOnDamagetype(), target, AttackPosition.position, target.transform.position, projectileType, travelSpeed, acceleration);
     }
 
-    public void CreateProjectileAndShootToward(EntityBase target, Vector3 position, ProjectileScript.ProjectileType projectileType)
+    public void CreateProjectileAndShootToward(EntityBase target, Vector3 targetPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0)
     {
-        CreateProjectileAndShootToward(ProjectilePrefab, GetInstanceBasedOnDamagetype(), target, position, projectileType);
+        CreateProjectileAndShootToward(ProjectilePrefab, GetInstanceBasedOnDamagetype(), target, AttackPosition.position, targetPosition, projectileType, travelSpeed, acceleration);
     }
 
-    public void CreateProjectileAndShootToward(EntityBase target, DamageInstance damageInstance, ProjectileScript.ProjectileType projectileType)
+    public void CreateProjectileAndShootToward(EntityBase target, Vector3 spawnPosition, Vector3 targetPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0)
     {
-        CreateProjectileAndShootToward(ProjectilePrefab, damageInstance, target, target.transform.position, projectileType);
+        CreateProjectileAndShootToward(ProjectilePrefab, GetInstanceBasedOnDamagetype(), target, spawnPosition, targetPosition, projectileType, travelSpeed, acceleration);
     }
 
-    public void CreateProjectileAndShootToward(EntityBase target, DamageInstance damageInstance, Vector3 position, ProjectileScript.ProjectileType projectileType)
+    public void CreateProjectileAndShootToward(EntityBase target, DamageInstance damageInstance, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0)
     {
-        CreateProjectileAndShootToward(ProjectilePrefab, damageInstance, target, position, projectileType);
+        CreateProjectileAndShootToward(ProjectilePrefab, damageInstance, target, AttackPosition.position,target.transform.position, projectileType, travelSpeed, acceleration);
     }
 
-    public void CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, EntityBase target, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType)
+    public void CreateProjectileAndShootToward(EntityBase target, DamageInstance damageInstance, Vector3 targetPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0)
+    {
+        CreateProjectileAndShootToward(ProjectilePrefab, damageInstance, target, AttackPosition.position, targetPosition, projectileType, travelSpeed, acceleration);
+    }
+
+    public void CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, EntityBase target, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8)
     {
         if (!ProjectilePref) return;
 
-        GameObject projectile = Instantiate(ProjectilePref, AttackPosition.position, Quaternion.identity);
+        GameObject projectile = Instantiate(ProjectilePref, spawnPosition, Quaternion.identity);
         ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
         if (!projectileScript) return;
 
         projectileScript.ProjectileFirer = this;
         projectileScript.DamageInstance = damageInstance;
-        projectileScript.ShootTowards(preferPosition, target, projectileType);
+        projectileScript.TravelSpeed = travelSpeed;
+        projectileScript.Acceleration = acceleration;
+        projectileScript.ShootTowards(preferPosition, target, projectileType, lifeSpan);
     }
 
-    public virtual List<EntityBase> SearchForEntitiesAroundSelf(Type type = null, bool catchInvisibles = false)
+    public void CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, Type targetType, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8)
     {
-        return SearchForEntitiesAroundCertainPoint(type, transform.position, aRng, catchInvisibles);
+        if (!ProjectilePref) return;
+
+        GameObject projectile = Instantiate(ProjectilePref, spawnPosition, Quaternion.identity);
+        ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
+        if (!projectileScript) return;
+
+        projectileScript.ProjectileFirer = this;
+        projectileScript.DamageInstance = damageInstance;
+        projectileScript.TravelSpeed = travelSpeed;
+        projectileScript.Acceleration = acceleration;
+        projectileScript.ShootTowards(preferPosition, targetType, projectileType, lifeSpan);
     }
 
-    public virtual List<EntityBase> SearchForEntitiesAroundCertainPoint(Type type, Vector2 pos, float r, bool catchInvisibles)
+    public virtual List<EntityBase> SearchForEntitiesAroundSelf(Type type = null, bool catchInvisibles = false, short take = -1)
+    {
+        return SearchForEntitiesAroundCertainPoint(type, transform.position, attackRange, catchInvisibles, take);
+    }
+
+    public virtual List<EntityBase> SearchForEntitiesAroundSelf(float r, Type type = null, bool catchInvisibles = false, short take = -1)
+    {
+        return SearchForEntitiesAroundCertainPoint(type, transform.position, r, catchInvisibles, take);
+    }
+
+    public virtual List<EntityBase> SearchForEntitiesAroundCertainPoint(Type type, Vector2 pos, float r, bool catchInvisibles = false, short take = -1)
     {
         Collider2D[] collider2Ds = Physics2D.OverlapCircleAll(pos, r);
         List<EntityBase> entityBases = new List<EntityBase>();
@@ -365,26 +492,29 @@ public class EntityBase : MonoBehaviour
             if (!entity 
                 || !entity.IsAlive() 
                     || (entity.isInvisible && !catchInvisibles) 
-                        || (type != null && !type.IsAssignableFrom(entity.GetType()))) 
+                        || entityBases.Contains(entity)
+                            || (type != null && !type.IsAssignableFrom(entity.GetType()))) 
                 continue;
             
             entityBases.Add(entity);
         }
 
-        return entityBases;
+        if (entityBases.Count == 1 || entityBases.Count <= take) return entityBases;
+
+        entityBases = entityBases.OrderBy(e => Vector2.Distance(e.transform.position, pos)).ToList();
+        return take == -1 ? entityBases : entityBases.Take(take).ToList();
     }
 
     public virtual EntityBase SearchForNearestEntityAroundSelf(Type type = null, bool catchInvisible = false)
     {
-        return SearchForNearestEntityAroundCertainPoint(type, AttackPosition.position, aRng, catchInvisible);
+        return SearchForNearestEntityAroundCertainPoint(type, AttackPosition.position, attackRange, catchInvisible);
     }
 
-    public virtual EntityBase SearchForNearestEntityAroundCertainPoint(Type type, Vector2 pos, float r, bool catchInvisibles)
+    public virtual EntityBase SearchForNearestEntityAroundCertainPoint(Type type, Vector2 pos, float r, bool catchInvisibles = false)
     {
-        var entities = SearchForEntitiesAroundCertainPoint(type, pos, r, catchInvisibles);
-        if (entities.Count <= 0) return null;
-        if (entities.Count == 1) return entities[0];
+        var targets = SearchForEntitiesAroundCertainPoint(type, pos, r, catchInvisibles, 1);
+        if (targets == null || targets.Count <= 0) return null;
 
-        return entities.OrderBy(e => Vector2.Distance(e.transform.position, transform.position)).First();
+        return targets[0];
     }
 }
