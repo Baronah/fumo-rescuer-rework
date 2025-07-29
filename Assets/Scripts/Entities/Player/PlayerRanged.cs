@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class PlayerRanged : PlayerBase
 {
     [SerializeField] private float ProjectileSpeed = 1250f;
-    [SerializeField] private GameObject AttackRangeIndicator, Warning, SkillEffect;
+    [SerializeField] private GameObject AttackRangeIndicator, Warning, SkillEffect, FreezeEffect;
 
     [SerializeField] private Transform SkillPosition;
     [SerializeField] private float SkillCooldown = 30f;
@@ -13,7 +13,19 @@ public class PlayerRanged : PlayerBase
     [SerializeField] private float Skill_DamageMulitplier = 0.25f;
     [SerializeField] private float Skill_AtkInterval = 0.25f;
 
-    private bool CanUseSkill = true, IsSkillActive = false;
+    [SerializeField] private float FreezeRange = 800f;
+    [SerializeField] private float FreezeDurationMin = 1f, FreeDurationMax = 4f, MinDistanceForFreezeDuration = 150f;
+    [SerializeField] private float FreezeCooldown = 11.5f;
+    [SerializeField] private float FreezeCastDuration = 0.25f;
+
+    private bool CanUseSkill = true, IsSkillActive = false, CanUseFreeze = true;
+    private RectTransform AttackRangeIndicatorRect;
+
+    public override void Start()
+    {
+        base.Start();
+        AttackRangeIndicatorRect = AttackRangeIndicator.GetComponent<RectTransform>();
+    }
 
     public override void FixedUpdate()
     {
@@ -21,6 +33,14 @@ public class PlayerRanged : PlayerBase
         if (!IsAlive())
         {
             AttackRangeIndicator.SetActive(false);
+        }
+
+        if (AttackRangeIndicatorRect)
+        {
+            AttackRangeIndicatorRect.sizeDelta = new Vector2(
+                attackRange * 2,
+                attackRange * 2
+            );
         }
 
         SkillEffect.SetActive(IsSkillActive && IsAlive());
@@ -54,8 +74,12 @@ public class PlayerRanged : PlayerBase
         {
             StartCoroutine(CastSkill());
         }
-
-        else Move();
+        else if (Input.GetKeyDown(stageManager.SpecialKey) && CanUseFreeze)
+        {
+            StartCoroutine(CastFreeze());
+        }
+        else 
+            Move();
     }
 
     IEnumerator SkillLockout()
@@ -64,6 +88,14 @@ public class PlayerRanged : PlayerBase
         StartCoroutine(stageManager.SkillCooldown(SkillCooldown));
         yield return new WaitForSeconds(SkillCooldown);
         CanUseSkill = true;
+    }
+
+    IEnumerator FreezeLockout()
+    {
+        CanUseFreeze = false;
+        StartCoroutine(stageManager.SpecialCooldown(FreezeCooldown));
+        yield return new WaitForSeconds(FreezeCooldown);
+        CanUseFreeze = true;
     }
 
     public override IEnumerator Attack()
@@ -93,6 +125,38 @@ public class PlayerRanged : PlayerBase
         }
 
         AttackRangeIndicator.SetActive(false);
+        yield return null;
+    }
+
+    public IEnumerator CastFreeze()
+    {
+        if (!IsAlive() || !CanUseFreeze || IsFrozen || IsStunned) yield break;
+
+        StartCoroutine(FreezeLockout());
+        StartCoroutine(StartMovementLockout(FreezeCastDuration));
+        StartCoroutine(StartAttackLockout(FreezeCastDuration));
+        
+        animator.SetTrigger("skill");
+        IsSkillActive = true;
+
+        Instantiate(FreezeEffect, SkillPosition.position, Quaternion.identity);
+        yield return new WaitForSeconds(FreezeCastDuration - Time.fixedDeltaTime);
+
+        var hitEnemies = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), SkillPosition.position, FreezeRange, true);
+        foreach (EntityBase e in hitEnemies)
+        {
+            EnemyBase enemy = e as EnemyBase;
+            float distance = Vector3.Distance(SkillPosition.position, enemy.transform.position);
+            float freezeDuration = distance >= FreezeRange * 0.8f
+                ?
+                FreezeDurationMin
+                : 
+                Mathf.Lerp(FreezeDurationMin, FreeDurationMax, MinDistanceForFreezeDuration * 1.0f / distance);
+            ApplyFreeze(enemy, freezeDuration);
+        }
+
+        animator.SetTrigger("skill_end");
+        IsSkillActive = false;
         yield return null;
     }
 

@@ -7,10 +7,33 @@ public class Sentinel : EnemyBase
     [SerializeField] private float AtkBuffOnAlert = 1.2f;
     [SerializeField] private GameObject DetectCircle;
 
+    private RectTransform DetectCircleRectTransform;
+
+    public override void Start()
+    {
+        base.Start();
+        DetectCircleRectTransform = DetectCircle.GetComponent<RectTransform>();
+    }
+
+    public override void InitializeComponents()
+    {
+        attackPattern = AttackPattern.NONE;
+
+        base.InitializeComponents();
+    }
+
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        DetectCircle.gameObject.SetActive(IsAlive());
+
+        if (!SpottedPlayer)
+        {
+            DetectCircleRectTransform.sizeDelta = new Vector2(
+                DetectionRange * 2.05f,
+                DetectionRange * 2.05f
+            );
+        }
+        DetectCircle.SetActive(IsAlive());
     }
 
     public override void OnFirsttimePlayerSpot(bool viaAlert = false)
@@ -20,14 +43,18 @@ public class Sentinel : EnemyBase
         base.OnFirsttimePlayerSpot();
         animator.SetTrigger("skill");
         StartCoroutine(ExpandDetectCircle());
-        EntityManager.Entities.ForEach(e =>
+
+        if (!viaAlert)
         {
-            if (e is EnemyBase enemy && enemy != this && enemy.IsAlive())
+            EntityManager.Enemies.ForEach(enemy =>
             {
-                enemy.moveSpeed *= SpeedBuffOnAlert;
-                enemy.atk = (short)(enemy.atk * AtkBuffOnAlert);
-            }
-        });
+                if (enemy != this && enemy.IsAlive())
+                {
+                    enemy.moveSpeed *= SpeedBuffOnAlert;
+                    enemy.atk = (short)(enemy.atk * AtkBuffOnAlert);
+                }
+            });
+        }
     }
 
     IEnumerator ExpandDetectCircle()

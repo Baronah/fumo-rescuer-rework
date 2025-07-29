@@ -197,7 +197,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -612813223
+  m_SortingLayerID: -1829218833
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3507539851168437672
@@ -332,8 +332,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -401,7 +401,7 @@ RectTransform:
   m_GameObject: {fileID: 7574998143464888112}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 172238147800401305}
@@ -409,7 +409,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 650, y: 650}
+  m_SizeDelta: {x: 900, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8650955048556551086
 CanvasRenderer:
@@ -622,7 +622,7 @@ MonoBehaviour:
   resIgn: 0
   lifeSteal: 0
   b_moveSpeed: 120
-  b_attackRange: 500
+  b_attackRange: 420
   b_attackSpeed: 1
   b_attackInterval: 1.9
   MIN_PHYSICAL_DMG: 0.05
@@ -644,18 +644,25 @@ MonoBehaviour:
   ProjectileType: 0
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 0.85
-  AttackSprite: {fileID: 21300000, guid: 425d049a62ac11f4bbb9a798b005c93f, type: 3}
-  SkillSprite: {fileID: 21300000, guid: 0da9d9817e86b52448dcab10e8b6f47f, type: 3}
-  SpecialSprite: {fileID: 21300000, guid: 1146632b55a73c34fa3b2bf1794f10ec, type: 3}
+  AttackSprite: {fileID: 21300000, guid: 1146632b55a73c34fa3b2bf1794f10ec, type: 3}
+  SkillSprite: {fileID: 21300000, guid: 425d049a62ac11f4bbb9a798b005c93f, type: 3}
+  SpecialSprite: {fileID: 21300000, guid: 0da9d9817e86b52448dcab10e8b6f47f, type: 3}
   ProjectileSpeed: 2000
   AttackRangeIndicator: {fileID: 7574998143464888112}
   Warning: {fileID: 6080019599566292019}
   SkillEffect: {fileID: 2390494206778937756}
+  FreezeEffect: {fileID: 1351288078136581532, guid: 62e2480aade261d40849517a0285b9d0, type: 3}
   SkillPosition: {fileID: 7519469202655066874}
   SkillCooldown: 30
   SkillDuration: 5
   Skill_DamageMulitplier: 0.2
   Skill_AtkInterval: 0.15
+  FreezeRange: 420
+  FreezeDurationMin: 0.5
+  FreeDurationMax: 4
+  MinDistanceForFreezeDuration: 100
+  FreezeCooldown: 11.5
+  FreezeCastDuration: 0.1
 --- !u!4 &6558327838760169379 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4379148182149629804, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}

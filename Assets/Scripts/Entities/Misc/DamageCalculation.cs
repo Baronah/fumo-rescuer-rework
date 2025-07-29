@@ -18,7 +18,7 @@ namespace DamageCalculation
             float MIN_PHYSICALDMG = attacker.MIN_PHYSICAL_DMG,
                   MIN_MAGICALDMG = attacker.MIN_MAGICAL_DMG;
 
-            int physicalDamage = (int) Mathf.Max(instance.PhysicalDamage * MIN_PHYSICALDMG, instance.PhysicalDamage - target.def);
+            int physicalDamage = (int) Mathf.Max(instance.PhysicalDamage * MIN_PHYSICALDMG, instance.PhysicalDamage * (100 - target.def) / 100);
             int magicalDamage = (int) Mathf.Max(instance.MagicalDamage * MIN_MAGICALDMG, instance.MagicalDamage * (100 - target.res) / 100);
 
             instance.PhysicalDamage = physicalDamage;

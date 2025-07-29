@@ -103,6 +103,8 @@ public class PlayerMelee : PlayerBase
         }
 
         rb2d.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(DashDuration);
         isInvulnerable = false;
     }
 

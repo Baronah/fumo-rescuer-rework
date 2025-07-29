@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.addressables": "1.21.21",
     "com.unity.cinemachine": "2.10.4",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.2d": "2.0.0",

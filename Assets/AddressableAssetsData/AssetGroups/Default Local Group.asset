@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c007ef409080514489cfe6fa99f69988
+  m_SerializeEntries:
+  - m_GUID: 306c76030ab425a44943af901b201f5d
+    m_Address: Assets/Prefabs/Enemy/Zealot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6eca04e191ef7c141b5e7f48299da369
+    m_Address: Assets/Prefabs/Enemy/Matterllurgist.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5578e7a9104f90b498324f2ed0060df3
+    m_Address: Assets/Prefabs/Enemy/Sentinel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3221dbae6b487b49907a796747ecac4
+    m_Address: Assets/Prefabs/Enemy/EnemyBase.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 10f81ecc1f290514588706c7f1b3ad80
+    m_Address: Assets/Prefabs/Enemy/RangedEnemyBase Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 889974ae779658e45970e67874721a1c
+    m_Address: Assets/Prefabs/Player/PlayerMelee.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 471a8ca8ee5aa634b8a85b8fac5cd431
+    m_Address: Assets/Prefabs/Player/PlayerBase.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfb67b33854060e489b3fdef5df9600f
+    m_Address: Assets/Prefabs/Player/PlayerRanged.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3cb6aeb3d703fc345860dd10f5b362fe
+    m_Address: Assets/Prefabs/Enemy/Heir.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f65301b1dd8c6c44bb3235aef6fd1d01, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 162c2a40379b3ad4e8297cd96e371858, type: 2}
+    - {fileID: 11400000, guid: 8fedcd7b4489dff4fb0545e6bfe902a9, type: 2}

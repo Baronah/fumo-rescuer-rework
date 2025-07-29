@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class EnemyTooltipsScript : MonoBehaviour
 {
-    private static List<EnemyTooltipsScript> ActiveTooltips = new();
-
     [SerializeField] RectTransform tooltipsTransform;
     [SerializeField] float showUpTime = 0.5f, holdTime = 8f;
     [SerializeField] Vector2 targetposition = new(-320, -125);
@@ -18,14 +16,17 @@ public class EnemyTooltipsScript : MonoBehaviour
     [SerializeField] TMP_Text txtName, txtDescription;
 
     private EnemyBase enemyBase;
-    private bool isShowing = false;
-
-    private List<EnemyTooltipsScript> enemyTooltipsScripts;
+    public static bool isAnyTooltipsShowing = false;
 
     private void Start()
     {
-        enemyTooltipsScripts = FindObjectsOfType<EnemyTooltipsScript>().Where(tt => tt && tt.isShowing && tt != this).ToList();
         startPosition = tooltipsTransform.anchoredPosition = new(targetposition.x + 700, targetposition.y);
+        StartCoroutine(OnStart());
+    }
+
+    IEnumerator OnStart()
+    {
+        while (isAnyTooltipsShowing) yield return null;
 
         enemyBase = transform.parent.GetComponent<EnemyBase>();
         if (enemyBase)
@@ -42,11 +43,7 @@ public class EnemyTooltipsScript : MonoBehaviour
 
     IEnumerator ShowUp()
     {
-        while (ActiveTooltips.Any(tt => tt != this && tt.isShowing))
-            yield return null;
-
-        ActiveTooltips.Add(this);
-        isShowing = true;
+        isAnyTooltipsShowing = true;
         float elapsedTime = 0f;
         while (elapsedTime < showUpTime)
         {
@@ -63,8 +60,7 @@ public class EnemyTooltipsScript : MonoBehaviour
 
     IEnumerator Disappear()
     {
-        isShowing = false;
-        ActiveTooltips.Remove(this);
+        isAnyTooltipsShowing = false;
         float elapsedTime = 0f;
         while (elapsedTime < showUpTime)
         {

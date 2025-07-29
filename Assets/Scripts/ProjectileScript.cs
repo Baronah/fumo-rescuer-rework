@@ -110,7 +110,7 @@ public class ProjectileScript : MonoBehaviour
 
 		if (doesDamage)
 		{
-			ProjectileFirer.DealDamage(target, DamageInstance);
+			ProjectileFirer.DealDamage(target, DamageInstance.PhysicalDamage, DamageInstance.MagicalDamage, DamageInstance.TrueDamage, true);
 			allowingUpdate = false;
 		}
 

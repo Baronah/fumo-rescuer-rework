@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 5466385592610398606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.22, y: 1.22, z: 1.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2939998375499294863}
@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 750, y: 750}
+  m_SizeDelta: {x: 900, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6098024779561960817
 CanvasRenderer:
@@ -144,7 +144,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1922547537
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e53d376bb59064f428594b9608ad6c2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -237,7 +237,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -612813223
   m_SortingOrder: -10
   m_TargetDisplay: 0
 --- !u!114 &6526344347505567830
@@ -288,6 +288,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 712479229275404704, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Name
       value: Sentinel
@@ -340,6 +348,9 @@ PrefabInstance:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1629728557240306582, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+    - {fileID: 6874472638164594782, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+    - {fileID: 6541530169667251654, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+    - {fileID: 5481549286690980022, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       insertIndex: 0
@@ -372,17 +383,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5323674882719549282}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f18c314de1ae22498f59129affa3ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Sentinel
   Icon: {fileID: 21300000, guid: 63b7c277af77fcc4a8a98b2095f3740b, type: 3}
-  mHealth: 80
+  mHealth: 100
   bAtk: 0
   bDef: 0
-  bRes: 0
+  bRes: 25
   defPen: 0
   defIgn: 0
   resPen: 0
@@ -411,19 +422,35 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
-  TooltipsPrefab: {fileID: 0}
+  enemyCode: 0
+  SpotPlayerUponSpawn: 0
+  TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsPriority: 0
   TooltipsHoldtime: 5.5
   DetectionRange: 450
   DangerRange_RatioOfAttackRange: 0
   MinimumDistanceFromPlayer: 20
   showTooltips: 1
+  gridCellSize: 35
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  pathfindingRadius: 500
+  pathUpdateInterval: 1
+  waypointReachDistance: 25
+  showPathGizmos: 1
+  allowDiagonalMovement: 1
+  pathfindingDistanceThreshold: 50
+  cornerAvoidanceDistance: 100
+  pathSmoothingLookahead: 2
   WaitTimes:
   - 7
   - 7
   - 7
   - 8
-  InitWaittime: 5
+  OverridePositionCheckRadius: 50
+  MoveToOverridePositionSpeedMultiplier: 1.5
+  MoveToOverridePositionSpeedMultiplierJump: 0.35
   SpeedBuffOnAlert: 1.35
   AtkBuffOnAlert: 1.2
   DetectCircle: {fileID: 5466385592610398606}

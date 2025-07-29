@@ -39,6 +39,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 155535948512199076, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.952
+      objectReference: {fileID: 0}
     - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -125,7 +129,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6874472638164594782, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+    - {fileID: 6541530169667251654, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+    - {fileID: 5481549286690980022, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       insertIndex: -1
@@ -147,17 +154,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389931498778135043}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ff9685b125731c4ea1098535ddd6b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Matterllurgist
   Icon: {fileID: 21300000, guid: e2c9872dc1e75ed40af900904592a547, type: 3}
-  mHealth: 100
+  mHealth: 130
   bAtk: 25
   bDef: 0
-  bRes: 0
+  bRes: 10
   defPen: 0
   defIgn: 0
   resPen: 0
@@ -186,6 +193,8 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
+  enemyCode: 0
+  SpotPlayerUponSpawn: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsPriority: 0
   TooltipsHoldtime: 6
@@ -193,6 +202,21 @@ MonoBehaviour:
   DangerRange_RatioOfAttackRange: 0.75
   MinimumDistanceFromPlayer: 20
   showTooltips: 1
+  gridCellSize: 35
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  pathfindingRadius: 500
+  pathUpdateInterval: 1
+  waypointReachDistance: 50
+  showPathGizmos: 1
+  allowDiagonalMovement: 1
+  pathfindingDistanceThreshold: 50
+  cornerAvoidanceDistance: 100
+  pathSmoothingLookahead: 3
+  OverridePositionCheckRadius: 50
+  MoveToOverridePositionSpeedMultiplier: 1.5
+  MoveToOverridePositionSpeedMultiplierJump: 0.35
   WaitTimes:
   - 5
   - 5

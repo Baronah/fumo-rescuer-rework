@@ -54,8 +54,8 @@ public class Zealot : EnemyBase
 
     public override void WriteStats()
     {
-        Description = "A zealot is a fanatical and uncompromising follower of a religion or cause.";
-        Skillset = "Zealots are known for their fervent devotion and willingness to fight for their beliefs.";
+        Description = "";
+        Skillset = ".";
         TooltipsDescription = "Melee unit, attacks deal physical damage. <color=green>Has a barrier that absorbs damage</color>, and gains <color=yellow>greatly increased movespeed</color> when the barrier is destroyed. " +
             "<color=yellow>If alerted early</color>, <color=red>forfeits</color> self barrier.";
 

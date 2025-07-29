@@ -15,8 +15,8 @@ public class EntityBase : MonoBehaviour
 
     [SerializeField] protected int mHealth;
     [SerializeField] protected short bAtk, bDef, bRes;
-    [SerializeField] protected short defPen, defIgn, resPen, resIgn, lifeSteal;
-    [SerializeField] protected float b_moveSpeed, b_attackRange, b_attackSpeed, b_attackInterval;
+    [SerializeField] protected short defPen, defIgn, resPen, resIgn;
+    [SerializeField] protected float lifeSteal, b_moveSpeed, b_attackRange, b_attackSpeed, b_attackInterval;
     public float MIN_PHYSICAL_DMG = 0.05F, MIN_MAGICAL_DMG = 0.1F;
 
     [HideInInspector] public int health;
@@ -54,11 +54,16 @@ public class EntityBase : MonoBehaviour
     protected Vector3 PrevPosition;
     protected Color InitSpriteColor;
 
-    protected short MovementLockout = 0, AttackLockout = 0;
-    public bool IsMovementLocked => MovementLockout > 0;
-    public bool IsAttackLocked => AttackLockout > 0;
+    protected float MovementLockout = 0, AttackLockout = 0;
+    public bool IsMovementLocked => MovementLockout > 0 || IsFrozen || IsStunned;
+    public bool IsAttackLocked => AttackLockout > 0 || IsFrozen || IsStunned;
 
     private bool TriggeredOnDeath = false;
+
+    protected float FreezeTimer = 0f, StunTimer = 0f;
+
+    public bool IsFrozen => FreezeTimer > 0f;
+    public bool IsStunned => StunTimer > 0f;
 
     [SerializeField] private float preferredMoveAnimationPlaySpeed = 1.0f;
 
@@ -113,15 +118,29 @@ public class EntityBase : MonoBehaviour
         EntityManager = FindObjectOfType<EntityManager>();
         if (EntityManager)
         {
-            EntityManager.OnEntitySpawn(this);
+            EntityManager.OnEntitySpawn(this.gameObject);
         }
     }
 
     public virtual void FixedUpdate()
     {
         if (!IsAlive() && !TriggeredOnDeath) OnDeath();
+        UpdateCooldowns();
         HandleSpriteFlipping();
         HandleAnimationSpeed();
+    }
+
+    public virtual void UpdateCooldowns()
+    {
+        bool PrevFrozen = FreezeTimer > 0f; 
+        FreezeTimer -= Time.deltaTime;
+        if (FreezeTimer > 0f) OnFreezeMaintain();
+        else if (PrevFrozen && FreezeTimer <= 0f) OnFreezeExit();
+
+        StunTimer -= Time.deltaTime;
+        
+        AttackLockout -= Time.deltaTime;
+        MovementLockout -= Time.deltaTime;
     }
 
     public virtual void HandleSpriteFlipping()
@@ -130,7 +149,7 @@ public class EntityBase : MonoBehaviour
         float deltaX = CurrentPos.x - PrevPosition.x;
 
         bool PrevFlipX = spriteRenderer.flipX;
-        if (Mathf.Abs(deltaX) > Mathf.Epsilon)
+        if (Mathf.Abs(deltaX) > 0.1f)
         {
             spriteRenderer.flipX = deltaX <= 0;
         }
@@ -177,16 +196,14 @@ public class EntityBase : MonoBehaviour
     public virtual IEnumerator StartMovementLockout(float m)
     {
         StopMovement();
-        MovementLockout++;
-        yield return new WaitForSeconds(m);
-        if (MovementLockout > 0) MovementLockout--;
+        MovementLockout = Mathf.Max(MovementLockout, m);
+        yield return null;
     }
 
     public virtual IEnumerator StartAttackLockout(float m)
     {
-        AttackLockout++;
-        yield return new WaitForSeconds(m);
-        if (AttackLockout > 0) AttackLockout--;
+        AttackLockout = Mathf.Max(AttackLockout, m);
+        yield return null;
     }
 
     public virtual DamageInstance DamageOutput(EntityBase target, int pDmg, int mDmg, int tDmg)
@@ -230,14 +247,18 @@ public class EntityBase : MonoBehaviour
         DealDamage(target, damage.PhysicalDamage, damage.MagicalDamage, damage.TrueDamage);
     }
 
-    public virtual void DealDamage(EntityBase target, int pDmg, int mDmg, int tDmg)
+    public virtual void DealDamage(EntityBase target, int pDmg, int mDmg, int tDmg, bool allowWhenDisabled = false)
     {
-        if (!target || !target.IsAlive() || target.isInvulnerable) return;
+        if ((!allowWhenDisabled && (IsFrozen || IsStunned)) || !target || !target.IsAlive() || target.isInvulnerable) return;
 
         var calcDamage = DamageOutput(target, pDmg, mDmg, tDmg);
         if (calcDamage.TotalDamage <= 0) return;
         
         target.TakeDamage(calcDamage, this);
+        if (lifeSteal > 0)
+        {
+            Heal(calcDamage.TotalDamage * lifeSteal);
+        }
     }
 
     public virtual void TakeDamage(DamageInstance damage, EntityBase source)
@@ -321,11 +342,44 @@ public class EntityBase : MonoBehaviour
         animator.SetFloat("move", 0);
     }
 
+    public virtual void ApplyFreeze(EntityBase target, float duration)
+    {
+        target.animator.speed = 0f;
+        target.animator.StartPlayback();
+        target.FreezeTimer = Mathf.Max(target.FreezeTimer, duration);
+        target.StopMovement();
+        target.CancelAttack();
+    }
+
+    public virtual void ApplyStun(EntityBase target, float duration)
+    {
+        target.animator.speed = 0f;
+        target.StunTimer = Mathf.Max(target.StunTimer, duration);
+        target.StopMovement();
+        target.CancelAttack();
+    }
+
+    public virtual void OnFreezeMaintain()
+    {
+        spriteRenderer.color = Color.blue;
+        StopMovement();
+    }
+
+    public virtual void OnFreezeExit()
+    {
+        if (FreezeTimer > 0f) return;
+        FreezeTimer = 0f;
+        spriteRenderer.color = InitSpriteColor;
+        animator.speed = 1f;
+    }
+
     public virtual Vector2 CalculateMovement(Vector2 normalizedMovementVector) => CalculateMovement(normalizedMovementVector, moveSpeed);
     public virtual Vector2 CalculateMovement(Vector2 normalizedMovementVector, float speed) => normalizedMovementVector * speed;
 
     public virtual void OnDeath()
     {
+        animator.speed = 1f;
+
         TriggeredOnDeath = true;
         animator.SetTrigger("die");
         healthBar.SetHealth(0);
@@ -341,7 +395,7 @@ public class EntityBase : MonoBehaviour
 
         if (EntityManager)
         {
-            EntityManager.OnEntityDeath(this);
+            EntityManager.OnEntityDeath(this.gameObject);
         }
         Destroy(this.gameObject, 5);
     }
@@ -369,6 +423,8 @@ public class EntityBase : MonoBehaviour
 
     public virtual void CancelAttack()
     {
+        animator.ResetTrigger("attack");
+
         if (AttackCoroutine != null)
         {
             StopCoroutine(AttackCoroutine);
@@ -474,6 +530,11 @@ public class EntityBase : MonoBehaviour
     public virtual List<EntityBase> SearchForEntitiesAroundSelf(Type type = null, bool catchInvisibles = false, short take = -1)
     {
         return SearchForEntitiesAroundCertainPoint(type, transform.position, attackRange, catchInvisibles, take);
+    }
+
+    public virtual List<EntityBase> SearchForEntitiesAroundSelf(Type type, float range, bool catchInvisibles = false, short take = -1)
+    {
+        return SearchForEntitiesAroundCertainPoint(type, transform.position, range, catchInvisibles, take);
     }
 
     public virtual List<EntityBase> SearchForEntitiesAroundSelf(float r, Type type = null, bool catchInvisibles = false, short take = -1)

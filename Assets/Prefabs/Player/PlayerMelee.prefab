@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8612525234557128388
 Transform:
   m_ObjectHideFlags: 0
@@ -181,6 +181,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3206940598239530024, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 4379148182149629804, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_LocalPosition.x
       value: 620
@@ -317,7 +321,7 @@ MonoBehaviour:
   resPen: 0
   resIgn: 0
   lifeSteal: 0
-  b_moveSpeed: 150
+  b_moveSpeed: 160
   b_attackRange: 65
   b_attackSpeed: 0.27
   b_attackInterval: 1
@@ -351,8 +355,8 @@ MonoBehaviour:
   SkillCooldown: 30
   SkillDuration: 7
   BurstHeal_HpPercentage: 0.25
-  HealPerSecond_HpPercentage: 0.05
-  DefBoost: 1
-  ResBoost: 10
-  AtkBoost: 0.25
+  HealPerSecond_HpPercentage: 0.06
+  DefBoost: 2
+  ResBoost: 20
+  AtkBoost: 0.35
   SpeedBoost: 0.35

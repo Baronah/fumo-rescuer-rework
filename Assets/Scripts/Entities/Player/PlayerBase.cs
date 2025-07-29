@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerBase : EntityBase
 {
     public Sprite AttackSprite, SkillSprite, SpecialSprite;
-    protected StageManager stageManager;
+    protected PlayerManager stageManager;
 
     private void Update()
     {
@@ -15,7 +15,7 @@ public class PlayerBase : EntityBase
     public override void InitializeComponents()
     {
         base.InitializeComponents();
-        stageManager = FindObjectOfType<StageManager>();
+        stageManager = FindObjectOfType<PlayerManager>();
         stageManager.Register(this);
 
         StartCoroutine(InvulnerableOnSpawn());
