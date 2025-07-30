@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBase : EntityBase
 {
     public Sprite AttackSprite, SkillSprite, SpecialSprite;
+    public string AttackDes, SkillName, SkillDes, SpecialName, SpecialDes;
     protected PlayerManager stageManager;
 
     private void Update()
@@ -76,6 +77,36 @@ public class PlayerBase : EntityBase
     {
         StartCoroutine(stageManager.AttackCooldown(attackInterval));
         return base.LockoutMovementsOnAttack();
+    }
+
+    public virtual PlayerTooltipsInfo GetPlayerTooltipsInfo()
+    {
+        return new PlayerTooltipsInfo
+        {
+            Icon = Icon,
+            AttackSprite = AttackSprite,
+            SkillSprite = SkillSprite,
+            SpecialSprite = SpecialSprite,
+            attackRange = attackRange,
+            attackSpeed = attackSpeed,
+            attackInterval = attackInterval,
+            atk = atk,
+            bAtk = bAtk,
+            bDef= bDef,
+            def = def,
+            bRes = bRes,
+            res = res,
+            attackPattern = attackPattern,
+            damageType = damageType,
+            mHealth = mHealth,
+            health = health,
+            moveSpeed = moveSpeed,
+            SkillName = SkillName,
+            SkillText = SkillDes,
+            SpecialName = SpecialName,
+            SpecialText = SpecialDes,
+            AttackText = "Perform an attack that deals",
+        };
     }
 
     public override void OnDeath()

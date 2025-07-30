@@ -75,7 +75,7 @@ public class Sentinel : EnemyBase
     {
         Description = "";
         Skillset = "";
-        TooltipsDescription = "Does not attack. Upon spotted the player, <color=red>alerts</color> all other enemies who haven't spotted them, increasing their ATK and movespeed.";
+        TooltipsDescription = "Does not attack. Upon spotting the player, <color=red>alerts</color> all other enemies who haven't spotted them, increasing their ATK and movespeed.";
 
         base.WriteStats();
     }

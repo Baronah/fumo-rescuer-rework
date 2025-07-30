@@ -432,7 +432,7 @@ public class EnemyBase : EntityBase
         lastPosition = currentPos;
 
         Vector3 destination = GetCurrentDestination();
-        Vector2 direction = destination - AttackPosition.position;
+        Vector2 direction =  destination - transform.position;
         float distanceToDestination = direction.magnitude;
 
         // Stop if we're very close to destination
@@ -560,6 +560,7 @@ public class EnemyBase : EntityBase
                 if (!enemy || !enemy.IsAlive() || !enemy.SpottedPlayer) continue;
                 RecentlyScannedPlayer = enemy.SpottedPlayer;
                 spottedViaAlert = true;
+                break;
             }
 
             if (!RecentlyScannedPlayer) RecentlyScannedPlayer = DetectPlayer();
@@ -590,7 +591,10 @@ public class EnemyBase : EntityBase
                         obstacleLayer);
 
                     if (checkObstacle.collider != null && !colliders.Contains(checkObstacle.collider))
+                    {
+                        RecentlyScannedPlayer = null;
                         return;
+                    }
                 }
             }
 
@@ -611,7 +615,6 @@ public class EnemyBase : EntityBase
         FaceToward(SpottedPlayer.transform.position);
         IsGuarding = false;
         MovementLockout = 0;
-        DetectionRange = Mathf.Max(DetectionRange * 0.5f, 200);
 
         // Clear current path when spotting player
         currentPath.Clear();
@@ -789,7 +792,8 @@ public class EnemyBase : EntityBase
     IEnumerator ShowTooltips()
     {
         yield return new WaitForSeconds(Time.fixedDeltaTime * 5 * TooltipsPriority);
-        Instantiate(TooltipsPrefab, Vector3.negativeInfinity, Quaternion.identity, transform);
+        GameObject o = Instantiate(TooltipsPrefab, Vector3.negativeInfinity, Quaternion.identity);
+        o.GetComponent<EnemyTooltipsScript>().Initialize(this);
     }
 
     public TooltipsData GetTooltipsData()

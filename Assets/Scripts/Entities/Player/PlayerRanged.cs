@@ -211,6 +211,27 @@ public class PlayerRanged : PlayerBase
         yield return null;
     }
 
+    public override PlayerTooltipsInfo GetPlayerTooltipsInfo()
+    {
+        var info = base.GetPlayerTooltipsInfo();
+
+        info.AttackText = $"Lauches a projectile toward the nearest enemy within range, " +
+            $"dealing {atk} {damageType.ToString().ToLower()} damage.";
+
+        info.SkillName = "Aupiciousness";
+        info.SkillText =
+            $"In the next {SkillDuration} seconds: becomes unable to move and attack, continuously unleashes a wave of projectiles " +
+            $"spreading in all direction around self. Each projectile hits the first enemy it comes into contact with, dealing {Skill_DamageMulitplier * 100}% ATK damage each. " +
+            $"{SkillCooldown}s cooldown.";
+
+        info.SpecialName = "Zeropoint Burst";
+        info.SpecialText =
+            $"After a short delay, inflicts freeze to all enemies within attack range for {FreezeDurationMin} - {FreeDurationMax} seconds based on distance. " +
+            $"{FreezeCooldown}s cooldown.";
+
+        return info;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

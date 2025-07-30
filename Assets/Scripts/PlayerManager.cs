@@ -8,6 +8,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static EntityBase;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -21,14 +22,23 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float SwapCooldown = 20f;
     [SerializeField] private Image Swapsymbol, AttackSprite, AttackCD, SkillSprite, SkillCD, SpecialSprite, SpecialCD, SwapCD, ActivePlayer, SwapToPlayer;
     [SerializeField] private Sprite MeleeIcon, RangedIcon;
-    [SerializeField] private TMP_Text txtAttackKey, txtSpecialKey, txtSkillKey;
+    [SerializeField] private TMP_Text txtViewKey, txtAttackKey, txtSpecialKey, txtSkillKey;
 
-    public KeyCode SwapKey = KeyCode.Space, AttackKey = KeyCode.Z, SkillKey = KeyCode.A, SpecialKey = KeyCode.X;
+    public KeyCode ViewKey = KeyCode.V, SwapKey = KeyCode.Space, AttackKey = KeyCode.Z, SkillKey = KeyCode.A, SpecialKey = KeyCode.X;
 
     private PlayerBase player;
     [SerializeField] private float swapCooldownTimer = 0f;
     [SerializeField] GameObject SwapReadyEffect;
+
+    [SerializeField] private GameObject SkillView_Overlay, SkillView;
+    [SerializeField] private Image PlayerIcon, SkillView_Attack, SkillView_Skill, SkillView_Special;
+    [SerializeField] private TMP_Text SkillView_Attributes, SkillView_AttackText, SkillView_SkillName, SkillView_SkillText, SkillView_SpecialName, SkillView_SpecialText;
+    private Coroutine skillViewCoroutine;
+
+    public bool IsReadingSkillView => skillViewCoroutine != null && SkillView_Overlay.activeSelf;
     private bool CanSwapPlayer => swapCooldownTimer >= SwapCooldown && player && player.IsAlive();
+
+    public bool IsPlayerAlive = true;
 
     [SerializeField] private GameObject[] Disables;
 
@@ -41,10 +51,10 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         SwapPlayer();
-        IsStageStarted = true;
 
         mainCamera = FindObjectOfType<CameraMovement>();
 
+        txtViewKey.text = GetCharFromKeyCode(ViewKey).ToString();
         txtAttackKey.text = GetCharFromKeyCode(AttackKey).ToString();
         txtSkillKey.text = GetCharFromKeyCode(SkillKey).ToString();
         txtSpecialKey.text = GetCharFromKeyCode(SpecialKey).ToString();
@@ -52,6 +62,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (!IsStageStarted) return;
+
         if (player && mainCamera)
         {
             mainCamera.UpdatePlayerMovement(player.transform);
@@ -63,6 +75,10 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(SwapKey) && CanSwapPlayer)
         {
             SwapPlayer();
+        }
+        else if (Input.GetKeyDown(ViewKey))
+        {
+            ViewSkill();
         }
     }
 
@@ -122,6 +138,7 @@ public class PlayerManager : MonoBehaviour
         {
             this.player = player;
             virtualCamera.Follow = player.transform;
+            IsStageStarted = true;
 
             SwapCooldownOnStart();
             return;
@@ -266,6 +283,7 @@ public class PlayerManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
+        IsPlayerAlive = false;
         StopAllCoroutines();
 
         foreach (var item in Disables)
@@ -281,5 +299,128 @@ public class PlayerManager : MonoBehaviour
         });
 
         Swapsymbol.color = new Color(1, 1, 1, 0.25f);
+    }
+
+    public void ViewSkill()
+    {
+        if (skillViewCoroutine != null) StopCoroutine(skillViewCoroutine);
+
+        if (SkillView_Overlay.activeSelf)
+        {
+            skillViewCoroutine = StartCoroutine(HideSkillView());
+        }
+        else
+        {
+            SetSkillViewAttributes();
+            SkillView_Overlay.SetActive(true);
+            skillViewCoroutine = StartCoroutine(ShowSkillView());
+        }
+    }
+
+    IEnumerator ShowSkillView()
+    {
+        float InitY = SkillView.transform.localPosition.y, TargetY = 170;
+        float c = 0, d = 0.35f, cJump = 0.02f;
+        while (c < d)
+        {
+            SkillView.transform.localPosition = new Vector3(SkillView.transform.localPosition.x, Mathf.Lerp(InitY, TargetY, c * 1.0f / d), SkillView.transform.localPosition.z);
+            c += cJump;
+            yield return new WaitForSecondsRealtime(cJump);
+        }
+
+        SkillView.transform.localPosition = new Vector3(SkillView.transform.localPosition.x, TargetY, SkillView.transform.localPosition.z);
+    }
+
+    IEnumerator HideSkillView()
+    {
+        float InitY = SkillView.transform.localPosition.y, TargetY = -500;
+        float c = 0, d = 0.35f, cJump = 0.02f;
+        while (c < d)
+        {
+            SkillView.transform.localPosition = new Vector3(SkillView.transform.localPosition.x, Mathf.Lerp(InitY, TargetY, c * 1.0f / d), SkillView.transform.localPosition.z);
+            c += cJump;
+            yield return new WaitForSecondsRealtime(cJump);
+        }
+
+        SkillView.transform.localPosition = new Vector3(SkillView.transform.localPosition.x, TargetY, SkillView.transform.localPosition.z);
+        SkillView_Overlay.SetActive(false);
+    }
+
+    private void SetSkillViewAttributes()
+    {
+        PlayerTooltipsInfo info = player.GetPlayerTooltipsInfo();
+
+        PlayerIcon.sprite = info.Icon;
+
+        SkillView_Attributes.text =
+            (info.attackPattern == AttackPattern.MELEE ? $"<color=yellow>{info.attackPattern}</color>" : $"<color=blue>{info.attackPattern}</color>") 
+            + ", " 
+            + (info.damageType == DamageType.MAGICAL ? $"<color=#800080>{info.damageType}</color>" : $"<color=#9C2007>{info.damageType}</color>") + "\n\n" +
+            $"<color=green>HP: {info.health} / {info.mHealth} ({info.health * 100 / info.mHealth}%)</color>\n\n" +
+            $"<color=#9C2007>ATK: {info.atk} ({info.bAtk} + {info.atk - info.bAtk})</color>\n\n" +
+            $"<color=#800000>ASPD: {info.ASPD}</color>\n\n" +
+            $"<color=yellow>DEF: {info.def} ({info.bDef} + {info.def - info.bDef})</color>\n\n" +
+            $"<color=#00ffff>RES: {info.res} ({info.bRes} + {info.res - info.bRes})</color>\n\n" +
+            $"<color=black>MSPD: {info.MSPD}</color>";
+
+        SkillView_Attack.sprite = info.AttackSprite;
+        SkillView_Skill.sprite = info.SkillSprite;
+        SkillView_Special.sprite = info.SpecialSprite;
+        SkillView_AttackText.text = info.AttackText;
+        SkillView_SkillName.text = info.SkillName;
+        SkillView_SkillText.text = info.SkillText;
+        SkillView_SpecialName.text = info.SpecialName;
+        SkillView_SpecialText.text = info.SpecialText;
+    }
+}
+
+public class PlayerTooltipsInfo
+{
+    public Sprite Icon { get; set; }
+    public Sprite AttackSprite { get; set; }
+    public Sprite SkillSprite { get; set; }
+    public Sprite SpecialSprite { get; set; }
+    public string AttackText { get; set; }
+    public string SkillName { get; set; }
+    public string SkillText { get; set; }
+    public string SpecialName { get; set; }
+    public string SpecialText { get; set; }
+    public int mHealth { get; set; }
+    public int health { get; set; }
+    public short bDef { get; set; }
+    public short def { get; set; }
+    public short bAtk { get; set; }
+    public short atk { get; set; }
+    public short bRes { get; set; }
+    public short res { get; set; }
+    public float moveSpeed { get; set; }
+    public AttackPattern attackPattern { get; set; }
+    public DamageType damageType { get; set; }
+    public float attackSpeed { get; set; }
+    public float attackRange { get; set; }
+    public float attackInterval { get; set; }
+
+    public string ASPD
+    {
+        get
+        {
+            if (attackSpeed <= 0.15f) return "VERY FAST";
+            if (attackSpeed <= 0.3f) return "FAST";
+            if (attackSpeed <= 0.6f) return "NORMAL";
+            if (attackSpeed <= 1.1f) return "SLOW";
+            return "VERY SLOW";
+        }
+    }
+
+    public string MSPD
+    {
+        get
+        {
+            if (moveSpeed <= 60f) return "VERY SLOW";
+            if (moveSpeed <= 100f) return "SLOW";
+            if (moveSpeed <= 160f) return "NORMAL";
+            if (moveSpeed <= 240f) return "FAST";
+            return "VERY FAST";
+        }
     }
 }

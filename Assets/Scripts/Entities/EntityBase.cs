@@ -255,9 +255,14 @@ public class EntityBase : MonoBehaviour
         if (calcDamage.TotalDamage <= 0) return;
         
         target.TakeDamage(calcDamage, this);
+        OnSuccessfulAttack(target, calcDamage);
+    }
+
+    public virtual void OnSuccessfulAttack(EntityBase target, DamageInstance damage)
+    {
         if (lifeSteal > 0)
         {
-            Heal(calcDamage.TotalDamage * lifeSteal);
+            Heal(damage.TotalDamage * lifeSteal);
         }
     }
 
@@ -320,11 +325,10 @@ public class EntityBase : MonoBehaviour
 
     public void DisplayDamage(string msg, Vector3 offset)
     {
-        if (DamagePopup)
-        {
-            GameObject popup = Instantiate(DamagePopup, transform.position + offset, Quaternion.identity);
-            popup.GetComponent<DamagePopup>().text.text = msg;
-        }
+        if (!DamagePopup) return;
+
+        GameObject popup = Instantiate(DamagePopup, transform.position + offset, Quaternion.identity);
+        popup.GetComponent<DamagePopup>().text.text = msg;
     }
 
     public virtual bool IsAlive() => health > 0;

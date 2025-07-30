@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 95e502d057da66b48b73cd9d61d4fb83, type: 3}
+      objectReference: {fileID: 21300000, guid: 5d1fe4eaa8390b34694838f8cb95858f, type: 3}
     - target: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -373.5
@@ -214,14 +214,13 @@ MonoBehaviour:
   pathfindingDistanceThreshold: 50
   cornerAvoidanceDistance: 100
   pathSmoothingLookahead: 3
-  OverridePositionCheckRadius: 50
-  MoveToOverridePositionSpeedMultiplier: 1.5
-  MoveToOverridePositionSpeedMultiplierJump: 0.35
   WaitTimes:
   - 5
   - 5
   - 5
-  InitWaittime: 10
+  OverridePositionCheckRadius: 50
+  MoveToOverridePositionSpeedMultiplier: 1.5
+  MoveToOverridePositionSpeedMultiplierJump: 0.35
   ProjectilePosition: {fileID: 1440802399349756502}
 --- !u!4 &5868672906707442847 stripped
 Transform:

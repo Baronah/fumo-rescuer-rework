@@ -23,6 +23,12 @@ public class BloodthirstyHeir : EnemyBase
         }
     }
 
+    public override void OnSuccessfulAttack(EntityBase target, DamageInstance damage)
+    {
+        base.OnSuccessfulAttack(target, damage);
+        if (sfxs[0]) sfxs[0].Play();
+    }
+
     public override void OnFirsttimePlayerSpot(bool viaAlert = false)
     {
         if (IsAlive() && !mspdIncreased)

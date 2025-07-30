@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Player Ranged
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 15ee98af90e40a74fb6b25aadaab346a, type: 3}
   mHealth: 100
   bAtk: 40
   bDef: 0
@@ -647,6 +647,11 @@ MonoBehaviour:
   AttackSprite: {fileID: 21300000, guid: 1146632b55a73c34fa3b2bf1794f10ec, type: 3}
   SkillSprite: {fileID: 21300000, guid: 425d049a62ac11f4bbb9a798b005c93f, type: 3}
   SpecialSprite: {fileID: 21300000, guid: 0da9d9817e86b52448dcab10e8b6f47f, type: 3}
+  AttackDes: 
+  SkillName: 
+  SkillDes: 
+  SpecialName: 
+  SpecialDes: 
   ProjectileSpeed: 2000
   AttackRangeIndicator: {fileID: 7574998143464888112}
   Warning: {fileID: 6080019599566292019}

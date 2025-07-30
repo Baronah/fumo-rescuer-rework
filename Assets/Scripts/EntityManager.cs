@@ -22,12 +22,12 @@ public class EntityManager : MonoBehaviour
         .Select(e => e.transform.parent.GetComponent<PlayerBase>())
         .ToList();
 
-    public static void OnStageStart()
+    public static void OnStageStart(float extraWaittime)
     {
         var spawnPoints = FindObjectsOfType<EnemySpawnpointScript>();
         foreach (var item in spawnPoints)
         {
-            item.enabled = true;
+            item.OnStageStart(extraWaittime);
         }
     }
 
@@ -53,7 +53,7 @@ public class EntityManager : MonoBehaviour
     private void FixedUpdate()
     {
         frameCounter++;
-        if (frameCounter >= 10)
+        if (frameCounter >= 20)
         {
             SortLayerIndex();
             frameCounter = 0;

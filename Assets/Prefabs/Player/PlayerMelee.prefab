@@ -311,10 +311,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Player Melee
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 16d47974b79ddaf4886e53951e987eab, type: 3}
   mHealth: 130
   bAtk: 25
-  bDef: 5
+  bDef: 20
   bRes: 0
   defPen: 0
   defIgn: 0
@@ -347,6 +347,11 @@ MonoBehaviour:
   AttackSprite: {fileID: 21300000, guid: 5e9fff9c9ee420648814bec52663e5da, type: 3}
   SkillSprite: {fileID: 21300000, guid: 2cd0725c669411348bad0221fa86922b, type: 3}
   SpecialSprite: {fileID: 21300000, guid: f4cc7f8d6c0b92f46ab8ea53b4389fa0, type: 3}
+  AttackDes: 
+  SkillName: 
+  SkillDes: 
+  SpecialName: 
+  SpecialDes: 
   IllusionPrefab: {fileID: 7614525393990378507, guid: c6fa58abea2ebf043a4612afde7194bd, type: 3}
   DashSpeed: 1600
   DashDuration: 0.08

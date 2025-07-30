@@ -145,4 +145,23 @@ public class PlayerMelee : PlayerBase
         moveSpeed -= speedAdd;
         IsSkillActive = false;
     }
+
+    public override PlayerTooltipsInfo GetPlayerTooltipsInfo()
+    {
+        var info = base.GetPlayerTooltipsInfo();
+
+        info.AttackText = $"Performs an attack that deals {atk} {damageType.ToString().ToLower()} damage to all enemies within range.";
+
+        info.SkillName = "Juggernaunt";
+        info.SkillText = 
+            $"Immediately heals self for {BurstHeal_HpPercentage * 100}% max HP. In the next {SkillDuration} seconds: " +
+            $"ATK +{AtkBoost * 100}%, DEF +{DefBoost * 100}%, RES +{ResBoost}, MSPD +{SpeedBoost * 100}% and " +
+            $"regenerate {HealPerSecond_HpPercentage * 100}% max HP every second. {SkillCooldown}s cooldown.";
+
+        info.SpecialName = "Evasion";
+        info.SpecialText = 
+            $"Dash a short distance toward the movement direction and briefly becomes invulnerable during the process. {DashCooldown}s cooldown.";
+        
+        return info;
+    }
 }

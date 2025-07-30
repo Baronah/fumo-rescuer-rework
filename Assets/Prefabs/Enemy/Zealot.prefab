@@ -338,8 +338,8 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 727115dcf85547a49b8c33392336b1e2, type: 3}
   mHealth: 160
   bAtk: 65
-  bDef: 5
-  bRes: 0
+  bDef: 20
+  bRes: 20
   defPen: 0
   defIgn: 0
   resPen: 0

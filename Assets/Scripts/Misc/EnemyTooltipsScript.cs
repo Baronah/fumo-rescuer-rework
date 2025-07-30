@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class EnemyTooltipsScript : MonoBehaviour
 {
+    [SerializeField] Image Progress;
     [SerializeField] RectTransform tooltipsTransform;
     [SerializeField] float showUpTime = 0.5f, holdTime = 8f;
     [SerializeField] Vector2 targetposition = new(-320, -125);
@@ -18,8 +19,11 @@ public class EnemyTooltipsScript : MonoBehaviour
     private EnemyBase enemyBase;
     public static bool isAnyTooltipsShowing = false;
 
-    private void Start()
+    public void Initialize(EnemyBase owner)
     {
+        if (owner == null) return;
+        enemyBase = owner;
+
         startPosition = tooltipsTransform.anchoredPosition = new(targetposition.x + 700, targetposition.y);
         StartCoroutine(OnStart());
     }
@@ -28,17 +32,19 @@ public class EnemyTooltipsScript : MonoBehaviour
     {
         while (isAnyTooltipsShowing) yield return null;
 
-        enemyBase = transform.parent.GetComponent<EnemyBase>();
-        if (enemyBase)
+        if (!enemyBase)
         {
-            var data = enemyBase.GetTooltipsData();
-            icon.sprite = data.Icon;
-            txtName.text = data.Name;
-            txtDescription.text = data.Description;
-            holdTime = data.HoldTime;
-
-            StartCoroutine(ShowUp());
+            Destroy(gameObject);
+            yield break;
         }
+
+        var data = enemyBase.GetTooltipsData();
+        icon.sprite = data.Icon;
+        txtName.text = data.Name;
+        txtDescription.text = data.Description;
+        holdTime = data.HoldTime;
+
+        StartCoroutine(ShowUp());
     }
 
     IEnumerator ShowUp()
@@ -49,12 +55,21 @@ public class EnemyTooltipsScript : MonoBehaviour
         {
             tooltipsTransform.anchoredPosition = Vector2.Lerp(startPosition, targetposition, elapsedTime * 1.0f / showUpTime);
             elapsedTime += Time.deltaTime;
+
             yield return null;
         }
 
         tooltipsTransform.anchoredPosition = targetposition;
-        yield return new WaitForSeconds(holdTime);
+        
+        elapsedTime = 0f;
+        while (elapsedTime < holdTime)
+        {
+            Progress.fillAmount = 1.0f - elapsedTime * 1.0f / holdTime;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
 
+        Progress.fillAmount = 0f;
         StartCoroutine(Disappear());
     }
 
