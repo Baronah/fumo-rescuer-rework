@@ -18,12 +18,32 @@ public class StageManager : MonoBehaviour
 
     [SerializeField] private GameObject pauseOverlay, titleOverlay;
     [SerializeField] private EnemyCode[] appearingEnemies;
-    [SerializeField] private float extraEnemyWaittime = 0f;
+    [SerializeField] private float extraEnemyWaittime = 0f, extraPlayerWaittime = 1.5f;
     [SerializeField] private TMP_Text LoadingState;
     [SerializeField] private CharacterPrefabsStorage prefabStorage;
 
     [SerializeField] private Image PauseButton;
     [SerializeField] private Sprite PausedSprite, UnpausedSprite;
+
+    protected AudioSource BGM;
+    private EnemySpawnpointScript[] enemySpawnpoints;
+    
+    private bool IsEnemyAlive => EntityManager.Enemies.Any(e => e && e.IsAlive()) || enemySpawnpoints.Any(e => !e.IsSpawnpointSpawned);
+
+    public enum StageCompleteCondition
+    {
+        ELIMINATE_ALL_ENEMIES,
+        RETRIEVE_FUMO,
+    };
+
+    public StageCompleteCondition StageCompleteConditionType = StageCompleteCondition.ELIMINATE_ALL_ENEMIES;
+
+    public enum EvironmentType
+    {
+
+    };
+
+    public EvironmentType StageEvironmentType;
 
     private PlayerManager playerManager;
 
@@ -31,6 +51,9 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
+        BGM = GetComponent<AudioSource>();
+
+        enemySpawnpoints = FindObjectsOfType<EnemySpawnpointScript>();
         playerManager = GetComponent<PlayerManager>();
         LoadingState.text = "Loading stage, please wait...";
         StartCoroutine(LoadRequiredPrefabs());
@@ -72,6 +95,7 @@ public class StageManager : MonoBehaviour
 
     IEnumerator TitleFadeOut()
     {
+        BGM.Play();
         CanvasGroup canvasGroup = titleOverlay.GetComponent<CanvasGroup>();
 
         float c = 0, d = 1.25f, cJump = 0.02f;
@@ -86,11 +110,17 @@ public class StageManager : MonoBehaviour
         Destroy(titleOverlay);
 
         Time.timeScale = 1f;
-        EntityManager.OnStageStart(extraEnemyWaittime);
-        yield return new WaitForSeconds(1.5f);
+
+        foreach (var item in enemySpawnpoints)
+        {
+            item.OnStageStart(extraEnemyWaittime);
+        }
+
+        yield return new WaitForSeconds(extraPlayerWaittime);
         GetComponent<PlayerManager>().enabled = true;
         yield return null;
 
+        OnStageReady();
         IsStageStarted = true;
         StartCoroutine(CheckStageStatus());
     }
@@ -100,6 +130,8 @@ public class StageManager : MonoBehaviour
         if (!IsStageReady) return;
 
         Time.timeScale = IsStagePaused || playerManager.IsReadingSkillView ? 0f : 1f;
+
+        OnStageUpdate();
 
         if (!PressedAnyKey && !IsStageStarted && Input.anyKeyDown)
         {
@@ -115,12 +147,25 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    IEnumerator CheckStageStatus()
+    protected virtual void OnStageReady() { }
+
+    protected virtual void OnStageUpdate() { }
+
+    protected virtual IEnumerator CheckStageStatus()
     {
         while (IsStageStarted)
         {
             yield return new WaitForSeconds(2f);
-            if (!playerManager.IsPlayerAlive || !EntityManager.Enemies.Any(e => e && e.IsAlive()))
+
+            if (!playerManager.IsPlayerAlive)
+            {
+                IsStageStarted = false;
+                OnStageEnd(false);
+                yield break; // Exit the coroutine if player is dead
+            }
+
+            if (StageCompleteConditionType == StageCompleteCondition.ELIMINATE_ALL_ENEMIES 
+                && !IsEnemyAlive)
             {
                 IsStageStarted = false;
                 OnStageEnd(playerManager.IsPlayerAlive);
@@ -128,7 +173,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    public void OnStageEnd(bool resultIsWin)
+    public virtual void OnStageEnd(bool resultIsWin)
     {
         IsStageEnd = true;
         StartCoroutine(FadeIn(resultIsWin));
@@ -183,6 +228,16 @@ public class StageManager : MonoBehaviour
         {
             Application.Quit();
         }
+    }
+
+    public void OnPlayerFumoPickup(PlayerBase player)
+    {
+        if (StageCompleteConditionType != StageCompleteCondition.RETRIEVE_FUMO) return;
+
+        player.isInvulnerable = true;
+        EntityManager.Enemies.ForEach(e => { if (e) e.InstaKill(); });
+        IsStageStarted = false;
+        OnStageEnd(true);
     }
 
     public static void SpecialStageAddsOn(EntityBase entity)

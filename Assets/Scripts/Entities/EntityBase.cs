@@ -19,9 +19,9 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected float lifeSteal, b_moveSpeed, b_attackRange, b_attackSpeed, b_attackInterval;
     public float MIN_PHYSICAL_DMG = 0.05F, MIN_MAGICAL_DMG = 0.1F;
 
-    [HideInInspector] public int health;
-    [HideInInspector] public short atk, def, res;
-    [HideInInspector] public float moveSpeed, attackRange, attackSpeed, attackInterval;
+    public int health;
+    public short atk, def, res;
+    public float moveSpeed, attackRange, attackSpeed, attackInterval;
 
     public int GetMaxHealth() => mHealth; 
     public short GetHealthPercentage() => (short) Mathf.Max(1, health * 100 / mHealth);
@@ -68,7 +68,7 @@ public class EntityBase : MonoBehaviour
     [SerializeField] private float preferredMoveAnimationPlaySpeed = 1.0f;
 
     private short UpdateCounter = 0;
-    private EntityManager EntityManager;
+    protected EntityManager EntityManager;
 
     protected Coroutine AttackCoroutine = null, LockoutMovementOnAttackCoroutine = null;
 
@@ -120,6 +120,33 @@ public class EntityBase : MonoBehaviour
         {
             EntityManager.OnEntitySpawn(this.gameObject);
         }
+
+        StartCoroutine(OnStartCoroutine());
+    }
+
+    IEnumerator OnStartCoroutine()
+    {
+        Color transparentBlack = new Color(0, 0, 0, 0);
+        spriteRenderer.color = transparentBlack;
+
+        float c = 0, d = 0.25f;
+        while (c < d)
+        {
+            spriteRenderer.color = Color.Lerp(transparentBlack, Color.black, c * 1.0f / d);
+            c += Time.deltaTime;
+            yield return null;
+        }
+
+        c = 0; d = 0.5f;
+        while (c < d)
+        {
+            spriteRenderer.color = Color.Lerp(Color.black, InitSpriteColor, c * 1.0f / d);
+            c += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteRenderer.color = InitSpriteColor;
+        yield return null;
     }
 
     public virtual void FixedUpdate()
@@ -276,6 +303,15 @@ public class EntityBase : MonoBehaviour
         if (damage.TotalDamage > 0) StartCoroutine(PulseSprite());
     }
 
+    public void InstaKill()
+    {
+        if (!IsAlive()) return;
+        canRevive = false;
+        health = 0;
+        healthBar.SetHealth(0);
+        OnDeath();
+    }
+
     public virtual void OnAttackReceive(EntityBase source)
     {
 
@@ -402,6 +438,29 @@ public class EntityBase : MonoBehaviour
             EntityManager.OnEntityDeath(this.gameObject);
         }
         Destroy(this.gameObject, 5);
+        StartCoroutine(SpriteFadeOutOnDeath());
+    }
+
+    IEnumerator SpriteFadeOutOnDeath()
+    {
+        yield return new WaitForSeconds(0.8f);
+        float c = 0, d = 0.25f;
+        while (c < d)
+        {
+            spriteRenderer.color = Color.Lerp(InitSpriteColor, Color.black, c * 1.0f / d);
+            c += Time.deltaTime;
+            yield return null;
+        }
+        spriteRenderer.color = Color.black;
+
+        c = 0; d = 0.5f;
+        while (c < d)
+        {
+            spriteRenderer.color = Color.Lerp(Color.black, new Color(0, 0, 0, 0), c * 1.0f / d);
+            c += Time.deltaTime;
+            yield return null;
+        }
+        spriteRenderer.color = new Color(0, 0, 0, 0);
     }
 
     public virtual IEnumerator Attack()

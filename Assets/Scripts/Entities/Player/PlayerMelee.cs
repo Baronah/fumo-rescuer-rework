@@ -31,15 +31,15 @@ public class PlayerMelee : PlayerBase
     {
         if (!IsAlive()) return;
 
-        if (Input.GetKeyDown(stageManager.AttackKey))
+        if (Input.GetKeyDown(playerManager.AttackKey))
         {
             AttackCoroutine = StartCoroutine(Attack());
         }
-        else if (Input.GetKeyDown(stageManager.SkillKey) && CanUseSkill)
+        else if (Input.GetKeyDown(playerManager.SkillKey) && CanUseSkill)
         {
             StartCoroutine(ActivateSkill());
         }
-        else if (Input.GetKeyDown(stageManager.SpecialKey) && CanUseDash)
+        else if (Input.GetKeyDown(playerManager.SpecialKey) && CanUseDash)
         {
             StartCoroutine(Dash());
         }
@@ -52,7 +52,7 @@ public class PlayerMelee : PlayerBase
     IEnumerator DashLockout()
     {
         CanUseDash = false;
-        StartCoroutine(stageManager.SpecialCooldown(DashCooldown));
+        StartCoroutine(playerManager.SpecialCooldown(DashCooldown));
         yield return new WaitForSeconds(DashCooldown);
         CanUseDash = true;
     }
@@ -60,7 +60,7 @@ public class PlayerMelee : PlayerBase
     IEnumerator SkillLockout()
     {
         CanUseSkill = false;
-        StartCoroutine(stageManager.SkillCooldown(SkillCooldown));
+        StartCoroutine(playerManager.SkillCooldown(SkillCooldown));
         yield return new WaitForSeconds(SkillCooldown);
         CanUseSkill = true;
     }

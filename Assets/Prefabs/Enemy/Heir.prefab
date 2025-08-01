@@ -99,6 +99,18 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: fc98b5e8217383c41acff68995454bee, type: 2}
+    - target: {fileID: 4442365958869264508, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0819946
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442365958869264508, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4442365958869264508, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.91
+      objectReference: {fileID: 0}
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -221,7 +233,7 @@ MonoBehaviour:
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsPriority: 0
   TooltipsHoldtime: 6
-  DetectionRange: 150
+  DetectionRange: 130
   DangerRange_RatioOfAttackRange: 1
   MinimumDistanceFromPlayer: 10
   showTooltips: 1

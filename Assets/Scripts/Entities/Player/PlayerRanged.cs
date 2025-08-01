@@ -66,15 +66,15 @@ public class PlayerRanged : PlayerBase
     {
         if (!IsAlive() || IsSkillActive) return;
 
-        if (Input.GetKeyDown(stageManager.AttackKey))
+        if (Input.GetKeyDown(playerManager.AttackKey))
         {
             AttackCoroutine = StartCoroutine(Attack());
         }
-        else if (Input.GetKeyDown(stageManager.SkillKey) && CanUseSkill)
+        else if (Input.GetKeyDown(playerManager.SkillKey) && CanUseSkill)
         {
             StartCoroutine(CastSkill());
         }
-        else if (Input.GetKeyDown(stageManager.SpecialKey) && CanUseFreeze)
+        else if (Input.GetKeyDown(playerManager.SpecialKey) && CanUseFreeze)
         {
             StartCoroutine(CastFreeze());
         }
@@ -85,7 +85,7 @@ public class PlayerRanged : PlayerBase
     IEnumerator SkillLockout()
     {
         CanUseSkill = false;
-        StartCoroutine(stageManager.SkillCooldown(SkillCooldown));
+        StartCoroutine(playerManager.SkillCooldown(SkillCooldown));
         yield return new WaitForSeconds(SkillCooldown);
         CanUseSkill = true;
     }
@@ -93,7 +93,7 @@ public class PlayerRanged : PlayerBase
     IEnumerator FreezeLockout()
     {
         CanUseFreeze = false;
-        StartCoroutine(stageManager.SpecialCooldown(FreezeCooldown));
+        StartCoroutine(playerManager.SpecialCooldown(FreezeCooldown));
         yield return new WaitForSeconds(FreezeCooldown);
         CanUseFreeze = true;
     }

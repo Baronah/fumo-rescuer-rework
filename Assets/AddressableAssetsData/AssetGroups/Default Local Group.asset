@@ -62,6 +62,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0ce5959feb62364db54eea44aacd24f
+    m_Address: Assets/Prefabs/Enemy/Hound.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48845fb0c6559764dbc472e781e3b566
+    m_Address: Assets/Prefabs/Enemy/BloodboilKnight.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f65301b1dd8c6c44bb3235aef6fd1d01, type: 2}
   m_SchemaSet:

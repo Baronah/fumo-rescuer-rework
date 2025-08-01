@@ -9,10 +9,12 @@ public class EnemyBase : EntityBase
 {
     public enum EnemyCode
     {
+        HOUND,
         MATTERLLURGIST,
         SENTINEL,
         ZEALOT,
         HEIR,
+        BLOODBOIL_KNIGHT,
     }
 
     public EnemyCode enemyCode;
@@ -88,25 +90,8 @@ public class EnemyBase : EntityBase
             pathfindingGrid = new PathfindingGrid(gridCellSize, obstacleLayer);
         }
 
-        StartCoroutine(OnStartCoroutine());
         WriteStats();
         if (SpotPlayerUponSpawn) ForceSpotPlayer();
-    }
-
-    IEnumerator OnStartCoroutine()
-    {
-        Color transparentBlack = new Color(0, 0, 0, 0);
-        spriteRenderer.color = transparentBlack;
-
-        float c = 0, d = 1;
-        while (c < d)
-        {
-            spriteRenderer.color = Color.Lerp(transparentBlack, InitSpriteColor, c * 1.0f / d);
-            c += Time.deltaTime;
-            yield return null;
-        }
-
-        spriteRenderer.color = InitSpriteColor;
     }
 
     public void ForceSpotPlayer() => SpottedPlayer = FindObjectOfType<PlayerBase>();
@@ -748,6 +733,14 @@ public class EnemyBase : EntityBase
     {
         base.OnDeath();
         DetectSymbol.gameObject.SetActive(false);
+
+        EntityManager.Enemies.ForEach(enemy =>
+        {
+            if (enemy && enemy.IsAlive() && enemy != this && enemy is BloodboilKnight bk)
+            {
+                bk.OnEnemyDeath();
+            }
+        });
     }
 
     public void ChangeAggro(PlayerBase player)

@@ -22,6 +22,10 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   EnemyAssetReferences:
+  - m_AssetGUID: c0ce5959feb62364db54eea44aacd24f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   - m_AssetGUID: 6eca04e191ef7c141b5e7f48299da369
     m_SubObjectName: 
     m_SubObjectType: 
@@ -35,6 +39,10 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   - m_AssetGUID: 3cb6aeb3d703fc345860dd10f5b362fe
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: 48845fb0c6559764dbc472e781e3b566
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

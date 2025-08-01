@@ -6,7 +6,8 @@ public class PlayerBase : EntityBase
 {
     public Sprite AttackSprite, SkillSprite, SpecialSprite;
     public string AttackDes, SkillName, SkillDes, SpecialName, SpecialDes;
-    protected PlayerManager stageManager;
+    protected PlayerManager playerManager;
+    protected StageManager StageManager;
 
     private void Update()
     {
@@ -16,8 +17,10 @@ public class PlayerBase : EntityBase
     public override void InitializeComponents()
     {
         base.InitializeComponents();
-        stageManager = FindObjectOfType<PlayerManager>();
-        stageManager.Register(this);
+        playerManager = FindObjectOfType<PlayerManager>();
+        playerManager.Register(this);
+
+        StageManager = FindObjectOfType<StageManager>();
 
         StartCoroutine(InvulnerableOnSpawn());
     }
@@ -75,7 +78,7 @@ public class PlayerBase : EntityBase
 
     public override IEnumerator LockoutMovementsOnAttack()
     {
-        StartCoroutine(stageManager.AttackCooldown(attackInterval));
+        StartCoroutine(playerManager.AttackCooldown(attackInterval));
         return base.LockoutMovementsOnAttack();
     }
 
@@ -112,7 +115,18 @@ public class PlayerBase : EntityBase
     public override void OnDeath()
     {
         base.OnDeath();
-        stageManager.OnPlayerDeath();
+        playerManager.OnPlayerDeath();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision || !collision.gameObject) return;
+
+        if (collision.gameObject.CompareTag("Fumo"))
+        {
+            StageManager.OnPlayerFumoPickup(this);
+            Destroy(collision.gameObject);
+        }
     }
 
     private void OnDrawGizmos()
