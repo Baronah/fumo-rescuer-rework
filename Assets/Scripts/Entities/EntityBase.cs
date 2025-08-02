@@ -16,12 +16,13 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected int mHealth;
     [SerializeField] protected short bAtk, bDef, bRes;
     [SerializeField] protected short defPen, defIgn, resPen, resIgn;
-    [SerializeField] protected float lifeSteal, b_moveSpeed, b_attackRange, b_attackSpeed, b_attackInterval;
+    [SerializeField] protected float lifeSteal, b_moveSpeed, b_attackRange, b_attackWindupTime, b_attackInterval;
     public float MIN_PHYSICAL_DMG = 0.05F, MIN_MAGICAL_DMG = 0.1F;
 
     public int health;
     public short atk, def, res;
-    public float moveSpeed, attackRange, attackSpeed, attackInterval;
+    public float ASPD = 100;
+    public float moveSpeed, attackRange, attackWindupTime, attackInterval;
 
     public int GetMaxHealth() => mHealth; 
     public short GetHealthPercentage() => (short) Mathf.Max(1, health * 100 / mHealth);
@@ -48,6 +49,8 @@ public class EntityBase : MonoBehaviour
     protected Collider2D[] colliders;
     protected AudioSource[] sfxs;
 
+    private GameObject ShadowSprite;
+
     public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 
     protected bool useTransformAsAttackPosition = false;
@@ -65,12 +68,13 @@ public class EntityBase : MonoBehaviour
     public bool IsFrozen => FreezeTimer > 0f;
     public bool IsStunned => StunTimer > 0f;
 
-    [SerializeField] private float preferredMoveAnimationPlaySpeed = 1.0f;
+    [SerializeField] protected float preferredMoveAnimationPlaySpeed = 1.0f, preferredAttackAnimationSpeed = 1.0f;
 
     private short UpdateCounter = 0;
     protected EntityManager EntityManager;
 
     protected Coroutine AttackCoroutine = null, LockoutMovementOnAttackCoroutine = null;
+    protected Animation attackAnimation;
 
     public Vector3 GetAttackPosition()
     {
@@ -92,6 +96,8 @@ public class EntityBase : MonoBehaviour
         colliders = GetComponents<Collider2D>();
         sfxs = GetComponents<AudioSource>();
 
+        ShadowSprite = spriteRenderer.transform.Find("Shadow").gameObject;
+
         InitSpriteColor = spriteRenderer.color;
         PrevPosition = transform.position;
 
@@ -101,7 +107,7 @@ public class EntityBase : MonoBehaviour
         res = bRes;
         moveSpeed = b_moveSpeed;
         attackRange = b_attackRange;
-        attackSpeed = b_attackSpeed;
+        attackWindupTime = b_attackWindupTime;
         attackInterval = b_attackInterval;
 
         AttackPosition = transform.Find("AttackPosition");
@@ -214,10 +220,15 @@ public class EntityBase : MonoBehaviour
 
     public virtual void HandleAnimationSpeed()
     {
-         float MIN_SPEED = preferredMoveAnimationPlaySpeed * 0.2f, 
-                MAX_SPEED = preferredMoveAnimationPlaySpeed * 2, 
-                X_MULTIPLIER = preferredMoveAnimationPlaySpeed - MIN_SPEED;
-        animator.SetFloat("speed_value", Mathf.Lerp(MIN_SPEED, MAX_SPEED, moveSpeed * (X_MULTIPLIER / (MAX_SPEED - MIN_SPEED)) / b_moveSpeed)); 
+         float MIN_MSPEED = preferredMoveAnimationPlaySpeed * 0.2f, 
+                MAX_MSPEED = preferredMoveAnimationPlaySpeed * 2, 
+                X_MSPD_MULTIPLIER = preferredMoveAnimationPlaySpeed - MIN_MSPEED;
+        animator.SetFloat("speed_value", Mathf.Lerp(MIN_MSPEED, MAX_MSPEED, moveSpeed * (X_MSPD_MULTIPLIER / (MAX_MSPEED - MIN_MSPEED)) / b_moveSpeed));
+
+        float MIN_ASPEED = preferredAttackAnimationSpeed * 0.2f,
+           MAX_ASPEED = preferredAttackAnimationSpeed * 5,
+           X_ASPD_MULTIPLIER = preferredAttackAnimationSpeed - MIN_MSPEED;
+        animator.SetFloat("a_speed_value", Mathf.Lerp(MIN_ASPEED, MAX_ASPEED, ASPD * (X_ASPD_MULTIPLIER / (MAX_ASPEED - MIN_ASPEED)) / 100));
     }
 
     public virtual IEnumerator StartMovementLockout(float m)
@@ -418,6 +429,7 @@ public class EntityBase : MonoBehaviour
 
     public virtual void OnDeath()
     {
+        ShadowSprite.SetActive(false);
         animator.speed = 1f;
 
         TriggeredOnDeath = true;
@@ -437,7 +449,7 @@ public class EntityBase : MonoBehaviour
         {
             EntityManager.OnEntityDeath(this.gameObject);
         }
-        Destroy(this.gameObject, 5);
+        Destroy(this.gameObject, 4);
         StartCoroutine(SpriteFadeOutOnDeath());
     }
 
@@ -466,6 +478,8 @@ public class EntityBase : MonoBehaviour
     public virtual IEnumerator Attack()
     {
         if (IsAttackLocked) yield break;
+
+        animator.SetTrigger("attack");
         LockoutMovementOnAttackCoroutine = StartCoroutine(LockoutMovementsOnAttack());
         yield break;
     }
@@ -475,14 +489,25 @@ public class EntityBase : MonoBehaviour
         // base example
         if (IsAttackLocked) yield break;
 
-        StartCoroutine(StartMovementLockout(attackSpeed * 1.5f));
-        StartCoroutine(StartAttackLockout(Mathf.Max(attackInterval, attackSpeed)));
+        StartCoroutine(StartMovementLockout(GetWindupTime() * 1.5f));
+        StartCoroutine(StartAttackLockout(GetAttackLockoutTime()));
 
         // as enemy and player unit have different attack method,
         // overrides will handle this
 
         yield return null;
     }
+
+    public float GetWindupTime() => attackWindupTime * (100 / Mathf.Max(20, ASPD));
+
+    public float GetAttackInterval() => attackInterval * (100 / Mathf.Max(20, ASPD));
+
+    public float GetAttackLockoutTime() 
+        => Mathf.Max(
+                GetWindupTime(),
+                GetAttackInterval(),
+                animator.GetCurrentAnimatorClipInfo(0).Length / preferredAttackAnimationSpeed / animator.GetFloat("a_speed_value")
+            );
 
     public virtual void CancelAttack()
     {

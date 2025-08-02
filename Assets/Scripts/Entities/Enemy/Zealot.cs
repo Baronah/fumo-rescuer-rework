@@ -6,6 +6,7 @@ public class Zealot : EnemyBase
     [SerializeField] private SpriteRenderer barrierEffect;
     [SerializeField] private float barrierMaxHealth = 100f;
     [SerializeField] private float speedMultuplierOnBarrierBreak = 1.5f;
+    [SerializeField] private float AspdBonusOnBarrierBreak = 50;
     private float barrierHealth;
 
     private Color barrierinitialColor;
@@ -44,6 +45,7 @@ public class Zealot : EnemyBase
             if (barrierHealth <= 0)
             {
                 moveSpeed *= speedMultuplierOnBarrierBreak;
+                ASPD += AspdBonusOnBarrierBreak;
             }
         }
         else
@@ -56,7 +58,7 @@ public class Zealot : EnemyBase
     {
         Description = "";
         Skillset = ".";
-        TooltipsDescription = "Melee unit, attacks deal physical damage. <color=green>Has a barrier that absorbs damage</color>, and gains <color=yellow>greatly increased movespeed</color> when the barrier is destroyed. " +
+        TooltipsDescription = "Melee unit, attacks deal physical damage. <color=green>Has a barrier that absorbs damage</color>, and gains <color=yellow>greatly increased MSPD and ASPD</color> when the barrier is destroyed. " +
             "<color=yellow>If alerted early</color>, <color=red>forfeits</color> self barrier.";
 
         base.WriteStats();

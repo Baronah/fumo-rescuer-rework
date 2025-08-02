@@ -359,7 +359,7 @@ MonoBehaviour:
   lifeSteal: 0
   b_moveSpeed: 100
   b_attackRange: 110
-  b_attackSpeed: 0.52
+  b_attackWindupTime: 0.57
   b_attackInterval: 3
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
@@ -367,9 +367,10 @@ MonoBehaviour:
   atk: 0
   def: 0
   res: 0
+  ASPD: 100
   moveSpeed: 0
   attackRange: 0
-  attackSpeed: 0
+  attackWindupTime: 0
   attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
@@ -380,6 +381,7 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
+  preferredAttackAnimationSpeed: 0.9
   enemyCode: 0
   SpotPlayerUponSpawn: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
@@ -411,6 +413,7 @@ MonoBehaviour:
   barrierEffect: {fileID: 4804839738491929246}
   barrierMaxHealth: 100
   speedMultuplierOnBarrierBreak: 1.75
+  AspdBonusOnBarrierBreak: 50
 --- !u!4 &6717527081346786045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}

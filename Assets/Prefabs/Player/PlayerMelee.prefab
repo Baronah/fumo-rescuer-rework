@@ -151,7 +151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Size.y
-      value: 2.118847
+      value: 1.9094594
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Offset.x
@@ -159,7 +159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Offset.y
-      value: -0.527133
+      value: -0.63182676
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -316,10 +316,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Player Melee
   Icon: {fileID: 21300000, guid: 16d47974b79ddaf4886e53951e987eab, type: 3}
-  mHealth: 130
+  mHealth: 150
   bAtk: 25
-  bDef: 20
-  bRes: 0
+  bDef: 25
+  bRes: 5
   defPen: 0
   defIgn: 0
   resPen: 0
@@ -327,7 +327,7 @@ MonoBehaviour:
   lifeSteal: 0
   b_moveSpeed: 160
   b_attackRange: 65
-  b_attackSpeed: 0.27
+  b_attackWindupTime: 0.27
   b_attackInterval: 1
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
@@ -335,9 +335,10 @@ MonoBehaviour:
   atk: 0
   def: 0
   res: 0
+  ASPD: 100
   moveSpeed: 0
   attackRange: 0
-  attackSpeed: 0
+  attackWindupTime: 0
   attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
@@ -348,6 +349,7 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
+  preferredAttackAnimationSpeed: 1
   AttackSprite: {fileID: 21300000, guid: 5e9fff9c9ee420648814bec52663e5da, type: 3}
   SkillSprite: {fileID: 21300000, guid: 2cd0725c669411348bad0221fa86922b, type: 3}
   SpecialSprite: {fileID: 21300000, guid: f4cc7f8d6c0b92f46ab8ea53b4389fa0, type: 3}
@@ -361,11 +363,11 @@ MonoBehaviour:
   DashDuration: 0.08
   DashCooldown: 6
   SkillEffect: {fileID: 1110703362071332137}
-  SkillCooldown: 30
+  SkillCooldown: 27
   SkillDuration: 7
-  BurstHeal_HpPercentage: 0.25
+  BurstHeal_HpPercentage: 0.3
   HealPerSecond_HpPercentage: 0.06
   DefBoost: 2
   ResBoost: 20
-  AtkBoost: 0.35
+  AtkBoost: 0.4
   SpeedBoost: 0.35

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 213761766176105656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.76, y: -0.44, z: 0}
+  m_LocalPosition: {x: 2.5, y: -0.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91813abfb7646e4a8851021385bd3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Winterwisp Hound
+  Name: Hound
   Icon: {fileID: 21300000, guid: 1128aaa26d588e141b03539acc45f707, type: 3}
   mHealth: 80
   bAtk: 25
@@ -198,7 +198,7 @@ MonoBehaviour:
   lifeSteal: 0
   b_moveSpeed: 260
   b_attackRange: 60
-  b_attackSpeed: 0.4
+  b_attackWindupTime: 0.4
   b_attackInterval: 2
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
@@ -206,9 +206,10 @@ MonoBehaviour:
   atk: 0
   def: 0
   res: 0
+  ASPD: 100
   moveSpeed: 0
   attackRange: 0
-  attackSpeed: 0
+  attackWindupTime: 0
   attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
@@ -219,6 +220,7 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
+  preferredAttackAnimationSpeed: 0.9
   enemyCode: 0
   SpotPlayerUponSpawn: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
@@ -232,7 +234,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
-  pathfindingRadius: 500
+  pathfindingRadius: 800
   pathUpdateInterval: 0.5
   waypointReachDistance: 50
   showPathGizmos: 1
@@ -241,6 +243,6 @@ MonoBehaviour:
   cornerAvoidanceDistance: 50
   pathSmoothingLookahead: 2
   WaitTimes: []
-  OverridePositionCheckRadius: 25
-  MoveToOverridePositionSpeedMultiplier: 1.5
+  OverridePositionCheckRadius: 50
+  MoveToOverridePositionSpeedMultiplier: 1
   MoveToOverridePositionSpeedMultiplierJump: 0.35

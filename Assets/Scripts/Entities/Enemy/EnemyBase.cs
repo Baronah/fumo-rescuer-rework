@@ -260,34 +260,26 @@ public class EnemyBase : EntityBase
         if (!SpottedPlayer) return transform.position;
 
         Vector2 playerPos = SpottedPlayer.transform.position;
-        Vector2 enemyPos = transform.position;
+        Vector2 enemyPos = AttackPosition.position;
 
         switch (attackPattern)
         {
             case AttackPattern.MELEE:
-                // For melee, path close to player but maintain minimum distance
                 float distanceToPlayer = Vector2.Distance(enemyPos, playerPos);
-                if (distanceToPlayer <= MinimumDistanceFromPlayer)
-                {
-                    return enemyPos; // Stop moving if too close
-                }
+                if (distanceToPlayer <= attackRange * DangerRange_RatioOfAttackRange) return enemyPos;
 
-                // Target a position slightly away from the player to avoid getting too close
                 Vector2 dirToPlayer = (playerPos - enemyPos).normalized;
-                return playerPos - dirToPlayer * (MinimumDistanceFromPlayer * 0.8f);
+                return playerPos - dirToPlayer;
 
             case AttackPattern.RANGED:
-                // For ranged, try to maintain distance
                 bool PlayerIsNearby = DetectPlayer(DangerRange_RatioOfAttackRange * attackRange, false) != null;
                 if (PlayerIsNearby)
                 {
-                    // Move away from player
                     Vector2 dirAwayFromPlayer = (enemyPos - playerPos).normalized;
                     return enemyPos + dirAwayFromPlayer * (attackRange * 0.8f);
                 }
                 else
                 {
-                    // Move to optimal attack range
                     dirToPlayer = (playerPos - enemyPos).normalized;
                     return playerPos - dirToPlayer * (attackRange * 0.7f);
                 }
@@ -327,7 +319,7 @@ public class EnemyBase : EntityBase
                 }
             }
 
-            // If we've reached the end of path, check if we still need pathfinding
+            // Check if pathfinding still needed
             Vector2 finalTarget = GetUniversalDestination();
             Vector2 currentPos = transform.position;
             Vector2 dirToFinal = (finalTarget - currentPos).normalized;
@@ -417,7 +409,7 @@ public class EnemyBase : EntityBase
         lastPosition = currentPos;
 
         Vector3 destination = GetCurrentDestination();
-        Vector2 direction =  destination - transform.position;
+        Vector2 direction =  destination - (SpottedPlayer && !isUsingPathfinding ? AttackPosition.position : transform.position);
         float distanceToDestination = direction.magnitude;
 
         // Stop if we're very close to destination
@@ -622,14 +614,13 @@ public class EnemyBase : EntityBase
         if (IsAttackLocked || attackPattern == AttackPattern.NONE) yield break;
 
         StartCoroutine(base.Attack());
-        animator.SetTrigger("attack");
 
         if (attackPattern == AttackPattern.RANGED)
         {
             var target = SearchForNearestEntityAroundSelf(typeof(PlayerBase));
             FaceToward(target.transform.position);
 
-            yield return new WaitForSeconds(attackSpeed);
+            yield return new WaitForSeconds(GetWindupTime());
 
             if (target && !IsStunned && !IsFrozen)
             {
@@ -642,7 +633,7 @@ public class EnemyBase : EntityBase
         }
         else if (attackPattern == AttackPattern.MELEE)
         {
-            yield return new WaitForSeconds(attackSpeed);
+            yield return new WaitForSeconds(GetWindupTime());
 
             var target = SearchForNearestEntityAroundSelf(typeof(PlayerBase));
             if (target && !IsStunned && !IsFrozen) DealDamage(target, atk);
@@ -853,7 +844,7 @@ public class EnemyBase : EntityBase
         if (!isUsingPathfinding && SpottedPlayer && SpottedPlayer.IsAlive())
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, GetPathfindingTarget());
+            Gizmos.DrawLine(AttackPosition.position, GetPathfindingTarget());
         }
     }
 }

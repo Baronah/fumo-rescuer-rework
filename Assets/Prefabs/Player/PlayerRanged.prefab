@@ -488,6 +488,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5849699
+      objectReference: {fileID: 0}
+    - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.5846481
+      objectReference: {fileID: 0}
     - target: {fileID: 1929991105562868378, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -624,8 +632,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Player Ranged
   Icon: {fileID: 21300000, guid: 15ee98af90e40a74fb6b25aadaab346a, type: 3}
-  mHealth: 100
-  bAtk: 40
+  mHealth: 120
+  bAtk: 45
   bDef: 0
   bRes: 20
   defPen: 0
@@ -633,9 +641,9 @@ MonoBehaviour:
   resPen: 0
   resIgn: 0
   lifeSteal: 0
-  b_moveSpeed: 120
+  b_moveSpeed: 125
   b_attackRange: 420
-  b_attackSpeed: 1
+  b_attackWindupTime: 1
   b_attackInterval: 1.9
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
@@ -643,9 +651,10 @@ MonoBehaviour:
   atk: 0
   def: 0
   res: 0
+  ASPD: 100
   moveSpeed: 0
   attackRange: 0
-  attackSpeed: 0
+  attackWindupTime: 0
   attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
@@ -656,6 +665,7 @@ MonoBehaviour:
   ProjectileType: 0
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 0.85
+  preferredAttackAnimationSpeed: 0.88
   AttackSprite: {fileID: 21300000, guid: 1146632b55a73c34fa3b2bf1794f10ec, type: 3}
   SkillSprite: {fileID: 21300000, guid: 425d049a62ac11f4bbb9a798b005c93f, type: 3}
   SpecialSprite: {fileID: 21300000, guid: 0da9d9817e86b52448dcab10e8b6f47f, type: 3}

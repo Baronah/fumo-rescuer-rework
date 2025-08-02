@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -853,7 +853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -1644,9 +1644,12 @@ MonoBehaviour:
   - {fileID: 1769122952}
   - {fileID: 1258518569}
   InitWaittime: 60
-  enemyPrefab: 0
+  enemyPrefab: 1
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &246092506
 GameObject:
   m_ObjectHideFlags: 0
@@ -2170,9 +2173,12 @@ MonoBehaviour:
   - {fileID: 534101640}
   - {fileID: 2036250192}
   InitWaittime: 20
-  enemyPrefab: 2
+  enemyPrefab: 3
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &322805881
 GameObject:
   m_ObjectHideFlags: 0
@@ -3056,9 +3062,12 @@ MonoBehaviour:
   - {fileID: 2093159968}
   - {fileID: 808219158}
   InitWaittime: 60
-  enemyPrefab: 0
+  enemyPrefab: 1
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &475011122
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,9 +3563,12 @@ MonoBehaviour:
   - {fileID: 1443026899}
   - {fileID: 2119819353}
   InitWaittime: 20
-  enemyPrefab: 2
+  enemyPrefab: 3
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &526347202
 GameObject:
   m_ObjectHideFlags: 0
@@ -4136,7 +4148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -5858,16 +5870,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spotPlayerUponSpawn: 0
   immediateSpawn: 1
-  showTooltips: 0
-  InitTooltipsPriority: 0
+  showTooltips: 1
+  InitTooltipsPriority: 3
   enemyCheckpoints:
   - {fileID: 1299905720}
   - {fileID: 507426737}
   - {fileID: 157432710}
   InitWaittime: 60
-  enemyPrefab: 0
+  enemyPrefab: 1
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &783455211
 GameObject:
   m_ObjectHideFlags: 0
@@ -6259,7 +6274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -7506,9 +7521,12 @@ MonoBehaviour:
   - {fileID: 910560281}
   - {fileID: 1651181331}
   InitWaittime: 20
-  enemyPrefab: 2
+  enemyPrefab: 3
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &894824928
 GameObject:
   m_ObjectHideFlags: 0
@@ -9336,7 +9354,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1187058513}
   - {fileID: 1164907489}
   - {fileID: 1900104751}
   - {fileID: 1263795719}
@@ -9939,7 +9956,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1187058513}
   m_Layer: 0
-  m_Name: Matter_01_Spawnpoint (2)
+  m_Name: Knight_00_Spawnpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9960,7 +9977,7 @@ Transform:
   m_Children:
   - {fileID: 1675274549}
   - {fileID: 2071489301}
-  m_Father: {fileID: 1086873356}
+  m_Father: {fileID: 1864072365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1231733638
 GameObject:
@@ -11114,7 +11131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -11699,9 +11716,12 @@ MonoBehaviour:
   - {fileID: 1360602773}
   - {fileID: 1800806895}
   InitWaittime: 60
-  enemyPrefab: 0
+  enemyPrefab: 1
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &1427043669
 GameObject:
   m_ObjectHideFlags: 0
@@ -13516,13 +13536,16 @@ MonoBehaviour:
   spotPlayerUponSpawn: 0
   immediateSpawn: 1
   showTooltips: 1
-  InitTooltipsPriority: 3
+  InitTooltipsPriority: 4
   enemyCheckpoints:
   - {fileID: 2071489302}
   InitWaittime: 60
-  enemyPrefab: 0
+  enemyPrefab: 5
   Quantity: 1
   OffsetRadius: 0
+  TargetObjectsToInteract: []
+  OnEnemySpawn_Action: 0
+  OnEnemyDeath_Action: 0
 --- !u!1 &1691423949
 GameObject:
   m_ObjectHideFlags: 0
@@ -13679,6 +13702,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 90, y: 90}
   m_EdgeRadius: 0
+--- !u!4 &1714103001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2195118875966331418, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+  m_PrefabInstance: {fileID: 1783534585}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1760129267
 GameObject:
   m_ObjectHideFlags: 0
@@ -14131,34 +14159,145 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 909066021767371747, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2640
+      objectReference: {fileID: 0}
+    - target: {fileID: 909066021767371747, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -418
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: ShowcaseSize
+      value: 1050
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: extraEnemyWaittime
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: extraPlayerWaittime
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: Waittimes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: Waittimes.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: CameraShowcases.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: StageCompleteConditionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: CameraShowcases.Array.data[0]
+      value: 
+      objectReference: {fileID: 1714103001}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.data[1]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.data[2]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.data[3]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 948272968721532573, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: appearingEnemies.Array.data[4]
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1388245275714907927, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_text
-      value: "- Enemy spots you when you are within sight. \n\n- Obstacles can block
-        the enemy's view,\n but it won't be effective if you are too close to the
-        enemy. \n\n- Attacking an enemy without them noticing you will make\nthem
-        and nearby enemies rushing toward where the attack came from.\n\n- Enemies
-        who spotted you will no longer lose their trails, \nand can also alert nearby
-        enemies about your presence.\n"
+      value: 'Everyone has their weapons drawn.
+
+        They are definitely not
+        here to negotiate.
+
+
+        <b>Goal: <color=red>Eliminate all enemies</color></b>'
       objectReference: {fileID: 0}
     - target: {fileID: 2103956321432040019, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -289
+      value: -165
+      objectReference: {fileID: 0}
+    - target: {fileID: 2109709240132902021, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 990
+      objectReference: {fileID: 0}
+    - target: {fileID: 2109709240132902021, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -421
       objectReference: {fileID: 0}
     - target: {fileID: 2180949171452089868, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_Name
       value: EventSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 2195118875966331418, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2650
+      objectReference: {fileID: 0}
+    - target: {fileID: 2195118875966331418, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -421
+      objectReference: {fileID: 0}
+    - target: {fileID: 3097339220927656715, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: dc54bb0ca623bbd41a7cda8121ccc0e1, type: 3}
     - target: {fileID: 3097339220927656715, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4972510026905490036, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -73
+      value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016183214343049740, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -93
+      objectReference: {fileID: 0}
+    - target: {fileID: 5313589822600801233, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_text
+      value: '<b><size=120>FM-02</size></b>
+
+        Checker'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6452663143887662580, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2650
+      objectReference: {fileID: 0}
+    - target: {fileID: 6452663143887662580, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -421
       objectReference: {fileID: 0}
     - target: {fileID: 7647050747776623937, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 260.64328
+      objectReference: {fileID: 0}
+    - target: {fileID: 8891701975477234824, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 990
+      objectReference: {fileID: 0}
+    - target: {fileID: 8891701975477234824, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -421
       objectReference: {fileID: 0}
     - target: {fileID: 9119001943703513319, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14201,7 +14340,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 180239506880216909, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+    - {fileID: 1609874572630328744, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
@@ -14542,6 +14683,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1187058513}
   - {fileID: 708394049}
   - {fileID: 1086873356}
   - {fileID: 912476654}
@@ -15106,7 +15248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime
@@ -16979,7 +17121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: enemyPrefab
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2759397622582439361, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: InitWaittime

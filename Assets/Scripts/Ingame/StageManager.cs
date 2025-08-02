@@ -22,6 +22,12 @@ public class StageManager : MonoBehaviour
     [SerializeField] private TMP_Text LoadingState;
     [SerializeField] private CharacterPrefabsStorage prefabStorage;
 
+    
+    [SerializeField] private CameraMovement mainCamera;
+    [SerializeField] private float ShowcaseSize;
+    [SerializeField] private Transform[] CameraShowcases;
+    [SerializeField] private float[] Waittimes;
+
     [SerializeField] private Image PauseButton;
     [SerializeField] private Sprite PausedSprite, UnpausedSprite;
 
@@ -110,6 +116,7 @@ public class StageManager : MonoBehaviour
         Destroy(titleOverlay);
 
         Time.timeScale = 1f;
+        yield return StartCoroutine(mainCamera.MoveShowcases(ShowcaseSize, CameraShowcases, Waittimes));
 
         foreach (var item in enemySpawnpoints)
         {
@@ -117,7 +124,7 @@ public class StageManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(extraPlayerWaittime);
-        GetComponent<PlayerManager>().enabled = true;
+        playerManager.enabled = true;
         yield return null;
 
         OnStageReady();

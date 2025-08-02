@@ -117,7 +117,7 @@ public class PlayerRanged : PlayerBase
         
         animator.SetTrigger("attack");
 
-        yield return new WaitForSeconds(attackSpeed);
+        yield return new WaitForSeconds(GetWindupTime());
 
         if (target)
         {

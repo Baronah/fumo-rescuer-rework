@@ -62,9 +62,8 @@ public class PlayerBase : EntityBase
         if (!IsAlive() || IsAttackLocked) yield break;
         
         StartCoroutine(base.Attack());
-        animator.SetTrigger("attack");
 
-        yield return new WaitForSeconds(attackSpeed);
+        yield return new WaitForSeconds(GetWindupTime());
 
         var targets = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), AttackPosition.position, attackRange);
         foreach (var target in targets)
@@ -78,7 +77,11 @@ public class PlayerBase : EntityBase
 
     public override IEnumerator LockoutMovementsOnAttack()
     {
-        StartCoroutine(playerManager.AttackCooldown(attackInterval));
+        StartCoroutine(playerManager.AttackCooldown(Mathf.Max(
+                attackWindupTime,
+                attackInterval,
+                animator.GetCurrentAnimatorClipInfo(0).Length / preferredAttackAnimationSpeed / animator.GetFloat("a_speed_value"))
+            ));
         return base.LockoutMovementsOnAttack();
     }
 
@@ -91,7 +94,7 @@ public class PlayerBase : EntityBase
             SkillSprite = SkillSprite,
             SpecialSprite = SpecialSprite,
             attackRange = attackRange,
-            attackSpeed = attackSpeed,
+            attackSpeed = attackWindupTime,
             attackInterval = attackInterval,
             atk = atk,
             bAtk = bAtk,

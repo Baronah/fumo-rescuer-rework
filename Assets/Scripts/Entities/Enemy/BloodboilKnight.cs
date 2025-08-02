@@ -6,7 +6,7 @@ public class BloodboilKnight : EnemyBase
 {
     [SerializeField] GameObject SkillEffect;
     [SerializeField] private float atkAddPerEnemyKilled = 0.125f;
-    [SerializeField] private float aintRedPerEnemyKilled = 0.25f;
+    [SerializeField] private float aspdAddPerEnemyKilled = 10f;
     [SerializeField] private float mspdAddPerEnemyKilled = 0.125f;
     [SerializeField] private short maxStackCount = 10;
 
@@ -36,7 +36,7 @@ public class BloodboilKnight : EnemyBase
         
         stackCount++;
         atk += (short)(bAtk * atkAddPerEnemyKilled);
-        attackInterval -= aintRedPerEnemyKilled;
+        ASPD += aspdAddPerEnemyKilled;
         moveSpeed += (short)(b_moveSpeed * mspdAddPerEnemyKilled);
     }
 

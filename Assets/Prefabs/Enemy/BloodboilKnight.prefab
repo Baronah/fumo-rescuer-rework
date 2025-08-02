@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 619823447658869984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.71, y: -0.32, z: 0}
+  m_LocalPosition: {x: 3, y: 0.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -280,8 +280,8 @@ MonoBehaviour:
   Name: Bloodboil Knightclub Elite
   Icon: {fileID: 21300000, guid: 1b3a17e5494dfee41bfe6c97ac3389a2, type: 3}
   mHealth: 400
-  bAtk: 70
-  bDef: 40
+  bAtk: 60
+  bDef: 30
   bRes: 25
   defPen: 0
   defIgn: 0
@@ -289,8 +289,8 @@ MonoBehaviour:
   resIgn: 0
   lifeSteal: 0
   b_moveSpeed: 110
-  b_attackRange: 105
-  b_attackSpeed: 0.6
+  b_attackRange: 95
+  b_attackWindupTime: 0.6
   b_attackInterval: 3
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
@@ -298,9 +298,10 @@ MonoBehaviour:
   atk: 0
   def: 0
   res: 0
+  ASPD: 100
   moveSpeed: 0
   attackRange: 0
-  attackSpeed: 0
+  attackWindupTime: 0
   attackInterval: 0
   canRevive: 0
   isInvulnerable: 0
@@ -311,14 +312,15 @@ MonoBehaviour:
   ProjectileType: 1
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   preferredMoveAnimationPlaySpeed: 1
+  preferredAttackAnimationSpeed: 1
   enemyCode: 5
   SpotPlayerUponSpawn: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsPriority: 0
   TooltipsHoldtime: 6
   DetectionRange: -1
-  DangerRange_RatioOfAttackRange: 0.4
-  MinimumDistanceFromPlayer: 20
+  DangerRange_RatioOfAttackRange: 0.7
+  MinimumDistanceFromPlayer: 50
   showTooltips: 0
   gridCellSize: 30
   obstacleLayer:
@@ -338,7 +340,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   SkillEffect: {fileID: 9121667887855823670}
   atkAddPerEnemyKilled: 0.125
-  aintRedPerEnemyKilled: 0.25
+  aspdAddPerEnemyKilled: 10
   mspdAddPerEnemyKilled: 0.125
   maxStackCount: 10
 --- !u!4 &7211870446209438570 stripped
