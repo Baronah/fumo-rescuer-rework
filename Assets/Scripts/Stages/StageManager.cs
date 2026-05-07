@@ -56,6 +56,8 @@ public class StageManager : MonoBehaviour
 
     protected bool IsEnemyAlive => EntityManager.Enemies.Any(e => e && e.IsAlive()) || enemySpawnpoints.Any(e => !e.IsSpawnpointSpawned);
 
+    public bool DoNotShowSpawnsGraphic = false;
+
     public enum StageCompleteCondition
     {
         ELIMINATE_ALL_ENEMIES,
@@ -131,6 +133,7 @@ public class StageManager : MonoBehaviour
         EnableChallengeMode();
 
         enemySpawnpoints = FindObjectsOfType<EnemySpawnpointScript>(true).ToArray();
+
         playerManager = GetComponent<PlayerManager>();
 
         if (CharacterPrefabsStorage.EnableChallengeMode) LoadingState.transform.position += new Vector3(0, -50);
@@ -174,7 +177,7 @@ public class StageManager : MonoBehaviour
         "When a patrolling enemy is attacked, they and their nearby allies will try to rush toward where the attack came from (represented by the '?' symbol above them).",
         "Melee attack can be dodged by quickly moving out of the attacker's range.\nFor ranged attack, just dodge their projectiles.",
         "Enemies who have spotted you have a '!' symbol above them. If it turns red, it means you are inside their attack range.",
-        "DEF and RES reduce the respective damage type a unit receives by percentage.\n" +
+        "DEF and RES reduce the respective damage type a unit receives.\n" +
         "Every 1 DEF/RES reduces the amount of physical/magical damage by 1%, up to 95% and 90%, respectively.",
     };
 
@@ -555,16 +558,21 @@ public class StageManager : MonoBehaviour
     }
 
     bool IsTimeScaleZero => IsStagePaused || mainCamera.TriggerStopHit || playerManager.IsReadingSkillView || mapOverview.activeSelf || IsStageEndOverlayActive;
+    public void UpdateTimeScale()
+    {
+        Time.timeScale =
+            IsTimeScaleZero
+            ? 0f
+                : isSlowing
+                ? timeScaleSlow
+                    : 1f;
+    }
+
     public virtual void Update()
     {
         if (!IsStageReady) return;
 
-        Time.timeScale = 
-            IsTimeScaleZero
-            ? 0f 
-                : isSlowing 
-                ? timeScaleSlow 
-                    : 1f;
+        UpdateTimeScale();
 
         if (!PressedAnyKey && !IsStageStarted && Input.anyKeyDown)
         {
@@ -572,23 +580,32 @@ public class StageManager : MonoBehaviour
             StartCoroutine(TitleFadeOut());
         }
 
-        if (!IsStageStarted) return;
-
-        OnStageUpdate();
+        if (!PressedAnyKey) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePauseStage();
         }
-        else if (Input.GetKeyDown(InputManager.Instance.SlowKey))
+
+        if (!IsStageStarted) return;
+
+        OnStageUpdate();
+
+        if (Input.GetKeyDown(InputManager.Instance.SlowKey))
         {
-            isSlowing = !isSlowing;
-            SlowImg.color = isSlowing ? Color.white : new(0.15f, 0.15f, 0.15f);
+            ToggleSlowmo();
         }
         else if (Input.GetKeyDown(InputManager.Instance.ViewMapKey))
         {
             ViewMap();
         }
+    }
+
+    void ToggleSlowmo()
+    {
+        isSlowing = !isSlowing;
+        SlowImg.color = isSlowing ? Color.white : new(0.15f, 0.15f, 0.15f);
+        UpdateTimeScale();
     }
 
     private void ViewMap()
@@ -603,6 +620,8 @@ public class StageManager : MonoBehaviour
             mapOverview.SetActive(true);
             mapCamera.SetActive(true);
         }
+
+        UpdateTimeScale();
     }
 
     protected virtual void OnStageReady() { }
@@ -707,6 +726,8 @@ public class StageManager : MonoBehaviour
     }
     public virtual void OnStageEnd(ResultType resultType)
     {
+        Cursor.visible = true;
+
         UpdateEnemyCountUI();
 
         PauseButton.gameObject.SetActive(false);
@@ -851,6 +872,10 @@ public class StageManager : MonoBehaviour
         pauseOverlay.SetActive(IsStagePaused);
 
         PauseButton.sprite = IsStagePaused ? PausedSprite : UnpausedSprite;
+
+        Cursor.visible = IsStagePaused;
+
+        UpdateTimeScale();
     }
 
     public virtual void RetryStage()

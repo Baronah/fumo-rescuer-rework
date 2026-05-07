@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static LevelDifficultyModifier;
@@ -31,6 +28,8 @@ public class PlayerRanged : PlayerBase
     [SerializeField] private GameObject IllusionPrefab;
 
     [SerializeField] private AudioSource SkillSfx;
+    AudioSource ProjectileEnviEnhanceSfx => sfxs[4];
+    AudioSource ProjectileBounceSfx => sfxs[5];
 
     private bool CanUseSkill = true, IsSkillActive = false, CanUseFreeze = true;
 
@@ -48,6 +47,8 @@ public class PlayerRanged : PlayerBase
     short fixedUpdateCnt = 0;
     public override void FixedUpdate()
     {
+        BounceSfxTimeLockout -= Time.fixedUnscaledDeltaTime;
+        EnhanceSfxTimeLockout -= Time.fixedUnscaledDeltaTime;
         base.FixedUpdate();
 
         fixedUpdateCnt++;
@@ -182,41 +183,24 @@ public class PlayerRanged : PlayerBase
     {
         base.OnFieldEnter();
 
-        if (Skills.Contains(SkillTree_Manager.SkillName.MAJOR_DEBUT))
+        if (Skills.Contains(SkillTree_Manager.SkillName.SWAP_START_SPECIAL))
         {
             Debut = true;
             UseSpecial();
         }
     }
 
-    protected override void GetControlInputs()
+    public override void Action_Skill()
     {
         if (!IsAlive()) return;
 
-        if (Input.GetKeyDown(GlobalStageManager.AttackKey))
+        if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
         {
-            AttackCoroutine = StartCoroutine(Attack());
+            MakeVow(PlayerManager.SkillType.ULTIMATE);
         }
-        else if (Input.GetKeyDown(GlobalStageManager.SkillKey))
-        {
-            if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
-            {
-                MakeVow(PlayerManager.SkillType.ULTIMATE);
-            }
 
-            if (SkillCoroutine == null) UseSkill();
-            else CancelSkill();
-        }
-        else if (Input.GetKeyDown(GlobalStageManager.SpecialKey))
-        {
-            if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
-            {
-                MakeVow(PlayerManager.SkillType.SPECIAL);
-            }
-            UseSpecial();
-        }
-        else 
-            Move();
+        if (SkillCoroutine == null) UseSkill();
+        else CancelSkill();
     }
 
     protected override void GetVow()
@@ -448,7 +432,7 @@ public class PlayerRanged : PlayerBase
 
         if (Skills.Contains(SkillTree_Manager.SkillName.WINGED_STEPS_A))
         {
-            ApplyEffect(Effect.AffectedStat.MSPD, "WINGED_STEPS_A_MSPD_BUFF", 30f, 2f + GetWindupTime(), true, EffectPersistType.DECAY);
+            GetWingedStepMspdBuff();
         }
     }
 
@@ -457,6 +441,7 @@ public class PlayerRanged : PlayerBase
     [SerializeField] float FreezeChargeCDRefund = 0.15f, 
                            FreezeConductDebuff = 50f,
                            FreezeHoldMax = 5f;
+    [SerializeField] GameObject SuperConnductUI;
     public IEnumerator CastFreeze()
     {
         if (!IsAlive() || !CanUseFreeze || IsFrozen || IsStunned) yield break;
@@ -491,13 +476,12 @@ public class PlayerRanged : PlayerBase
                 FreezeDurationMin
                 : 
                 Mathf.Lerp(FreezeDurationMin, FreezeDurationMax, MinDistanceForFreezeDuration * 1.0f / distance);
+            
             ApplyFreeze(enemy, freezeDuration);
 
             if (Skills.Contains(SkillTree_Manager.SkillName.FREEZE_SUPERCONDUCT))
             {
-                float debuffDuration = enemy.FreezeTimer + 2f;
-                enemy.ApplyEffect(Effect.AffectedStat.DEF, "FREEZE_SUPERCONDUCT_DEF_DEBUFF", -FreezeConductDebuff, debuffDuration, true);
-                enemy.ApplyEffect(Effect.AffectedStat.RES, "FREEZE_SUPERCONDUCT_RES_DEBUFF", -FreezeConductDebuff, debuffDuration, true);
+                ApplySuperConduct(enemy);
             }
 
             if (Skills.Contains(SkillTree_Manager.SkillName.WINDBLOW_NORTH))
@@ -508,10 +492,10 @@ public class PlayerRanged : PlayerBase
                     :
                     Mathf.Lerp(0.12f, 0.23f, MinDistanceForFreezeDuration * 1.0f / distance);
 
-                PushEntityFrom(enemy, AttackPosition.transform, 1.8f, pushDuration);
+                PushEntityFrom(enemy, AttackPosition.transform, 2.3f, pushDuration);
             }
             else if (Skills.Contains(SkillTree_Manager.SkillName.WINDBLOW_SOUTH))
-                PullEntityTowards(enemy, AttackPosition.transform, 2.1f, 0.2f);
+                PullEntityTowards(enemy, AttackPosition.transform, 2.6f, 0.2f);
 
             InitialHitDictionary.Add(e, freezeDuration);
         }
@@ -566,6 +550,25 @@ public class PlayerRanged : PlayerBase
         animator.SetTrigger("skill_end");
         if (Skills.Contains(SkillTree_Manager.SkillName.FREEZE_BLOOM))
             playerManager.ChainFreeze(InitialHitDictionary, FreezeRange, FreezeDurationMin, FreezeDurationMax, MinDistanceForFreezeDuration);
+    }
+
+    void ApplySuperConduct(EntityBase enemy)
+        => StartCoroutine(ApplySuperConductCoroutine(enemy));
+
+    IEnumerator ApplySuperConductCoroutine(EntityBase enemy)
+    {
+        yield return null;
+
+        float bonusDuration = Mathf.Min(enemy.FreezeTimer * 0.5f, 2f);
+        float debuffDuration = enemy.FreezeTimer + bonusDuration;
+        enemy.ApplyEffect(Effect.AffectedStat.DEF, "FREEZE_SUPERCONDUCT_DEF_DEBUFF", -FreezeConductDebuff, debuffDuration, true);
+        enemy.ApplyEffect(Effect.AffectedStat.RES, "FREEZE_SUPERCONDUCT_RES_DEBUFF", -FreezeConductDebuff, debuffDuration, true);
+
+        if (enemy.IsFrozen)
+        {
+            GameObject sp = Instantiate(SuperConnductUI, enemy.transform.position + new Vector3(50, 70), Quaternion.identity, enemy.transform);
+            sp.GetComponent<UI_SuperConduct>().Inititialize(enemy, "FREEZE_SUPERCONDUCT_DEF_DEBUFF");
+        }
     }
 
     float GetFreezeRingScale()
@@ -933,6 +936,24 @@ public class PlayerRanged : PlayerBase
         freezeCooldownTimer = FreezeCooldown;
         skillCooldownTimer = SkillCooldown;
         base.MintRevive();
+    }
+
+    private float EnhanceSfxTimeLockout = 0f;
+    public void ProjectileEnvironmentEnhanceCallback()
+    {
+        if (EnhanceSfxTimeLockout > 0) return;
+        
+        ProjectileEnviEnhanceSfx.Play();
+        EnhanceSfxTimeLockout = 0.5f;
+    }
+
+    private float BounceSfxTimeLockout = 0f;
+    public void ProjectileBounceCallback()
+    {
+        if (BounceSfxTimeLockout > 0) return;
+        
+        ProjectileBounceSfx.Play();
+        BounceSfxTimeLockout = 0.5f;
     }
 
     public override PlayerTooltipsInfo GetPlayerTooltipsInfo()

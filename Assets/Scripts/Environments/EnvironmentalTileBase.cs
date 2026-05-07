@@ -6,7 +6,9 @@ using static StageManager;
 public class EnvironmentalTileBase : MonoBehaviour
 {
     [SerializeField] protected float Interval = 1.0f;
+    
     protected List<EntityBase> entitiesWithin = new List<EntityBase>();
+    List<EntityBase> entitiesWithinClone;
 
     public virtual EnvironmentType GetEnvironmentType() => EnvironmentType.KEYS;
 
@@ -27,7 +29,9 @@ public class EnvironmentalTileBase : MonoBehaviour
             yield return new WaitForSeconds(Interval);
 
             entitiesWithin.RemoveAll(e => !e || !e.IsAlive());
-            entitiesWithin.ForEach(e =>
+            
+            entitiesWithinClone = new(entitiesWithin);
+            entitiesWithinClone.ForEach(e =>
             {
                 OnEntityStay(e);
             });

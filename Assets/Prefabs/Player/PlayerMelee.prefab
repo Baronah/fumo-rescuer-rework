@@ -5918,12 +5918,13 @@ MonoBehaviour:
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   SettleSwappedInPlayer: 0
   ObstacleLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1792
   AttackSprite: {fileID: 21300000, guid: 5e9fff9c9ee420648814bec52663e5da, type: 3}
   SkillSprite: {fileID: 21300000, guid: 2cd0725c669411348bad0221fa86922b, type: 3}
   SpecialSprite: {fileID: 21300000, guid: f4cc7f8d6c0b92f46ab8ea53b4389fa0, type: 3}
@@ -5945,6 +5946,7 @@ MonoBehaviour:
   WindAnthemAspdBuffCap: 72
   AllowVow: {fileID: 8793346564079435933}
   RockPickEffect: {fileID: 2065466168563246693, guid: e5f5c8d983ad1e441a274419c9f3738f, type: 3}
+  UltimateShockwaveEffect: {fileID: 848363566047558353, guid: f612ed0de3bf7c94fabe91665976febb, type: 3}
   heavyHitterMaxTimer: 10
   IllusionPrefab: {fileID: 7614525393990378507, guid: c6fa58abea2ebf043a4612afde7194bd, type: 3}
   AfterimagePrefabs: {fileID: 8715830305643004679, guid: 25e5cb859428c344dbe7ba0856015cef, type: 3}

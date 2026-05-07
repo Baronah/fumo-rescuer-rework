@@ -159,10 +159,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -345,7 +345,9 @@ MonoBehaviour:
   InitDelay: 0
   spotPlayerUponSpawn: 0
   immediateSpawn: 1
+  isBound: 0
   showTooltips: 0
+  isInsignificant: 0
   InitTooltipsPriority: 0
   enemyCheckpoints:
   - {fileID: 3657888462369445159}
@@ -362,6 +364,9 @@ MonoBehaviour:
   OnEnemySpawn_Action: 0
   OnEnemyDeath_Action: 0
   UsedByChallengeMode: 0
+  ShowSpawnpointIndicator: 1
+  SpawnpointIndicatorGraphicPrefab: {fileID: 7842996029418349917, guid: 77e8065c6d1abb84380fd788ddc80386, type: 3}
+  OnValueSetToTrue_Spawn: 1
 --- !u!61 &4389550498355865362
 BoxCollider2D:
   m_ObjectHideFlags: 0

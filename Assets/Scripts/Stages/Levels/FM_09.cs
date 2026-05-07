@@ -61,6 +61,7 @@ public class FM_09 : StageManager
     }
 
     float modifySpawnTimer = 0;
+    bool enabledLaterSpawn = false;
     public override void Update()
     {
         if (stageTimer >= targetTimer) return;
@@ -81,15 +82,24 @@ public class FM_09 : StageManager
 
         modifySpawnTimer += Time.deltaTime;
 
-        if (stageTimer >= laterSpawnsActivateTimegate && !laterSpawn.activeSelf)
+        if (stageTimer >= laterSpawnsActivateTimegate && !enabledLaterSpawn)
         {
-            laterSpawn.SetActive(true);
+            EnableLaterSpawn();
         }
 
         if (modifySpawnTimer >= modifySpawnInterval)
         {
             ModifySpawnRate();
         }
+    }
+
+    void EnableLaterSpawn()
+    {
+        if (enabledLaterSpawn) return;
+        
+        enabledLaterSpawn = true;
+        var list = laterSpawn.GetComponentsInChildren<EndlessEnemySpawn>();
+        foreach (EndlessEnemySpawn e in list) e.OnValueSetToTrue_Spawn = true;
     }
 
     short modifySpawnCount = 0;

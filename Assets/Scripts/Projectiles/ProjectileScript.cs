@@ -32,13 +32,6 @@ public class ProjectileScript : MonoBehaviour
     private void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
-
-        var sfxs = GetComponents<AudioSource>();
-        float volume = GlobalStageManager.GetSFX();
-        foreach (var sfx in sfxs)
-        {
-            sfx.volume = volume;
-        }
     }
 
     public enum ProjectileType

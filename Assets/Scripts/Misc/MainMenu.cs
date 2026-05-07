@@ -34,6 +34,8 @@ public class MainMenu : MonoBehaviour
     private static bool firstTimeBootup = true;
     private void Awake()
     {
+        GlobalStageManager.ResumeNormalVariables();
+
         DvdTitleToggle.isOn = SaveDataManager.UseDVDTittleSettings;
         DvdTitleToggle.onValueChanged.AddListener((v) => SaveDataManager.SetDdTitleSettings(v, Title.gameObject));
         MintArknightsToggle.isOn = SaveDataManager.HasMintInTitle;
@@ -207,7 +209,11 @@ public class MainMenu : MonoBehaviour
                 ResolutionTxt.text = "1920 x 1080";
                 break;
             case 3:
-                Screen.SetResolution(Screen.width, Screen.height, true);
+                float aspectRatio = 16f / 9f;
+                int width = Screen.currentResolution.width;
+                int height = Mathf.RoundToInt(width / aspectRatio);
+
+                Screen.SetResolution(width, height, true);
                 ResolutionTxt.text = "Full-screen";
                 break;
         }

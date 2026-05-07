@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Sentinel : EnemyBase
 {
-    [SerializeField] public float SpeedBuffOnAlert = 1.35f;
-    [SerializeField] public float AtkBuffOnAlert = 1.2f;
+    [SerializeField] public float SpeedBuffOnAlert = 0.35f;
+    [SerializeField] public float AtkBuffOnAlert = 0.2f;
     [SerializeField] private GameObject DetectCircle;
 
     private RectTransform DetectCircleRectTransform;
@@ -44,6 +44,7 @@ public class Sentinel : EnemyBase
         if (alarmed) return;
 
         alarmed = true;
+
         animator.SetTrigger("skill");
         StartCoroutine(ExpandDetectCircle());
 
@@ -54,8 +55,8 @@ public class Sentinel : EnemyBase
         {
             if (enemy != this && enemy.IsAlive())
             {
-                enemy.moveSpeed *= SpeedBuffOnAlert;
-                enemy.atk = (short)(enemy.atk * AtkBuffOnAlert);
+                enemy.ApplyEffect(Effect.AffectedStat.MSPD, "SENTINEL_ALARM_MSPD_" + gameObject.GetInstanceID(), SpeedBuffOnAlert * 100f, 9999f, true);
+                enemy.ApplyEffect(Effect.AffectedStat.ATK, "SENTINEL_ALARM_ATK_" + gameObject.GetInstanceID(), AtkBuffOnAlert * 100f, 9999f, true);
             }
         });
     }
@@ -76,16 +77,19 @@ public class Sentinel : EnemyBase
             yield return null;
         }
 
-        DetectCircle.transform.localScale = finalScale * 5f; 
+        DetectCircle.transform.localScale = finalScale * 5f;
+
+        ApplyEffect(Effect.AffectedStat.ARNG, "ALARM_DETECTION", 15000f, 9999f, false);
+        CanDetectThroughWalls = true;
     }
 
     public override void WriteStats()
     {
         Description = "They are responsible for scouting, patrolling, and issuing early warnings to the entire squad. Once spotting intruder, the Herald will immediately issue a warning that spread to the entire army.";
         Skillset = 
-            "• Unable to attack.\n" +
-            "• Upon spotting the player, raises an alarm that increases the ATK and MSPD of all presenting enemies, " +
-            "and makes them to also spot the player immediately.";
+            "• Does not attack, but has a large detection range.\n" +
+            "• Upon spotting the player, raises an alarm that alerts all presenting enemies and increases their ATK and MSPD.\n" +
+            "• Detection range becomes global after the alarm is raised.";
         TooltipsDescription = "Does not attack. Upon spotting the player, <color=red>alerts</color> all other enemies who haven't spotted them, increasing their ATK and movespeed.";
 
         base.WriteStats();

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RockGachaSkill : MonoBehaviour
 {
@@ -11,5 +10,10 @@ public class RockGachaSkill : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = skillImage[skillNames.IndexOf(skillName)];
+    }
+
+    public Sprite GetSkillImage(SkillTree_Manager.SkillName skillName)
+    {
+        return skillImage[skillNames.IndexOf(skillName)];
     }
 }

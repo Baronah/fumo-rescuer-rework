@@ -17,6 +17,8 @@ public class GlobalStageManager
 
     public static void OnStageStart()
     {
+        Cursor.visible = false;
+
         SFX = SaveDataManager.GetSFXVolume();
         BGM = SaveDataManager.GetBGMVolume();
 
@@ -28,5 +30,11 @@ public class GlobalStageManager
         ViewInfoKey = InputManager.Instance.ViewInfoKey;
         SwapInfoKey = InputManager.Instance.SwapInfoKey;
         ViewMapKey = InputManager.Instance.ViewMapKey;
+    }
+
+    public static void ResumeNormalVariables()
+    {
+        Cursor.visible = true;
+        Time.timeScale = 1f;
     }
 }

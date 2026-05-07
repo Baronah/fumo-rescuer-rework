@@ -29,8 +29,15 @@ public class FM_10 : StageManager
     [SerializeField] Tilemap bg1, bg2;
     void OnAssassinSkillTrigger()
     {
-        activateStatue.SetActive(true);
-        if (spawnSudaram) activateSudaram.SetActive(true);
+        activateStatue.GetComponentInChildren<EnemySpawnpointScript>().OnValueSetToTrue_Spawn = true;
+        if (spawnSudaram)
+        {
+            var sudarams = activateSudaram.GetComponentsInChildren<EnemySpawnpointScript>();
+            foreach (var s in sudarams)
+            {
+                s.OnValueSetToTrue_Spawn = true;
+            }
+        }
         StartCoroutine(TilemapDarkens());
     }
 

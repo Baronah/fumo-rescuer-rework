@@ -3,13 +3,21 @@ using UnityEngine;
 
 public class Matterllurgist : EnemyBase
 {
+    [SerializeField] GameObject EnhanceEffect;
+
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        EnhanceEffect.SetActive(gainedASPD && IsAlive());
+    }
+
     bool gainedASPD = false;
     public override void OnFirsttimePlayerSpot(bool viaAlert = false)
     {
         base.OnFirsttimePlayerSpot(viaAlert);
         if (viaAlert && !gainedASPD)
         {
-            ASPD += 200f;
+            ApplyEffect(Effect.AffectedStat.ASPD, "ALERT_SELF_ASPD_BUFF", 200f, 9999f, false);
             gainedASPD = true;
         }
     }

@@ -5,23 +5,23 @@ using static StageManager;
 
 public class CasterProjectileScript : ProjectileScript
 {
-    [SerializeField] private AudioSource bounceSFX, enviSFX;
     private bool fieldExpertEnabled = false;
 
     private HashSet<EnvironmentType> contactedEnvironmentType = new();
     
     PlayerManager playerManager;
+    PlayerRanged caster;
     void GetFieldExpert()
     {
-        PlayerRanged player = ProjectileFirer ? ProjectileFirer.GetComponent<PlayerRanged>() : null;
-        PlayerCasterIllusion playerCasterIllusion = ProjectileFirer && !player ? ProjectileFirer.GetComponent<PlayerCasterIllusion>() : null;
+        caster = ProjectileFirer ? ProjectileFirer.GetComponent<PlayerRanged>() : null;
+        PlayerCasterIllusion playerCasterIllusion = ProjectileFirer && !caster ? ProjectileFirer.GetComponent<PlayerCasterIllusion>() : null;
 
         fieldExpertEnabled =
-            (player && player.Skills.Contains(SkillTree_Manager.SkillName.SPIRAL_FIELD_EXPERT))
+            (caster && caster.Skills.Contains(SkillTree_Manager.SkillName.SPIRAL_FIELD_EXPERT))
             ||
             (playerCasterIllusion && playerCasterIllusion.FieldExpert);
 
-        playerManager = player ? player.getPlayerManager : playerCasterIllusion ? playerCasterIllusion.playerManager : null;
+        playerManager = caster ? caster.getPlayerManager : playerCasterIllusion ? playerCasterIllusion.playerManager : null;
     }
 
     public override void ShootTowards(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)
@@ -117,7 +117,7 @@ public class CasterProjectileScript : ProjectileScript
                     value = 1.25f;
                     if (ragingTerrain) value *= 2;
 
-                    target.ApplyEffect(Effect.AffectedStat.ARNG, "DARK_ZONE_CASTER_HIT_DEBUFF", -99f, value, true);
+                    target.ApplyEffect(Effect.AffectedStat.ARNG, "BLINDESS", -99f, value, true);
                     break;
             }
         }
@@ -142,19 +142,15 @@ public class CasterProjectileScript : ProjectileScript
         Acceleration = 0;
 
         ShootTowards(reflected, ProjectileType.CATCH_FIRST_TARGET_OF_TYPE, Mathf.Max(Lifespan, 5f), true, initTarget.GetGenericType());
-        if (bounceSFX && b_audioPlayLockout <= 0f)
+        if (caster)
         {
-            bounceSFX.Play();
-            b_audioPlayLockout = 1f;
+            caster.ProjectileBounceCallback();
         }
     }
 
-    private static float b_audioPlayLockout = 0f, e_audioPlayLockout = 0f;
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (b_audioPlayLockout > 0) b_audioPlayLockout -= Time.fixedUnscaledDeltaTime;
-        if (e_audioPlayLockout > 0) e_audioPlayLockout -= Time.fixedUnscaledDeltaTime;
     }
 
     public override void HandleHit(GameObject other)
@@ -232,10 +228,9 @@ public class CasterProjectileScript : ProjectileScript
 
         trail.enabled = true;
 
-        if (enviSFX && e_audioPlayLockout <= 0f)
+        if (caster)         
         {
-            enviSFX.Play();
-            e_audioPlayLockout = 1f;
+            caster.ProjectileEnvironmentEnhanceCallback();
         }
     }
 }

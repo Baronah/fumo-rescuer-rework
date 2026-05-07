@@ -877,6 +877,7 @@ public class ShroudedAssassin : EnemyBase
         Description = "Assassin who has abandoned his name and covered his face. Behind that pall is a burning fanaticism and a destined fate.";
         
         Skillset =
+            $"• Any damage received that is not from the target for [Feud Bonding] is greatly reduced.\n\n" +
             $"• [Feud Bonding] Receiving damage from the player unit builds up \"Feud\" on them (has a limit). Self takes reduced damage from the attacker based on how much \"Feud\" they have built up, up to {MaxDamageReduction * 100}%. " +
             "Gains greatly increased MSPD when the target has their \"Feud\" maxed out.\n\n" +
             "• [Silencer] Receving damage increases ATK (stacks to a limit) and shortens the cool-down of the next [Pack Up] and [Wrapped Shroud] use. " +

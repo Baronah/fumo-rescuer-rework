@@ -102,6 +102,7 @@ public class LevelSelectionScript : MonoBehaviour
 
     private void Start()
     {
+        GlobalStageManager.ResumeNormalVariables();
         SaveDataManager.GetAllCompletedLevels();
 
         FindAnyObjectByType<SkillTree_Manager>(FindObjectsInactive.Include).GetPlayerProgress();
@@ -117,7 +118,6 @@ public class LevelSelectionScript : MonoBehaviour
             }
         }
 
-        Time.timeScale = 1f;
         AssignLevels();
         UpdateStartingPlayerIcon();
 

@@ -53,16 +53,40 @@ public class EnemySpawnpointScript : MonoBehaviour
     protected bool Spawned = false;
     public bool IsSpawnpointSpawned => Spawned;
 
+    public bool ShowSpawnpointIndicator = true;
+    [SerializeField] GameObject SpawnpointIndicatorGraphicPrefab;
+    List<GameObject> SpawnpointIndicatorGraphics = new();
+
+    bool CanSpawn => !Spawned || (RepeatedSpawn && doSpawnEnemy);
+
     private void Awake()
     {
         stageManager = FindObjectOfType<StageManager>(true);
-        SpawnPositions = transform.Find("Spawnposition").GetComponentsInChildren<Transform>();
+        if (stageManager.DoNotShowSpawnsGraphic) ShowSpawnpointIndicator = false;
+
+        GetSpawnPositions();
     }
 
+    public bool OnValueSetToTrue_Spawn = true;
     private void Start()
     {
+        StartCoroutine(WaitUntilSpawnValueIsTrue_ThenSpawn());
+    }
+
+    IEnumerator WaitUntilSpawnValueIsTrue_ThenSpawn()
+    {
+        yield return new WaitUntil(() => OnValueSetToTrue_Spawn);
         if (immediateSpawn)
             StartCoroutine(SpawnEnemy());
+    }
+
+    private void Update()
+    {
+        bool activeStatus = ShowSpawnpointIndicator && CanSpawn;
+        foreach (var sp in SpawnpointIndicatorGraphics)
+        {
+            if (sp) sp.SetActive(activeStatus);
+        }
     }
 
     public void OnStageStart(float extraWaittime = 0)
@@ -211,7 +235,7 @@ public class EnemySpawnpointScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (immediateSpawn || Spawned) return;
+        if (immediateSpawn || Spawned || !OnValueSetToTrue_Spawn) return;
 
         if (other.CompareTag("Player"))
         {
@@ -226,7 +250,7 @@ public class EnemySpawnpointScript : MonoBehaviour
         if (!this.gameObject) return 0;
 
         if (!stageManager) stageManager = FindObjectOfType<StageManager>(true);
-        SpawnPositions ??= transform.Find("Spawnposition").GetComponentsInChildren<Transform>();
+        GetSpawnPositions();
 
         if (!doSpawnEnemy || SpawnPositions == null || IsNotAccountForCounter()) return 0;
         
@@ -234,6 +258,21 @@ public class EnemySpawnpointScript : MonoBehaviour
 
         if (Spawned) return SpawnEnemies.Count(e => e.IsAlive() && !e.IsInsignificant);
         return SpawnPositions.Length * Quantity;
+    }
+
+    void GetSpawnPositions()
+    {
+        if (SpawnPositions != null) return;
+
+        Transform SpawnPosition = transform.Find("Spawnposition");
+        SpawnPositions = SpawnPosition.GetComponentsInChildren<Transform>();
+
+        if (!doSpawnEnemy || !ShowSpawnpointIndicator) return;
+        foreach (var sp in SpawnPositions)
+        {
+            GameObject graphic = Instantiate(SpawnpointIndicatorGraphicPrefab, sp.position, Quaternion.identity, sp);
+            SpawnpointIndicatorGraphics.Add(graphic);
+        }
     }
 }
 

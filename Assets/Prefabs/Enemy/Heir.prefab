@@ -291,8 +291,8 @@ MonoBehaviour:
   lifeSteal: 0.9
   b_moveSpeed: 90
   b_attackRange: 30
-  b_attackWindupTime: 0.1
-  b_attackInterval: 0.13
+  b_attackWindupTime: 0.09
+  b_attackInterval: 0.14
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 60
@@ -329,7 +329,7 @@ MonoBehaviour:
   AttackAnimation: {fileID: 7400000, guid: 0ecc7133e5b0a254b963f364657db491, type: 2}
   sfxs:
   - {fileID: 7424751633068628821}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -340,6 +340,7 @@ MonoBehaviour:
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 3780482149273082054}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 4

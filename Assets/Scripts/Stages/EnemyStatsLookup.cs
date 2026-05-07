@@ -166,7 +166,6 @@ public static class EnemyStatsLookup
                     enemy.mHealth = 200;
                     enemy.bDef /= 2;
                     enemy.bRes = 0;
-                    sud.originiumPollutionDamageMultiplier = 0.5f;
                     hasChanged = true;
                 }
                 break;

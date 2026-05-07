@@ -136,7 +136,7 @@ public class PlayerMelee : PlayerBase
     public override void OnFieldEnter()
     {
         base.OnFieldEnter();
-        if (Skills.Contains(SkillTree_Manager.SkillName.MAJOR_DEBUT))
+        if (Skills.Contains(SkillTree_Manager.SkillName.SWAP_START_SPECIAL))
         {
             Debut = true;
             UseSpecial();
@@ -148,38 +148,6 @@ public class PlayerMelee : PlayerBase
         }
 
         if (!playerManager.FirstBlackFlash) UpgradeBlackflash();
-    }
-
-    protected override void GetControlInputs()
-    {
-        if (!IsAlive()) return;
-
-        if (Input.GetKeyDown(GlobalStageManager.AttackKey))
-        {
-            AttackCoroutine = StartCoroutine(Attack());
-        }
-        else if (Input.GetKeyDown(GlobalStageManager.SkillKey))
-        {
-            if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
-            {
-                MakeVow(SkillType.ULTIMATE);
-            }
-
-            UseSkill();
-        }
-        else if (Input.GetKeyDown(GlobalStageManager.SpecialKey))
-        {
-            if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
-            {
-                MakeVow(SkillType.SPECIAL);
-            }
-
-            UseSpecial();
-        }
-        else
-        {
-            Move();
-        }
     }
 
     protected override void GetVow()
@@ -215,8 +183,8 @@ public class PlayerMelee : PlayerBase
             ResBoost += 10;
             SpeedBoost += 0.15f;
 
-            ApplyEffect(Effect.AffectedStat.DEF, "VOW_DEF_BUFF", 10f, 9999f, true, EffectPersistType.PERSIST, false);
-            ApplyEffect(Effect.AffectedStat.RES, "VOW_RES_BUFF", 10f, 9999f, true, EffectPersistType.PERSIST, false);
+            ApplyEffect(Effect.AffectedStat.DEF, "VOW_DEF_BUFF", 10f, 9999f, false, EffectPersistType.PERSIST, false);
+            ApplyEffect(Effect.AffectedStat.RES, "VOW_RES_BUFF", 10f, 9999f, false, EffectPersistType.PERSIST, false);
             ApplyEffect(Effect.AffectedStat.ASPD, "VOW_ASPD_BUFF", 15f, 9999f, false, EffectPersistType.PERSIST, false);
 
             PullRadius += 100f;
@@ -408,14 +376,7 @@ public class PlayerMelee : PlayerBase
                     }
                     else if (Skills.Contains(SkillTree_Manager.SkillName.DASH_LETHAL))
                     {
-                        foreach (EntityBase enemy in enemies)
-                        {
-                            if (!enemy || !enemy.IsAlive() || EnemyHitByDash.Contains(enemy)) continue;
-
-                            DealDamage(enemy, (int)(atk * Up_DashDamageScale), 0, 0);
-                            PushEntityFrom(enemy, movementInputs, 5f, DashDuration - dashTime, false);
-                            EnemyHitByDash.Add(enemy);
-                        }
+                        ProcessDashDamageUpgrade(enemies, movementInputs, dashTime);
                     }
                 }
 
@@ -430,15 +391,7 @@ public class PlayerMelee : PlayerBase
             if (Skills.Contains(SkillTree_Manager.SkillName.DASH_LETHAL))
             {
                 var enemies = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), transform.position, 60f, true);
-
-                foreach (EntityBase enemy in enemies)
-                {
-                    if (!enemy || !enemy.IsAlive() || EnemyHitByDash.Contains(enemy)) continue;
-
-                    DealDamage(enemy, atk, 0, 0);
-                    PushEntityFrom(enemy, transform, 3f, 0.1f);
-                    EnemyHitByDash.Add(enemy);
-                }
+                ProcessDashDamageUpgrade(enemies, movementInputs);
             }
             yield return null;
         }
@@ -450,6 +403,18 @@ public class PlayerMelee : PlayerBase
         rb2d.velocity = Vector2.zero;
         IsDashing = false;
         if (EnemyHitByDash.Count > 0) EnemyHitByDash.Clear();
+    }
+
+    void ProcessDashDamageUpgrade(List<EntityBase> enemies, Vector3 movementInputs, float dashTime = 0.1f)
+    {
+        foreach (EntityBase enemy in enemies)
+        {
+            if (!enemy || !enemy.IsAlive() || EnemyHitByDash.Contains(enemy)) continue;
+
+            DealDamage(enemy, (int)(atk * Up_DashDamageScale), 0, 0);
+            PushEntityFrom(enemy, movementInputs, 5f, DashDuration - dashTime, false);
+            EnemyHitByDash.Add(enemy);
+        }
     }
 
     void SpawnIllusion(bool extendingDash = false)
@@ -504,7 +469,7 @@ public class PlayerMelee : PlayerBase
             if (sfxs[0]) sfxs[0].Play();
             if (Skills.Contains(SkillTree_Manager.SkillName.WINGED_STEPS_A))
             {
-                ApplyEffect(Effect.AffectedStat.MSPD, "WINGED_STEPS_A_MSPD_BUFF", 30f, 2f + GetWindupTime(), true, EffectPersistType.DECAY);
+                GetWingedStepMspdBuff();
             }
             if (Skills.Contains(SkillTree_Manager.SkillName.WIND_ANTHEM)) ReduceSpecialCooldown(IsWindAnthemMaxed ? 1.5f : 0.75f);
         }
@@ -683,7 +648,7 @@ public class PlayerMelee : PlayerBase
         var enemies = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), transform.position, PullRadius, true);
         foreach (EntityBase enemy in enemies)
         {
-            PullEntityTowards(enemy, transform, 3f, 0.13f);
+            PullEntityTowards(enemy, transform, 3.6f, 0.13f);
             enemy.ApplyEffect(Effect.AffectedStat.MSPD, "JUGGERNAUNT_PULL_DEBUFF_MSPD", -PullDebuffValue, 1.25f, true);
             enemy.ApplyEffect(Effect.AffectedStat.ASPD, "JUGGERNAUNT_PULL_DEBUFF_ASPD", -PullDebuffValue, 1.25f, false);
         }

@@ -59,10 +59,15 @@ public class PlayerBase : EntityBase
     {
         if (IsComponentsInitialized) return;
         ObstacleLayers = LayerMask.GetMask("Obstacle", "OnedirectionalPassage", "Border");
+
         stageManager = FindObjectOfType<StageManager>();
         stageManager.OnPlayerSpawn(this);
 
+        playerManager = FindObjectOfType<PlayerManager>();
+        playerManager.Register(this);
+
         GetSkillTreeEffects();
+
         HH_Effect_parent.SetActive(Skills.Contains(SkillTree_Manager.SkillName.HEAVY_HITTER));
         WindanthemSlider = WindanthemBar.GetComponentInChildren<Slider>();
         WindanthemCounter = WindanthemBar.GetComponentInChildren<TMP_Text>();
@@ -70,12 +75,8 @@ public class PlayerBase : EntityBase
         base.InitializeComponents();
         TransformFeetposition = transform.Find("Feetposition");
 
-        playerManager = FindObjectOfType<PlayerManager>();
-        playerManager.Register(this);
-
         SetInvulnerable(1f);
 
-        OnFieldEnter();
         IsComponentsInitialized = true;
     }
 
@@ -111,7 +112,7 @@ public class PlayerBase : EntityBase
     void WindBladeBuff()
     {
         w_countUp += Time.fixedDeltaTime;
-        if (w_countUp < 0.2f) return;
+        if (w_countUp < 0.15f) return;
         w_countUp = 0;
 
         if (!Skills.Contains(SkillTree_Manager.SkillName.WINGED_STEPS_B)) return;
@@ -120,10 +121,13 @@ public class PlayerBase : EntityBase
             ? 0 
             : (moveSpeed - b_moveSpeed) / (b_moveSpeed * 0.01f);
 
-        if (amount > 0) ApplyEffect(Effect.AffectedStat.ASPD, "WIND_BLADE_BUFF", amount * 0.7f, 0.2f, false);
+        if (amount > 0) ApplyEffect(Effect.AffectedStat.ASPD, "WIND_BLADE_BUFF", amount * 0.7f, 0.15f, false);
     }
 
     float i_countUp = 0;
+    readonly float i_UltimateRefundBase = 0.03f, i_SpecialRefundBase = 0.05f;
+    bool previouslyMoving = true;
+    short i_ContiuousCounter = 0;
     void IdeasBuff()
     {
         i_countUp += Time.fixedDeltaTime;
@@ -134,33 +138,66 @@ public class PlayerBase : EntityBase
         if (!Skills.Contains(SkillTree_Manager.SkillName.WINGED_STEPS_C)) return;
         
         bool isMoving = rb2d.velocity.magnitude > 0.1f;
+        if (isMoving == previouslyMoving) i_ContiuousCounter = (short) Mathf.Min(i_ContiuousCounter + 1, 3);
+        else i_ContiuousCounter = 0;
+
         if (isMoving)
         {
-            ReduceUltimateCooldown(interval * 0.03f, CooldownReductionType.PERCENTAGE_FULL);
+            float reduceAmount = interval * (i_UltimateRefundBase * (1f + 0.5f * i_ContiuousCounter));
+            ReduceUltimateCooldown(reduceAmount, CooldownReductionType.PERCENTAGE_CURRENT);
         }
         else
         {
-            ReduceSpecialCooldown(interval * 0.05f, CooldownReductionType.PERCENTAGE_FULL);
+            float reduceAmount = interval * (i_SpecialRefundBase * (1f + 0.5f * i_ContiuousCounter));
+            ReduceSpecialCooldown(reduceAmount, CooldownReductionType.PERCENTAGE_CURRENT);
         }
+
+        previouslyMoving = isMoving;
     }
 
     float a_countUp = 0;
+    bool hasDamageReductionBuffFromAttentionMaxed = false,
+         hasLifestealBuffFromAttentionMin = false;
     void AttentionBuff()
     {
         a_countUp += Time.fixedDeltaTime;
         if (a_countUp < 0.2f) return;
         a_countUp = 0;
 
-        if (health > mHealth * 0.8f && Skills.Contains(SkillTree_Manager.SkillName.ATTENTION_BOOK))
+        if (health < mHealth && hasDamageReductionBuffFromAttentionMaxed)
         {
-            ApplyEffect(Effect.AffectedStat.ATK, "ATTENTION_BUFF", 25, 0.25f, true);
-            ApplyEffect(Effect.AffectedStat.ASPD, "ATTENTION_BUFF", 30, 0.25f, true);
+            hasDamageReductionBuffFromAttentionMaxed = false;
+            damageReduction -= 90;
+        }
+
+        if (health > mHealth * 0.3f && hasLifestealBuffFromAttentionMin)
+        {
+            hasLifestealBuffFromAttentionMin = false;
+            lifeSteal -= 0.35f;
+        }
+
+        if (health >= mHealth * 0.85f && Skills.Contains(SkillTree_Manager.SkillName.ATTENTION_BOOK))
+        {
+            ApplyEffect(Effect.AffectedStat.ATK, "ATTENTION_BUFF", 30, 0.22f, true);
+            ApplyEffect(Effect.AffectedStat.ASPD, "ATTENTION_BUFF", 20, 0.22f, true);
+
+            if (health >= mHealth && !hasDamageReductionBuffFromAttentionMaxed)
+            {
+                hasDamageReductionBuffFromAttentionMaxed = true;
+                damageReduction += 90;
+            }
         }
         
         if (health <= mHealth * 0.6f && Skills.Contains(SkillTree_Manager.SkillName.ATTENTION_DEVICE))
         {
-            ApplyEffect(Effect.AffectedStat.DEF, "ATTENTION_BUFF", 35, 0.25f, false);
-            ApplyEffect(Effect.AffectedStat.RES, "ATTENTION_BUFF", 25, 0.25f, false);
+            ApplyEffect(Effect.AffectedStat.DEF, "ATTENTION_BUFF", 30, 0.22f, false);
+            ApplyEffect(Effect.AffectedStat.RES, "ATTENTION_BUFF", 20, 0.22f, false);
+
+            if (health <= mHealth * 0.3f && !hasLifestealBuffFromAttentionMin)
+            {
+                hasLifestealBuffFromAttentionMin = true;
+                lifeSteal += 0.35f;
+            }
         }
     }
 
@@ -176,7 +213,7 @@ public class PlayerBase : EntityBase
         }
     }
 
-
+    readonly string StartMspdBuffKey = "SWAP_START_MSPDBUFF";
     public virtual void OnFieldEnter()
     {
         short diff = (short)(CharacterPrefabsStorage.DifficultyLevel - 1);
@@ -185,6 +222,7 @@ public class PlayerBase : EntityBase
         if (diff >= (int) DiffType.Player1HP && playerManager.IsFirstTimeStageEnter)
         {
             SetHealth(1);
+            StartCoroutine(HealingEffectivenessDebuff());
             playerManager.IsFirstTimeStageEnter = false;
         }
 
@@ -194,6 +232,25 @@ public class PlayerBase : EntityBase
             Heal((mHealth - health) * 0.3f);
             ApplyEffect(Effect.AffectedStat.ATK, "SWAP_START_ATKBUFF", 75f, 5f, true, EffectPersistType.PERSIST);
         }
+
+        if (Skills.Contains(SkillTree_Manager.SkillName.SWAP_START_MSPD))
+        {
+            ApplyEffect(Effect.AffectedStat.MSPD, StartMspdBuffKey, 50f, 9999f, true, EffectPersistType.PERSIST, false);
+        }
+    }
+
+    IEnumerator HealingEffectivenessDebuff()
+    {
+        HealingEffectiveness -= 0.9f;
+        
+        int loop = 80;
+        float add = 0.9f / loop;
+
+        for (int i = 0; i < loop; i++)
+        {
+            yield return new WaitForSeconds(0.5f);
+            HealingEffectiveness += add;
+        }
     }
 
     IEnumerator DifficultModifierNegativeStatus(short diff)
@@ -201,6 +258,7 @@ public class PlayerBase : EntityBase
         if (diff < (int)DiffType.PlayerFieldDebuff_1) yield break;
 
         if (diff == (int)DiffType.PlayerFieldDebuff_1) yield return new WaitForSeconds(10f);
+        else yield return new WaitForSeconds(5f);
 
         float c = 0, d = 40f;
         while (c < d)
@@ -241,7 +299,7 @@ public class PlayerBase : EntityBase
     protected bool Debut = false;
     protected virtual IEnumerator SpecialLockout()
     {
-        if (!Debut && !FireWorkStarted && Skills.Contains(SkillTree_Manager.SkillName.MAJOR_DEBUT))
+        if (!Debut && !FireWorkStarted && Skills.Contains(SkillTree_Manager.SkillName.SWAP_START_SPECIAL))
             StartCoroutine(FireWork_Special());
         yield return null;
     }
@@ -258,12 +316,14 @@ public class PlayerBase : EntityBase
         SkillTree_Manager.SkillName.WINGED_STEPS_B,
         SkillTree_Manager.SkillName.WINGED_STEPS_C,
         SkillTree_Manager.SkillName.SWAP_START_ATK,
-        SkillTree_Manager.SkillName.MAJOR_DEBUT,
+        SkillTree_Manager.SkillName.SWAP_START_SPECIAL,
+        SkillTree_Manager.SkillName.SWAP_START_MSPD,
         SkillTree_Manager.SkillName.BREAK_THE_ICE,
         SkillTree_Manager.SkillName.CERTAIN_FATES,
         SkillTree_Manager.SkillName.BUBBLE_ARTS,
         SkillTree_Manager.SkillName.HEAVY_HITTER,
         SkillTree_Manager.SkillName.SPECIAL_MSPD,
+        SkillTree_Manager.SkillName.ULTIMATE_BUFF,
         SkillTree_Manager.SkillName.EQUIPMENT_SCOPE,
         SkillTree_Manager.SkillName.EQUIPMENT_PROVISIONS,
         SkillTree_Manager.SkillName.EQUIPMENT_BLADE,
@@ -279,6 +339,8 @@ public class PlayerBase : EntityBase
     {
         var SelectedSkills = CharacterPrefabsStorage.Skills.Keys.ToList();
 
+        RockGachaSkill rockGacha = RockPickEffect.GetComponent<RockGachaSkill>();
+
         if (SelectedSkills.Contains(SkillTree_Manager.SkillName.A_NICE_LOOKING_ROCK))
         {
             RockBonusSkill.RemoveAll(s => SelectedSkills.Contains(s));
@@ -289,7 +351,13 @@ public class PlayerBase : EntityBase
                 SelectedSkills.Add(bonusSkill);
 
                 GameObject o = Instantiate(RockPickEffect, transform.position + new Vector3(0, 100), Quaternion.identity, transform);
-                o.GetComponent<RockGachaSkill>().SetSkill(bonusSkill);
+                RockGachaSkill thisRock = o.GetComponent<RockGachaSkill>();
+                thisRock.SetSkill(bonusSkill);
+
+                playerManager.PlayerInvoke_SetSkillUI(
+                    bonusSkill,
+                    thisRock.GetSkillImage(bonusSkill),
+                    new Color(0f, 1f, 0.67f));
             }
         }
 
@@ -305,7 +373,7 @@ public class PlayerBase : EntityBase
                     break;
 
                 case SkillTree_Manager.SkillName.WINGED_STEPS_B:
-                    b_moveSpeed += b_moveSpeed * 0.1f;
+                    ApplyEffect(Effect.AffectedStat.MSPD, "WINGED_STEPS_B_BUFF", 10f, 9999f, true, EffectPersistType.PERSIST);
                     break;
 
                 case SkillTree_Manager.SkillName.EQUIPMENT_BLADE:
@@ -356,6 +424,14 @@ public class PlayerBase : EntityBase
         }
 
         canVow = Skills.Contains(SkillTree_Manager.SkillName.KNOTS);
+
+        if (playerManager && playerManager.MintBlessing)
+        {
+            playerManager.PlayerInvoke_SetSkillUI(
+                SkillTree_Manager.SkillName.AMULET, 
+                rockGacha.GetSkillImage(SkillTree_Manager.SkillName.AMULET),
+                new Color(0, 0.8f, 1f));
+        }
     }
 
     public virtual void OnFieldSwapOut(PlayerBase swapInPlayer)
@@ -378,6 +454,11 @@ public class PlayerBase : EntityBase
         swapInPlayer.specialCastCount = specialCastCount;
 
         swapInPlayer.SettleSwappedInPlayer = true;
+
+        foreach (var skill in Skills)
+        {
+            playerManager.PlayerInvoke_RemoveSkillUI(skill);
+        }
     }
 
     protected override float GetRegenAmount()
@@ -386,7 +467,7 @@ public class PlayerBase : EntityBase
         float provisionAdd = 0;
         if (Skills.Contains(SkillTree_Manager.SkillName.EQUIPMENT_PROVISIONS))
         {
-            provisionAdd = mHealth * 0.01f + (mHealth - health) * 0.025f;
+            provisionAdd = mHealth * 0.01f + (mHealth - health) * 0.02f;
         }
 
         return regenAmount + provisionAdd;
@@ -405,10 +486,13 @@ public class PlayerBase : EntityBase
 
         playerManager.SetSealSkill(this, seal);
         GameObject vowEffect = Instantiate(VowEffect, transform.position + new Vector3(0, 100), Quaternion.identity, transform);
-        
+        SpriteRenderer vowEffectSp = vowEffect.GetComponent<SpriteRenderer>();
+
         Color vowColor = GetVowEffectColor(skillType);
-        vowEffect.GetComponent<SpriteRenderer>().color = vowColor;
+        vowEffectSp.color = vowColor;
         vowEffect.GetComponentInChildren<Image>().color = new Color(vowColor.r, vowColor.g, vowColor.b, 0.7f);
+
+        playerManager.PlayerInvoke_SetSkillUI(SkillTree_Manager.SkillName.KNOTS, vowEffectSp.sprite, vowColor); 
 
         GetVow();
     }
@@ -446,9 +530,50 @@ public class PlayerBase : EntityBase
 
         if (Input.GetKeyDown(GlobalStageManager.AttackKey))
         {
-            StartCoroutine(Attack());
+            Action_Attack();
         }
-        else Move();
+        else if (Input.GetKeyDown(GlobalStageManager.SkillKey))
+        {
+            Action_Skill();
+        }
+        else if (Input.GetKeyDown(GlobalStageManager.SpecialKey))
+        {
+            Action_Special();
+        }
+        else
+        {
+            Move();
+        }
+    }
+
+    public virtual void Action_Attack()
+    {
+        if (!IsAlive()) return;
+        AttackCoroutine = StartCoroutine(Attack());
+    }
+
+    public virtual void Action_Skill()
+    {
+        if (!IsAlive()) return;
+
+        if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
+        {
+            MakeVow(PlayerManager.SkillType.ULTIMATE);
+        }
+
+        UseSkill();
+    }
+
+    public virtual void Action_Special()
+    {
+        if (!IsAlive()) return;
+
+        if (Skills.Contains(SkillTree_Manager.SkillName.KNOTS) && !playerManager.hasVowed)
+        {
+            MakeVow(PlayerManager.SkillType.SPECIAL);
+        }
+
+        UseSpecial();
     }
 
     short specialCastCount = 0;
@@ -462,9 +587,29 @@ public class PlayerBase : EntityBase
         }
     }
 
+    [SerializeField] GameObject UltimateShockwaveEffect;
     public virtual void UseSkill()
     {
+        if (Skills.Contains(SkillTree_Manager.SkillName.ULTIMATE_BUFF))
+        {
+            float range = Mathf.Max(attackRange, 300f);
 
+            var enemies = SearchForEntitiesAroundSelf(typeof(EnemyBase),range, true);
+            foreach (var enemy in enemies)
+            {
+                if (!enemy || !enemy.IsAlive()) continue;
+                enemy.ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_ENEMY_DEBUFF", -90f, 2f, true, EffectPersistType.DECAY);
+                PushEntityFrom(enemy, transform.position, 3.6f, 0.15f, true);
+            }
+
+            GameObject vfx = Instantiate(UltimateShockwaveEffect, transform.position, Quaternion.identity, transform);
+            vfx.transform.localScale *= range / 300f;
+            Destroy(vfx, 1f);
+
+            ApplyEffect(Effect.AffectedStat.ATK, "ULTIMATE_ATK_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+            ApplyEffect(Effect.AffectedStat.ASPD, "ULTIMATE_ASPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+            ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_MSPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+        }
     }
 
     public override void Move()
@@ -573,6 +718,8 @@ public class PlayerBase : EntityBase
     {
         base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
 
+        if (damage.TotalDamage > 0) RemoveEffect(StartMspdBuffKey);
+
         if (source && !isInvulnerable && !IgnoreInvulnerability)
         {
             float strengthLevel = damage.TotalDamage * 1.0f / (mHealth * 0.5f);
@@ -589,11 +736,32 @@ public class PlayerBase : EntityBase
         return multiplier;
     }
 
+    protected void GetWingedStepMspdBuff()
+    {
+        float baseValue = 25f, jumpValue = 20f;
+        string key = "WINGED_STEPS_A_MSPD_BUFF";
+        if (MspdBuffs.ContainsKey(key) && MspdBuffs[key].IsInEffect)
+        {
+            float newValue = MspdBuffs[key].Value + jumpValue;
+
+            ApplyEffect(
+                Effect.AffectedStat.MSPD, 
+                key,
+                Mathf.Max(baseValue, newValue), 
+                3, 
+                true, 
+                EffectPersistType.DECAY);
+        }
+        else
+        {
+            ApplyEffect(Effect.AffectedStat.MSPD, key, baseValue, 3, true, EffectPersistType.DECAY);
+        }
+    }
+
     protected bool IsHeavyHitterMaxed =>
         Skills.Contains(SkillTree_Manager.SkillName.HEAVY_HITTER)
         &&
         timerSinceLastAttack >= heavyHitterMaxTimer;
-
 
     readonly HashSet<EntityBase> Levitated = new();
     public override void DealDamage(EntityBase target, float pDmg, float mDmg, float tDmg, bool allowWhenDisabled = false, ProjectileScript projectileInfo = null)
@@ -668,6 +836,7 @@ public class PlayerBase : EntityBase
         Heal(mHealth * 0.52f, healThroughDead: true);
 
         playerManager.MintBlessingRevival();
+        playerManager.PlayerInvoke_RemoveSkillUI(SkillTree_Manager.SkillName.AMULET);
         SetInvulnerable(1.52f);
 
         Instantiate(RockEffect, transform.position, Quaternion.identity);

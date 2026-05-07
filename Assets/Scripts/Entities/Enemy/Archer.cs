@@ -58,7 +58,7 @@ public class Archer : EnemyBase
     {
         Description = "A crossbowman that is adept at hiding in the darkness and assassinating their targets with special bolts.";
         Skillset = "• The first attack deals greatly increased damage. This effect is slowly recharged while not attacking.";
-        TooltipsDescription = "Seasoned archer that can perform long-range shots. The first attack made has greatly increased ATK.";
+        TooltipsDescription = "Seasoned archer that can perform long-range shots. The first attack made deals greatly increased damage.";
 
         base.WriteStats();
     }

@@ -123,7 +123,16 @@ public class EntityBase : MonoBehaviour
 
     protected GameObject ShadowSprite;
 
-    public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
+    public SpriteRenderer GetSpriteRenderer()
+    {
+        if (!spriteRenderer) 
+        {
+            Transform Sprite = transform.Find("Sprite");
+            spriteRenderer = Sprite.GetComponent<SpriteRenderer>();
+        } 
+        
+        return spriteRenderer;
+    }
 
     protected bool useTransformAsAttackPosition = false;
     protected Vector3 PrevPosition;
@@ -133,7 +142,8 @@ public class EntityBase : MonoBehaviour
     public bool IsMovementLocked => MovementLockout > 0 || IsFrozen || IsStunned;
     public bool IsAttackLocked => AttackLockout > 0 || IsFrozen || IsStunned;
 
-    public bool IsBeingShifted = false;
+    public short BeingShiftState = 0;
+    public bool IsBeingShifted => BeingShiftState > 0;
 
     private bool TriggeredOnDeath = false;
 
@@ -155,7 +165,7 @@ public class EntityBase : MonoBehaviour
     protected Coroutine AttackCoroutine = null, LockoutMovementOnAttackCoroutine = null;
     protected Animation attackAnimation;
 
-    protected bool IsComponentsInitialized = false;
+    public bool IsComponentsInitialized = false;
 
     public Dictionary<string, Effect>
                     AtkBuffs = new(),
@@ -240,6 +250,7 @@ public class EntityBase : MonoBehaviour
         InitializeComponents();
     }
 
+    GameObject BlindnessEffect;
     RectTransform GravityCircle;
     readonly bool absolutism = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ABSOLUTISM);
     readonly bool statis = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.STATIS);
@@ -279,6 +290,8 @@ public class EntityBase : MonoBehaviour
             StatisObj = StatisTransform.gameObject;
             StatisObj.SetActive(statis);
         }
+
+        BlindnessEffect = transform.Find("Blindness").gameObject;
 
         health = mHealth;
         atk = bAtk;
@@ -369,6 +382,7 @@ public class EntityBase : MonoBehaviour
         RegenCount();
         UpdateCooldowns();
         UpdateEffectDurations();
+        UpdateUI();
 
         BDB_Cnt++;
         if (BDB_Cnt >= 10) CalculateBuffsAndDebuffs();
@@ -379,6 +393,20 @@ public class EntityBase : MonoBehaviour
 
         if (!IsStunned && IsBeingLevitated && EndLevitateCoroutine == null)
             EndLevitateCoroutine = StartCoroutine(EndLevitate());
+    }
+
+    short BlindnessUIUpdateCnt = 7;
+    public virtual void UpdateUI()
+    {
+        BlindnessUIUpdateCnt++;
+
+        if (BlindnessUIUpdateCnt >= 7)
+        {
+            BlindnessUIUpdateCnt = 0;
+
+            string BlindKey = "BLINDNESS";
+            BlindnessEffect.SetActive(IsAlive() && ArngDebuffs.ContainsKey(BlindKey) && ArngDebuffs[BlindKey].IsInEffect);
+        }
     }
 
     // use negative values for debuffs
@@ -1512,6 +1540,14 @@ public class EntityBase : MonoBehaviour
         StartCoroutine(StartAttackLockout(999));
         StartCoroutine(EndLevitate());
 
+        foreach (var entity in currentlyShiftedEntities)
+        {
+            if (!entity) continue;
+
+            entity.BeingShiftState--;
+            if (entity.rb2d) entity.rb2d.velocity = Vector2.zero;
+        }
+
         if (EntityManager)
         {
             EntityManager.OnEntityDeath(this.gameObject);
@@ -1625,7 +1661,7 @@ public class EntityBase : MonoBehaviour
         Heal(amount, this, healThroughDead);
     }
 
-    protected float HealingEffectiveness = 1f;
+    [SerializeField] protected float HealingEffectiveness = 1f;
     public virtual void Heal(float amount, EntityBase target, bool healThroughDead = false, bool displayMsg = true)
     {
         if (!target || amount <= 0 || (!target.IsAlive() && !healThroughDead)) return;
@@ -1675,11 +1711,26 @@ public class EntityBase : MonoBehaviour
         => StartCoroutine(ApplyForceCoroutine(targetEntity, sourcePosition.position, pushForce, duration, false, hasReferencePosition, cancelAction));
 
     public void PullEntityTowards(EntityBase targetEntity, Vector3 targetPosition, float pullForce, float duration, bool hasReferencePosition = true, bool cancelAction = true)
-    => StartCoroutine(ApplyForceCoroutine(targetEntity, targetPosition, pullForce, duration, true, hasReferencePosition, cancelAction));
+        => StartCoroutine(ApplyForceCoroutine(targetEntity, targetPosition, pullForce, duration, true, hasReferencePosition, cancelAction));
 
     public void PushEntityFrom(EntityBase targetEntity, Vector3 sourcePosition, float pushForce, float duration, bool hasReferencePosition = true, bool cancelAction = true)
         => StartCoroutine(ApplyForceCoroutine(targetEntity, sourcePosition, pushForce, duration, false, hasReferencePosition, cancelAction));
 
+    public static int GetConversionWeight(short inWeight)
+    {
+        return inWeight switch
+        {
+            0 => 0,
+            1 => 1,
+            2 => 3,
+            3 => 5,
+            4 => 7,
+            5 => 10,
+            6 => 14,
+            _ => inWeight * 7 / 3 + 1,
+        };
+    }
+    
     private List<EntityBase> currentlyShiftedEntities = new();
     private IEnumerator ApplyForceCoroutine(EntityBase targetEntity, Vector3 referencePosition, float force, float duration, bool isPull, bool hasReferencePosition = true, bool cancelAction = true)
     {
@@ -1687,12 +1738,15 @@ public class EntityBase : MonoBehaviour
 
         float ForceValue = force * duration / 0.03f;
         
-        float ForceValueAfterWeight = ForceValue - targetEntity.weight;
+        float ForceValueAfterWeight = ForceValue - GetConversionWeight(targetEntity.weight);
         if (!cancelAction) ForceValueAfterWeight = ForceValue;
 
-        if (ForceValueAfterWeight <= 0.5f) yield break;
+        if (ForceValueAfterWeight <= 0.4f) yield break;
 
-        if (targetEntity is EnemyBase e) e.StopObstacleIgnore();
+        if (targetEntity is EnemyBase e)
+        {
+            e.StopObstacleIgnore();
+        }
 
         bool ShiftDoesDamage = this is PlayerBase b && targetEntity != this && b.Skills.Contains(SkillTree_Manager.SkillName.CERTAIN_FATES);
 
@@ -1705,7 +1759,8 @@ public class EntityBase : MonoBehaviour
             targetEntity.CancelAttack();
             StartCoroutine(targetEntity.StartMovementLockout(duration + 0.1f));
         }
-        targetEntity.IsBeingShifted = true;
+
+        targetEntity.BeingShiftState++;
         currentlyShiftedEntities.Add(targetEntity);
 
         float elapsedTime = 0f;
@@ -1773,13 +1828,12 @@ public class EntityBase : MonoBehaviour
 
             if (ShiftDoesDamage)
             {
-                float damage = ForceValueAfterWeight * 0.75f;
-                if (isPull) damage *= 0.65f;
+                float damage = ForceValueAfterWeight * 0.85f;
+                if (isPull) damage *= 0.7f;
 
                 DealDamage(targetEntity, new DamageInstance(0, (int)damage, 0));
             }
 
-            targetEntity.IsBeingShifted = true;
             lastDistance = currentDistance;
             elapsedTime += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
@@ -1787,7 +1841,7 @@ public class EntityBase : MonoBehaviour
 
         // Ensure entity stops at the end
         if (targetEntity.rb2d) targetEntity.rb2d.velocity = Vector2.zero;
-        targetEntity.IsBeingShifted = false;
+        targetEntity.BeingShiftState--;
         currentlyShiftedEntities.Remove(targetEntity);
     }
 
@@ -1795,9 +1849,9 @@ public class EntityBase : MonoBehaviour
     {
         foreach (var entity in currentlyShiftedEntities)
         {
-            if (!entity) continue; 
-            
-            entity.IsBeingShifted = false;
+            if (!entity) continue;
+
+            entity.BeingShiftState--;
             if (entity.rb2d) entity.rb2d.velocity = Vector2.zero;
         }
     }

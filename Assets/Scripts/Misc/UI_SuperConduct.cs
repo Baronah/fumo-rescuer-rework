@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,20 +10,21 @@ public class UI_SuperConduct : MonoBehaviour
 
     bool Initialized = false;
     public void Inititialize(EntityBase target, string key)
+        => StartCoroutine(WaitOneFrameThenInitialize(target, key));
+
+    IEnumerator WaitOneFrameThenInitialize(EntityBase target, string key)
     {
+        yield return null;
         Target = target;
         Key = key;
 
-        if (!DebuffInEffect) Destroy(gameObject);
-        else Initialized = true;
+        Initialized = true;
     }
 
-    bool DebuffInEffect => Target.DefDebuffs.ContainsKey(Key) && Target.DefDebuffs[Key].IsInEffect;
+    bool DebuffInEffect => Target.IsAlive() && Target.DefDebuffs.ContainsKey(Key) && Target.DefDebuffs[Key].IsInEffect;
     private void Update()
     {
         if (!Initialized) return;
         if (!DebuffInEffect) Destroy(gameObject);
-
-        transform.position = Target.transform.position + Vector3.up * 50f;
     }
 }

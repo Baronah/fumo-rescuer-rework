@@ -6,10 +6,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using TMPro;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.UI;
 using static EntityBase;
 using static LevelDifficultyModifier;
+using static PlayerToxicSmoke;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -160,6 +162,25 @@ public class PlayerManager : MonoBehaviour
             mainCamera.UpdatePlayerMovement(player.transform);
         }
 
+        UpdateSwapUI();
+        UpdateUpgradeBar();
+
+        if (Input.GetKeyDown(GlobalStageManager.PlayerSwapKey) && CanSwapPlayer)
+        {
+            SwapPlayer();
+        }
+        else if (Input.GetKeyDown(GlobalStageManager.ViewInfoKey))
+        {
+            ViewSkill();
+        }
+        else if (Input.GetKeyDown(GlobalStageManager.SwapInfoKey))
+        {
+            SwapView();
+        }
+    }
+
+    void UpdateSwapUI()
+    {
         for (int i = 0; i < SwapStacksImg.Length; ++i)
         {
             Image image = SwapStacksImg[i];
@@ -182,24 +203,67 @@ public class PlayerManager : MonoBehaviour
             if (SwapOverflowTimer >= SwapCooldown)
             {
                 SwapOverflowTimer = 0;
-                SwapStacks = (short) Mathf.Min(SwapStacks + 1, SwapMaxStacks);
+                SwapStacks = (short)Mathf.Min(SwapStacks + 1, SwapMaxStacks);
             }
         }
         else SwapOverflowTimer = 0;
-        
-        SwapReadyEffect.SetActive(CanSwapPlayer);
 
-        if (Input.GetKeyDown(GlobalStageManager.PlayerSwapKey) && CanSwapPlayer)
+        SwapReadyEffect.SetActive(CanSwapPlayer);
+    }
+
+    public void PlayerInvoke_SetSkillUI(SkillTree_Manager.SkillName name, Sprite sprite, Color color)
+    {
+        if (StatusesUI.ContainsKey(name)) return;
+
+        GameObject upgradeUI = Instantiate(UpgradeUIPrefab, StatusBarUI.transform);
+        Image[] upgradeImages = upgradeUI.GetComponentsInChildren<Image>();
+        foreach (var img in upgradeImages)
         {
-            SwapPlayer();
+            img.sprite = sprite;
+            img.color = color;
         }
-        else if (Input.GetKeyDown(GlobalStageManager.ViewInfoKey))
+
+        StatusesUI.Add(name, upgradeUI);
+
+        barUpdateCounter = 999;
+        UpdateUpgradeBar();
+    }
+
+    public void PlayerInvoke_RemoveSkillUI(SkillTree_Manager.SkillName name)
+    {
+        if (!StatusesUI.ContainsKey(name) || name == SkillTree_Manager.SkillName.KNOTS) return;
+        Destroy(StatusesUI[name]);
+        StatusesUI.Remove(name);
+
+        barUpdateCounter = 999;
+        UpdateUpgradeBar();
+    }
+
+    [SerializeField] GameObject StatusBarUI, UpgradeUIPrefab;
+    Dictionary<SkillTree_Manager.SkillName, GameObject> StatusesUI = new();
+    
+    short barUpdateCounter = 0;
+    void UpdateUpgradeBar()
+    {
+        barUpdateCounter++;
+        if (barUpdateCounter < 6) return;
+        barUpdateCounter = 0;
+
+        List<GameObject> Statuses = StatusesUI.Values.ToList();
+        if (Statuses.Count <= 0) return;
+
+        Vector3 position = Vector3.zero;
+        int mid = Statuses.Count / 2;
+        float offset = 150f;
+
+        for (int i = 0; i < StatusesUI.Count; ++i)
         {
-            ViewSkill();
-        }
-        else if (Input.GetKeyDown(GlobalStageManager.SwapInfoKey))
-        {
-            SwapView();
+            GameObject upgrade = Statuses[i];
+            
+            position = new Vector3(offset * (i - mid), 0, 0);
+            if (StatusesUI.Count % 2 == 0) position.x += offset / 2;
+
+            upgrade.transform.localPosition = position;
         }
     }
 
@@ -214,7 +278,6 @@ public class PlayerManager : MonoBehaviour
             SwapCooldown *= mul;
             swapCooldownTimer *= mul;
             SwapOverflowTimer = 0;
-            SwapStacks = 0;
         }
 
         if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.EQUIPMENT_RADIO))
@@ -253,6 +316,7 @@ public class PlayerManager : MonoBehaviour
         AssignPlayerSkillSprites(player);
     }
 
+    [SerializeField] private GameObject SwapSmokeUpgradePrefab;
     Coroutine SwapCoroutine;
     public void SwapPlayer()
     {
@@ -283,7 +347,6 @@ public class PlayerManager : MonoBehaviour
 
         Vector3 spawnPosition = IsStageStarted ? player.transform.position : PlayerSpawnpoint.position;
 
-        GameObject Effect = Instantiate(SwapEffect, spawnPosition, Quaternion.identity);
         GameObject newPlayerPrefab = CharacterPrefabsStorage.PlayerPrefabs[(int) swapToPlayertype];
         
         GameObject inPlayer = Instantiate(newPlayerPrefab, spawnPosition, Quaternion.identity);
@@ -293,8 +356,6 @@ public class PlayerManager : MonoBehaviour
         {
             player.OnFieldSwapOut(inPlayer.GetComponent<PlayerBase>());
         }
-
-        StartCoroutine(FadeOut(Effect, IsStageStarted ? 1f : 2f));
 
         if (swapToPlayertype == PlayerType.RANGED)
         {
@@ -308,6 +369,25 @@ public class PlayerManager : MonoBehaviour
         }
 
         StartCoroutine(SwapCooldownE(SwapCooldown, swapCooldownTimer, IsStageStarted));
+
+        SpawnEntranceSmoke(spawnPosition);
+    }
+
+    void SpawnEntranceSmoke(Vector3 spawnPosition)
+    {
+        GameObject Effect = Instantiate(SwapEffect, spawnPosition, Quaternion.identity);
+        StartCoroutine(FadeOut(Effect, IsStageStarted ? 1f : 2f));
+
+        BUG_SPRAY_TYPE type = BUG_SPRAY_TYPE.NONE;
+        if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.SMOKE_TOXIC))
+            type = BUG_SPRAY_TYPE.POISON;
+        else if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.SMOKE_BLIND))
+            type = BUG_SPRAY_TYPE.SMOKE;
+
+        if (type == BUG_SPRAY_TYPE.NONE) return;
+
+        GameObject toxicSmoke = Instantiate(SwapSmokeUpgradePrefab, spawnPosition, Quaternion.identity);
+        toxicSmoke.GetComponent<PlayerToxicSmoke>().SetType(type);
     }
 
     public void SwapCooldownOnStart()
@@ -329,24 +409,36 @@ public class PlayerManager : MonoBehaviour
     {
         if (!this.player)
         {
-            this.player = player;
-            virtualCamera.Follow = player.transform;
-            IsStageStarted = true;
-            player.SettleSwappedInPlayer = true;
-            SwapCooldownOnStart();
+            StartCoroutine(AssignNewplayerAttributes(player));
             return;
         }
 
         StartCoroutine(AssignSwappedPlayerAttributes(player));
     }
 
+    IEnumerator AssignNewplayerAttributes(PlayerBase player)
+    {
+        this.player = player;
+        virtualCamera.Follow = player.transform;
+        IsStageStarted = true;
+        player.SettleSwappedInPlayer = true;
+        SwapCooldownOnStart();
+
+        yield return new WaitUntil(() => player && player.IsComponentsInitialized);
+
+        player.OnFieldEnter();
+    }
+
     IEnumerator AssignSwappedPlayerAttributes(PlayerBase newPlayer)
     {
+        yield return new WaitUntil(() => newPlayer && newPlayer.IsComponentsInitialized);
+
         AssignPlayerSkillSprites(newPlayer);
 
         short percentageHealth = player.GetHealthPercentage();
         newPlayer.SetHealth(Mathf.Max(1, newPlayer.GetMaxHealth() *  percentageHealth / 100));
-        
+        newPlayer.OnFieldEnter();
+
         EntityManager.SpriteRenderers.Remove(player.GetSpriteRenderer());
         EntityManager.Enemies.ForEach(e =>
         {
@@ -358,8 +450,6 @@ public class PlayerManager : MonoBehaviour
             newPlayer.GetSpriteRenderer().flipX = true;
             newPlayer.FlipAttackPosition();
         }
-
-        yield return new WaitForEndOfFrame();
 
         var outPlayer = player.gameObject;
         outPlayer.SetActive(false);
@@ -571,6 +661,10 @@ public class PlayerManager : MonoBehaviour
 
     public void ViewSkill()
     {
+        if (!IsStageStarted || !activePlayer) return;
+
+        stageManager.UpdateTimeScale();
+
         if (skillViewCoroutine != null) StopCoroutine(skillViewCoroutine);
 
         if (SkillView_Overlay.activeSelf)
@@ -584,6 +678,10 @@ public class PlayerManager : MonoBehaviour
             skillViewCoroutine = StartCoroutine(ShowSkillView());
         }
     }
+
+    public void OnAttackButtonPress() { if (activePlayer) activePlayer.Action_Attack(); }
+    public void OnSkillButtonPress() { if (activePlayer) activePlayer.Action_Skill(); }
+    public void OnSpecialButtonPress() { if (activePlayer) activePlayer.Action_Special(); }
 
     IEnumerator ShowSkillView()
     {

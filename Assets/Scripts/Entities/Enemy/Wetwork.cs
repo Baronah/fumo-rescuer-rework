@@ -74,7 +74,7 @@ public class Wetwork : EnemyBase
     {
         Description = "An assassin who makes up for their average skills with clever plots. They are adept at hiding in the darkness, sharpening their blades and continually increasing their ATK.";
         Skillset = "• The first attack deals greatly increased damage. This effect is slowly recharged while not attacking.";
-        TooltipsDescription = "An assassin who prefers close-ranged combat. The first attack made has greatly increased ATK.";
+        TooltipsDescription = "An assassin who prefers close-ranged combat. The first attack made deals greatly increased damage.";
 
         base.WriteStats();
     }

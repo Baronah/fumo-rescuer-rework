@@ -422,7 +422,7 @@ MonoBehaviour:
   attackInterval: 0
   hpRegenFlat: 0
   hpRegenPercentage: 0
-  weight: 7
+  weight: 4
   damageReduction: 0
   damageAmplify: 0
   IsShiftImmune: 0
@@ -455,6 +455,7 @@ MonoBehaviour:
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 6764861229625904772}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 19

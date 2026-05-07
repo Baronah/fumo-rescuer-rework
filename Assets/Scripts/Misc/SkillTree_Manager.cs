@@ -78,7 +78,7 @@ public class SkillTree_Manager : MonoBehaviour
         MINT_WINDRUSH,
         ATTENTION_BOOK,
         ATTENTION_DEVICE,
-        MAJOR_DEBUT,
+        SWAP_START_SPECIAL,
         DASH_AFTERIMAGES,
         SWAP_START_ATK,
         SPECIAL_MSPD,
@@ -106,6 +106,10 @@ public class SkillTree_Manager : MonoBehaviour
         KNOTS,
         A_NICE_LOOKING_ROCK,
         ADAPTION,
+        SMOKE_TOXIC,
+        SMOKE_BLIND,
+        SWAP_START_MSPD,
+        ULTIMATE_BUFF,
     }
 
     public static SkillTree_Manager Instance;

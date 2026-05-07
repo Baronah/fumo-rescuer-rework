@@ -141,10 +141,10 @@ public class LevelDifficultyModifier : MonoBehaviour
             if (ConvertedDiffLevel == (int) DiffType.PlayerFieldDebuff_1)
                 ModifierDetail.text += "\n\nAfter staying on the field for 10 seconds, your character gradually has <color=#5b7ccf>reduced ATK</color>, up to 80% after 40 seconds (resets on swap).";
             else if (ConvertedDiffLevel >= (int) DiffType.PlayerFieldDebuff_2)
-                ModifierDetail.text += "\n\nWhile staying on the field, your character gradually has reduced <color=#5b7ccf>ATK and MSPD</color>, up to 80% and 50%, respectively, after 40 seconds (resets on swap).";
+                ModifierDetail.text += "\n\nAfter staying on the field for 5 seconds, your character gradually has reduced <color=#5b7ccf>ATK and MSPD</color>, up to 80% and 50%, respectively, after 40 seconds (resets on swap).";
 
             if (ConvertedDiffLevel >= (int) DiffType.Player1HP)
-                ModifierDetail.text += "\n\nUpon entering the stage, <color=red>your HP becomes 1</color>.";
+                ModifierDetail.text += "\n\nUpon entering the stage, <color=red>your HP becomes 1</color>. Afterward, healing effectiveness -90%, effect gradually expires over 40 seconds.";
         }
     }
 
@@ -172,6 +172,8 @@ public class LevelDifficultyModifier : MonoBehaviour
 
     string GetDifficultyName(out VertexGradient textGradientOut)
     {
+        int Diff = CurrentDifficultyLevel - 1;
+
         // default at yellow
         textGradientOut = new VertexGradient();
         textGradientOut.topLeft = textGradientOut.bottomLeft = Color.yellow;
@@ -191,14 +193,14 @@ public class LevelDifficultyModifier : MonoBehaviour
             return "Explorer";
         }
 
-        string DefaultText = $"Researcher\nLV. {CurrentDifficultyLevel - 1}";
+        string DefaultText = $"Researcher\nLV. {Diff}";
 
-        if (CurrentDifficultyLevel >= 11)
+        if (Diff >= (int) DiffType.PlayerCD_1)
         {
             textGradientOut.topLeft = textGradientOut.bottomLeft = Color.red;
             textGradientOut.topRight = textGradientOut.bottomRight = new(0.62f, 0.28f, 0.28f);
         }
-        else if (CurrentDifficultyLevel >= 6)
+        else if (Diff >= (int) DiffType.EnemiesDefenseSurvivalBuff)
         {
             textGradientOut.topLeft = textGradientOut.bottomLeft = new(1, 0.565f, 0);
             textGradientOut.topRight = textGradientOut.bottomRight = new(0.76f, 0.63f, 0.22f);

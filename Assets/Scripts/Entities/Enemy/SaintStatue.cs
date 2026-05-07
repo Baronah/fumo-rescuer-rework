@@ -57,7 +57,7 @@ public class SaintStatue : EnemyBase
     {
         EntityManager.Enemies.ForEach(enemy =>
         {
-            if (!enemy || !enemy.IsAlive() || enemy == this) return;
+            if (!enemy || !enemy.IsAlive()) return;
             Heal(amount + mHealth * SelfHpHealingBonus, enemy);
         });
     }

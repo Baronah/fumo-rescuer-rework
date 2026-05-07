@@ -15,18 +15,6 @@ public class EndlessEnemySpawn : EnemySpawnpointScript
 
     [SerializeField] private float GraduallyDecreaseSpawnInterval = 0.5f;
 
-    private void Awake()
-    {
-        stageManager = FindObjectOfType<StageManager>(true);
-        SpawnPositions = transform.Find("Spawnposition").GetComponentsInChildren<Transform>();
-    }
-
-    private void Start()
-    {
-        if (immediateSpawn)
-            StartCoroutine(SpawnEnemy());
-    }
-
     public override IEnumerator SpawnEnemy()
     {
         if (immediateSpawn)

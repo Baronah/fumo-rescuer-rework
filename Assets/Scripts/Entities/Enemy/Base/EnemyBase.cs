@@ -80,7 +80,7 @@ public class EnemyBase : EntityBase
     [SerializeField] private List<float> WaitTimes = new();
 
     private readonly float OverridePositionCheckRadius = 75f;
-    private Vector2 OverridePosition;
+    private Vector3 OverridePosition;
     [SerializeField] private float MoveToOverridePositionSpeedMultiplier = 1.5f, MoveToOverridePositionSpeedMultiplierJump = 0.35f;
     private short MoveToOverridePositionJumpCnt = 0;
     private bool MoveToOverridePosition = false;
@@ -195,7 +195,8 @@ public class EnemyBase : EntityBase
 
     public override void FixedUpdate()
     {
-        if (!IsAlive() || ViewOnlyMode) return;
+        if (ViewOnlyMode) return;
+        
         if (DetectSymbol)
         {
             DetectSymbol.color = RecentlyScannedPlayer ? Color.red : Color.yellow;
@@ -292,7 +293,7 @@ public class EnemyBase : EntityBase
             return;
         }
 
-        pathfindingRadius = Mathf.Clamp(distanceToDestination, 500, 2500);
+        pathfindingRadius = Mathf.Clamp(distanceToDestination, 400, 1750);
         // Determine what changed to decide if we need path updates
         Vector2 currentTargetPos = SpottedPlayer ? SpottedPlayer.transform.position : desiredDestination;
 
@@ -331,7 +332,7 @@ public class EnemyBase : EntityBase
                     for (float angle = 0; angle < 360; angle += 45)
                     {
                         Vector2 offset = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)) * 30f;
-                        Vector2 alternateTarget = OverridePosition + offset;
+                        Vector2 alternateTarget = new Vector2(OverridePosition.x, OverridePosition.y) + offset;
                         fallbackPath = pathfindingGrid.FindPath(currentPos, alternateTarget, allowDiagonalMovement);
                         if (fallbackPath.Count > 0) break;
                     }
@@ -573,47 +574,43 @@ public class EnemyBase : EntityBase
             return;
         }
 
-        StartCoroutine(TemporarilyDisableHitbox());
+        if (currentIgnoreCoroutine == null) 
+            currentIgnoreCoroutine = StartCoroutine(TemporarilyDisableHitbox());
 
-        // Force path recalculation
         // ForceChangePath();
-        stuckTimer = 0f;
-
-        /*************************
-
-        // Try a different approach - move slightly away from current position
-        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle.normalized;
-        Vector2 escapeTarget = (Vector2) FeetPosition.position + randomDirection * gridCellSize * 2f;
-
-        // Check if escape direction is clear
-        RaycastHit2D escapeHit = Physics2D.Raycast(FeetPosition.position, randomDirection, gridCellSize * 2f, obstacleLayer);
-        if (escapeHit.collider == null || colliders.Contains(escapeHit.collider))
-        {
-            rb2d.velocity = CalculateMovement(randomDirection);
-        }
-
-        *********************/
+        StopObstacleIgnore();
     }
 
     public void StopObstacleIgnore()
     {
         Physics2D.IgnoreLayerCollision(gameObject.layer, 8, false);
+        stuckTimer = -1f;
     }
 
+    Coroutine currentIgnoreCoroutine = null;
     IEnumerator TemporarilyDisableHitbox()
     {
+        yield return new WaitForEndOfFrame();
+        yield return null;
+        if (!IsValidForTerrainIgnore) 
+        {
+            currentIgnoreCoroutine = null;
+            yield break;
+        }
+
         float c = 0, d = 1;
         while (c < d)
         {
-            if (!IsValidForTerrainIgnore) break;
             Physics2D.IgnoreLayerCollision(gameObject.layer, 8, IsValidForTerrainIgnore);
             c += Time.deltaTime;
             yield return null;
         }
         Physics2D.IgnoreLayerCollision(gameObject.layer, 8, false);
+        currentIgnoreCoroutine = null;
     }
 
-    bool IsValidForTerrainIgnore => isUsingPathfinding && !IsBeingShifted && !IsStunned && !IsFrozen && animator.GetFloat("move") >= 0.1f;
+    bool IsValidForTerrainIgnore 
+        => isUsingPathfinding && !IsBeingShifted && !IsStunned && !IsFrozen && animator.GetFloat("move") >= 0.1f;
 
     private Vector2 GetAvoidanceDirection(Vector2 originalDirection, float distanceToDestination)
     {
@@ -636,7 +633,7 @@ public class EnemyBase : EntityBase
                 if (!isUsingPathfinding && SpottedPlayer)
                 {
                     float distanceToTarget = Vector2.Distance(currentPos, GetPathfindingTarget());
-                    if (distanceToTarget > 75f) // Lower threshold
+                    if (distanceToTarget > 75f)
                     {
                         // Force pathfinding recalculation next frame
                         lastPathUpdateTime = 0f;
@@ -959,6 +956,7 @@ public class EnemyBase : EntityBase
     protected void MoveTowardTheSourceOfAttack(EntityBase source)
     {
         if (SpottedPlayer) return;
+        if (MoveToOverridePosition && OverridePosition == source.transform.position) return;
 
         ForceChangePath();
         MoveToOverridePositionJumpCnt++;

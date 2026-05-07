@@ -6648,6 +6648,7 @@ MonoBehaviour:
   PausedSprite: {fileID: 21300000, guid: b1919bdb48d44784697497e2fd68e898, type: 3}
   UnpausedSprite: {fileID: 21300000, guid: 96af0636a2e0062489482ce82248fbab, type: 3}
   ChallengeModeStatsModifier: 1.2
+  DoNotShowSpawnsGraphic: 1
   StageCompleteConditionType: 0
   StageEvironmentTypes: 01000000
   timeDilation: {fileID: 326384475}

@@ -387,6 +387,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3865746826419508853, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4379148182149629804, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_LocalPosition.x
       value: -628.5089
@@ -584,12 +588,15 @@ MonoBehaviour:
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   Debut: {fileID: 393571691815884567}
   SkillPosition: {fileID: 3133010215521894544}
   SkillEffect: {fileID: 5073970244535040960}
   SkillBarObj: {fileID: 5301457869692540562}
+  FieldExpert: 0
+  playerManager: {fileID: 0}
 --- !u!82 &1765163117567622394
 AudioSource:
   m_ObjectHideFlags: 0
