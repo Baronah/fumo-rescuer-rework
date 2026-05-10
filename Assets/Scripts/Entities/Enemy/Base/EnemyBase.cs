@@ -116,9 +116,7 @@ public class EnemyBase : EntityBase
 
     public bool hasDRWhenNotCombat = false;
     public override void InitializeComponents()
-    {
-        if (IsComponentsInitialized) return;
-
+    { 
         stageManager = FindObjectOfType<StageManager>(true);
 
         base.InitializeComponents();
@@ -908,10 +906,10 @@ public class EnemyBase : EntityBase
     protected float Adaption_DefJump = 5;
     protected float Adaption_ResJump = 3;
     protected short Adaption_MaxCount = 40;
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         OnAttackReceive(source);
-        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
+        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
         ProcessAdaption(damage, source);
     }
 

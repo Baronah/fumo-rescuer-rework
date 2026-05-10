@@ -714,9 +714,9 @@ public class PlayerBase : EntityBase
         };
     }
 
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
-        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
+        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
 
         if (damage.TotalDamage > 0) RemoveEffect(StartMspdBuffKey);
 

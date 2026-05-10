@@ -142,7 +142,7 @@ public class ShroudedAssassin : EnemyBase
     public float MaxDamageReduction = 1f, MaxAtkBuff = 0.5f, MaxMspdBuff = 0.3f;
     public float AtkBuff_Jump = 0.05f;
     readonly string SilencerAtkBuffKey = "SILENCER_ATK_BUFF";
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         if (source && source == SpottedPlayer)
         {
@@ -164,7 +164,7 @@ public class ShroudedAssassin : EnemyBase
             dashCooldownTimerCountdown--;
         }
 
-        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
+        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
     }
 
     public override void Move()

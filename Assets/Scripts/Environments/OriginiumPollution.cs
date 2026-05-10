@@ -85,7 +85,7 @@ public class OriginiumPollution : EnvironmentalTileBase
         {
             if (e is Sudaram sr) damage = (int)(damage * sr.originiumPollutionDamageMultiplier);
 
-            e.TakeDamage(new(0, 0, damage), null);
+            e.TakeDamage(new(0, 0, damage), null, null, false, true);
         }
     }
 

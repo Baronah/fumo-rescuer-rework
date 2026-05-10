@@ -722,7 +722,7 @@ public class PlayerMelee : PlayerBase
 
     bool healedOnThisDash = false;
     [SerializeField] Material ColorOverlayMat;
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         if (IsDashing && Skills.Contains(SkillTree_Manager.SkillName.DASH_FAITH))
         {
@@ -738,7 +738,7 @@ public class PlayerMelee : PlayerBase
             }
         }
         
-        if (!IsDashing) base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
+        if (!IsDashing) base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
     }
 
     void StoreDamage(DamageInstance damage)

@@ -13,13 +13,13 @@ public class BloodthirstyHeir : EnemyBase
         base.InitializeComponents();
     }
 
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
         if (IsAlive() && !mspdIncreased)
         {
             mspdIncreased = true;
-            moveSpeed *= speedMultiplierOnPlayerSpot;
+            ApplyEffect(Effect.AffectedStat.MSPD, "BLOODTHIRSTY_HEIR_SPOT_MSPD", speedMultiplierOnPlayerSpot * 100f, 9999f, true);
         }
     }
 
@@ -34,7 +34,7 @@ public class BloodthirstyHeir : EnemyBase
         if (IsAlive() && !mspdIncreased)
         {
             mspdIncreased = true;
-            moveSpeed *= speedMultiplierOnPlayerSpot;
+            ApplyEffect(Effect.AffectedStat.MSPD, "BLOODTHIRSTY_HEIR_SPOT_MSPD", speedMultiplierOnPlayerSpot * 100f, 9999f, true);
         }
         base.OnFirsttimePlayerSpot(viaAlert);
     }

@@ -75,7 +75,7 @@ public class Candle : EnemyBase
         RemoveEffect("CANDLE_FREEZE_DEBUFF");
     }
 
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false) { }
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false) { }
 
     public override void Move() { }
 

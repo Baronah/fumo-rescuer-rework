@@ -44,10 +44,10 @@ public class Toy : EnemyBase
         yield return StartCoroutine(base.Attack());
     }
 
-    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         if (!IsStarted || (!IsActive && !IgnoreInvulnerability)) return;
-        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability);
+        base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
     }
 
     public override IEnumerator OnAttackComplete()

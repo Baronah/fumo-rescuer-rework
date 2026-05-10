@@ -94,7 +94,7 @@ public class PlayerToxicSmoke : MonoBehaviour
             {
                 if (!entity || !entity.IsAlive()) continue;
 
-                entity.ApplyEffect(Effect.AffectedStat.ARNG, "BLINDNESS", -99f, Tick, true);
+                entity.ApplyEffect(Effect.AffectedStat.ARNG, "BLINDNESS", -99f, Tick + 0.2f, true);
             }
         }
         else if (TYPE == BUG_SPRAY_TYPE.POISON)
@@ -105,7 +105,7 @@ public class PlayerToxicSmoke : MonoBehaviour
                 if (!entity || !entity.IsAlive()) continue;
 
                 DamageInstance damageInstance = new DamageInstance(0, damage + entity.mHealth * PercentageHealthDamage / 2, 0);
-                entity.TakeDamage(damageInstance, null);
+                entity.TakeDamage(damageInstance, null, null, false, true);
             }
         }
     }

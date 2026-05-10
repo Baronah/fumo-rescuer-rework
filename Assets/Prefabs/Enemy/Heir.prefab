@@ -337,6 +337,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 2
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 3780482149273082054}
@@ -373,7 +374,7 @@ MonoBehaviour:
   CanDetectThroughWalls: 0
   IsInsignificant: 0
   hasDRWhenNotCombat: 0
-  speedMultiplierOnPlayerSpot: 3
+  speedMultiplierOnPlayerSpot: 2
 --- !u!82 &7424751633068628821
 AudioSource:
   m_ObjectHideFlags: 0

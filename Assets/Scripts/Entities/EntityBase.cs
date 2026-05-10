@@ -123,16 +123,7 @@ public class EntityBase : MonoBehaviour
 
     protected GameObject ShadowSprite;
 
-    public SpriteRenderer GetSpriteRenderer()
-    {
-        if (!spriteRenderer) 
-        {
-            Transform Sprite = transform.Find("Sprite");
-            spriteRenderer = Sprite.GetComponent<SpriteRenderer>();
-        } 
-        
-        return spriteRenderer;
-    }
+    public SpriteRenderer GetSpriteRenderer() => spriteRenderer;
 
     protected bool useTransformAsAttackPosition = false;
     protected Vector3 PrevPosition;
@@ -291,7 +282,12 @@ public class EntityBase : MonoBehaviour
             StatisObj.SetActive(statis);
         }
 
-        BlindnessEffect = transform.Find("Blindness").gameObject;
+        Transform BlindnessTransform = transform.Find("Blindness");
+        if (BlindnessTransform)
+        {
+            BlindnessEffect = BlindnessTransform.gameObject;
+            BlindnessEffect.SetActive(false);
+        }
 
         health = mHealth;
         atk = bAtk;
@@ -404,8 +400,11 @@ public class EntityBase : MonoBehaviour
         {
             BlindnessUIUpdateCnt = 0;
 
-            string BlindKey = "BLINDNESS";
-            BlindnessEffect.SetActive(IsAlive() && ArngDebuffs.ContainsKey(BlindKey) && ArngDebuffs[BlindKey].IsInEffect);
+            if (BlindnessEffect)
+            {
+                string BlindKey = "BLINDNESS";
+                BlindnessEffect.SetActive(IsAlive() && ArngDebuffs.ContainsKey(BlindKey) && ArngDebuffs[BlindKey].IsInEffect);
+            }
         }
     }
 
@@ -1065,10 +1064,12 @@ public class EntityBase : MonoBehaviour
         }
     }
 
-    public virtual void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false)
+    public virtual void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
         if (!this || !this.IsAlive() || (this.isInvulnerable && !IgnoreInvulnerability)) return;
 
+        if (CalculateDamage) damage = DamageOutput(this, damage.PhysicalDamage, damage.MagicalDamage, damage.TrueDamage);
+        
         OnAttackReceive(source);
         ShowDamageDealt(damage);
         AdjustHealthOnDamageReceive(damage);

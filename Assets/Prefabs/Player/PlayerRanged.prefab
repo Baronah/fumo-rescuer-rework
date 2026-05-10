@@ -1530,7 +1530,7 @@ MonoBehaviour:
   FreezeRange: 450
   FreezeDurationMin: 1
   FreezeDurationMax: 4
-  MinDistanceForFreezeDuration: 100
+  MinDistanceForFreezeDuration: 125
   FreezeCooldown: 12
   FreezeCastDuration: 0.1
   IllusionPrefab: {fileID: 4804969973133499271, guid: 09bcf3452a6a99f4a94ce939d3a3fc57, type: 3}
