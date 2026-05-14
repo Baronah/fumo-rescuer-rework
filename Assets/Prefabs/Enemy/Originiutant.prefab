@@ -277,17 +277,6 @@ MonoBehaviour:
   b_detectionRange: 250
   DangerRange_RatioOfAttackRange: 0.85
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 2
   - 5

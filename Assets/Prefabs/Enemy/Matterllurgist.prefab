@@ -5005,6 +5005,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
       value: 150
@@ -5111,7 +5115,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 0.9
-  IsComponentsInitialized: 0
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 75958401430846253}
@@ -5130,17 +5134,6 @@ MonoBehaviour:
   b_detectionRange: 420
   DangerRange_RatioOfAttackRange: 0.75
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 50
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 100
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 5
   - 5

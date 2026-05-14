@@ -195,6 +195,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
       value: 80
@@ -264,7 +268,7 @@ MonoBehaviour:
   def: 0
   res: 10
   ASPD: 100
-  moveSpeed: 260
+  moveSpeed: 270
   attackRange: 65
   attackWindupTime: 0.4
   attackInterval: 2
@@ -292,7 +296,7 @@ MonoBehaviour:
   ccBar: {fileID: 6784049404754971277}
   AttackAnimation: {fileID: 7400000, guid: ef78f774e1b926f4c9e8d58a5c5dfa3c, type: 2}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -300,9 +304,11 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 0.9
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 6420305331894271001}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 0
@@ -316,17 +322,6 @@ MonoBehaviour:
   b_detectionRange: 200
   DangerRange_RatioOfAttackRange: 1
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 0.5
-  waypointReachDistance: 50
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 125
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 2
   WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1
   MoveToOverridePositionSpeedMultiplierJump: 0.35

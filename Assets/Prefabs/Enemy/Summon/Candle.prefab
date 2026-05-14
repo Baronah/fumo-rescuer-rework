@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 5297205753035597417}
   - component: {fileID: 4669809397563499186}
   - component: {fileID: 1475035593441962246}
+  - component: {fileID: 625008511722066663}
   m_Layer: 6
   m_Name: Candle
   m_TagString: Untagged
@@ -341,17 +342,23 @@ MonoBehaviour:
   ccBar: {fileID: 468123535657762149}
   AttackAnimation: {fileID: 7400000, guid: a09a6a5b301f7034a95e77b2c60a63a9, type: 2}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
+  StatusResistTimer: 0
+  PhysicalDodgeChance: 0
+  MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 17
+  size: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: Enemy lore or description
@@ -360,26 +367,37 @@ MonoBehaviour:
   b_detectionRange: 0
   DangerRange_RatioOfAttackRange: 0.75
   MinimumDistanceFromPlayer: 20
-  gridCellSize: 50
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 3000
-  pathUpdateInterval: 0.5
-  waypointReachDistance: 50
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 100
-  cornerAvoidanceDistance: 50
-  pathSmoothingLookahead: 2
   WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1.5
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 1
+  hasDRWhenNotCombat: 0
   Manager: {fileID: 9087003249395919761, guid: 992a657673c99b5488fc1ad97a0c7931, type: 3}
   movementThreshold: 30
   attackRangeIndicator: {fileID: 0}
+--- !u!195 &625008511722066663
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3258101646320977294}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &4710489055097979268
 GameObject:
   m_ObjectHideFlags: 0

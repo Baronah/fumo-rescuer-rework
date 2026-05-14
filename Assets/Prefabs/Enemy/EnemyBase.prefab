@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1333956751212545712}
   - component: {fileID: 7243432407170544928}
   - component: {fileID: 7523077825662678453}
-  - component: {fileID: 6332891816829384026}
+  - component: {fileID: 8117222602758807740}
+  - component: {fileID: 8520806456914657924}
   m_Layer: 6
   m_Name: EnemyBase
   m_TagString: Untagged
@@ -177,7 +178,7 @@ MonoBehaviour:
   ccBar: {fileID: 773491194806959642}
   AttackAnimation: {fileID: 0}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -185,6 +186,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
@@ -201,17 +203,6 @@ MonoBehaviour:
   b_detectionRange: 0
   DangerRange_RatioOfAttackRange: 0.75
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 100
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 2
   - 5
@@ -221,8 +212,8 @@ MonoBehaviour:
   CanDetectThroughWalls: 0
   IsInsignificant: 0
   hasDRWhenNotCombat: 0
---- !u!61 &6332891816829384026
-BoxCollider2D:
+--- !u!58 &8117222602758807740
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -254,18 +245,30 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -1.9}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.05, y: 0.05}
-  m_EdgeRadius: 0
+  m_Radius: 0.025
+--- !u!195 &8520806456914657924
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712479229275404704}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 0
 --- !u!1 &716587016134730976
 GameObject:
   m_ObjectHideFlags: 0

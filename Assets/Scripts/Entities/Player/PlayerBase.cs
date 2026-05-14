@@ -206,11 +206,13 @@ public class PlayerBase : EntityBase
         base.UpdateCooldowns();
         if (Skills.Contains(SkillTree_Manager.SkillName.HEAVY_HITTER))
         {
-            timerSinceLastAttack += Time.deltaTime;
+            timerSinceLastAttack += Time.fixedDeltaTime;
             HH_Effect_fill.fillAmount = Mathf.Lerp(0, 1f, timerSinceLastAttack / heavyHitterMaxTimer);
             HH_Effect_fill.color = IsHeavyHitterMaxed ? Color.white : new(0.81f, 0.12f, 0.12f);
             HH_Effect_fill.material = IsHeavyHitterMaxed ? null : HH_Fill_Material;
         }
+
+        leverCDTimer += Time.fixedDeltaTime;
     }
 
     readonly string StartMspdBuffKey = "SWAP_START_MSPDBUFF";
@@ -592,24 +594,35 @@ public class PlayerBase : EntityBase
     {
         if (Skills.Contains(SkillTree_Manager.SkillName.ULTIMATE_BUFF))
         {
-            float range = Mathf.Max(attackRange, 300f);
-
-            var enemies = SearchForEntitiesAroundSelf(typeof(EnemyBase),range, true);
-            foreach (var enemy in enemies)
-            {
-                if (!enemy || !enemy.IsAlive()) continue;
-                enemy.ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_ENEMY_DEBUFF", -90f, 2f, true, EffectPersistType.DECAY);
-                PushEntityFrom(enemy, transform.position, 3.6f, 0.15f, true);
-            }
-
-            GameObject vfx = Instantiate(UltimateShockwaveEffect, transform.position, Quaternion.identity, transform);
-            vfx.transform.localScale *= range / 300f;
-            Destroy(vfx, 1f);
-
-            ApplyEffect(Effect.AffectedStat.ATK, "ULTIMATE_ATK_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
-            ApplyEffect(Effect.AffectedStat.ASPD, "ULTIMATE_ASPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
-            ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_MSPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+            ActivateLever();
         }
+    }
+
+    readonly float leverCD = 5f;
+    float leverCDTimer = 0f;
+    void ActivateLever()
+    {
+        ApplyEffect(Effect.AffectedStat.ATK, "ULTIMATE_ATK_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+        ApplyEffect(Effect.AffectedStat.ASPD, "ULTIMATE_ASPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+        ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_MSPD_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
+
+        if (leverCDTimer < leverCD) return;
+
+        float range = Mathf.Max(attackRange, 300f);
+
+        var enemies = SearchForEntitiesAroundSelf(typeof(EnemyBase), range, true);
+        foreach (var enemy in enemies)
+        {
+            if (!enemy || !enemy.IsAlive()) continue;
+            enemy.ApplyEffect(Effect.AffectedStat.MSPD, "ULTIMATE_ENEMY_DEBUFF", -90f, 2f, true, EffectPersistType.DECAY);
+            PushEntityFrom(enemy, transform.position, 3.6f, 0.15f, true);
+        }
+
+        GameObject vfx = Instantiate(UltimateShockwaveEffect, transform.position, Quaternion.identity, transform);
+        vfx.transform.localScale *= range / 300f;
+        Destroy(vfx, 0.5f);
+
+        leverCDTimer = 0f;
     }
 
     public override void Move()

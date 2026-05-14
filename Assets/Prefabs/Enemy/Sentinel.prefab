@@ -522,6 +522,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
       value: 130
@@ -625,7 +629,7 @@ MonoBehaviour:
   AttackAnimation: {fileID: 0}
   sfxs:
   - {fileID: 3220264862875923812}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -633,6 +637,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 752885162673987109}
@@ -646,24 +651,14 @@ MonoBehaviour:
   Description: They are responsible for scouting, patrolling, and issuing early warnings
     to the entire squad. Once spotting intruder, the Herald will immediately issue
     a warning that spread to the entire army.
-  Skillset: "\u2022 Unable to attack.\n\u2022 Upon spotting the player, raises an
-    alarm that increases the ATK and MSPD of all presenting enemies, and makes them
-    to also spot the player immediately."
+  Skillset: "\u2022 Does not attack, but has a large detection range.\n\u2022 Upon
+    spotting the player, raises an alarm that alerts all presenting enemies and increases
+    their ATK and MSPD.\n\u2022 Detection range becomes global after the alarm is
+    raised."
   detectionRange: 450
   b_detectionRange: 450
   DangerRange_RatioOfAttackRange: 0
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 2
   WaitTimes:
   - 7
   - 7

@@ -94,7 +94,7 @@ public class PlayerToxicSmoke : MonoBehaviour
             {
                 if (!entity || !entity.IsAlive()) continue;
 
-                entity.ApplyEffect(Effect.AffectedStat.ARNG, "BLINDNESS", -99f, Tick + 0.2f, true);
+                entity.ApplyEffect(Effect.AffectedStat.ARNG, "BLINDNESS", -100f, Tick + 0.2f, true);
             }
         }
         else if (TYPE == BUG_SPRAY_TYPE.POISON)

@@ -104,7 +104,7 @@ public class FumoScript : MonoBehaviour
             {
                 GameObject o = Instantiate(PushEffect, transform.position, Quaternion.identity);
                 o.transform.localScale *= SkillRange / baseRange;
-                Destroy(o, 1f);
+                Destroy(o, 0.5f);
 
                 var enemies = EntityBase.Base_SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), transform.position, SkillRange, true);
                 foreach (var enemy in enemies)

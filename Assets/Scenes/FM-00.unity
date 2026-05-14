@@ -545302,6 +545302,7 @@ GameObject:
   - component: {fileID: 535622583}
   - component: {fileID: 535622582}
   - component: {fileID: 535622581}
+  - component: {fileID: 535622585}
   m_Layer: 8
   m_Name: Obstacle
   m_TagString: Untagged
@@ -548248,6 +548249,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &535622585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535622579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &542706977
 GameObject:
   m_ObjectHideFlags: 0
@@ -548650,6 +548667,86 @@ RectTransform:
   m_AnchoredPosition: {x: 960, y: 540}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1041618460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1041618463}
+  - component: {fileID: 1041618462}
+  - component: {fileID: 1041618461}
+  m_Layer: 0
+  m_Name: Navmesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1041618461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041618460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70bd44a44cd62c64fbfc1eea95b24880, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideByGrid: 0
+  m_UseMeshPrefab: {fileID: 0}
+  m_CompressBounds: 0
+  m_OverrideVector: {x: 1, y: 1, z: 1}
+--- !u!114 &1041618462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041618460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e04976799df50f54ba128eff723155a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 1
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.5
+  m_BuildHeightMesh: 0
+  m_MinRegionArea: 0
+  m_HideEditorLogs: 0
+  m_NavMeshData: {fileID: 23800000, guid: 79fb39c39d5acf346aa76203db203e8b, type: 2}
+--- !u!4 &1041618463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041618460}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 837.46796, y: 4624.328, z: -8.016279}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1112677750
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -548764,6 +548861,7 @@ GameObject:
   - component: {fileID: 1178296199}
   - component: {fileID: 1178296198}
   - component: {fileID: 1178296197}
+  - component: {fileID: 1178296201}
   m_Layer: 8
   m_Name: IntroGate
   m_TagString: Untagged
@@ -549328,6 +549426,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1178296201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178296195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!4 &1194258982 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1175018332318429812, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
@@ -549476,6 +549590,10 @@ PrefabInstance:
     - target: {fileID: 4038287163405050437, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 275
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406620913998143626, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4684844716827115939, guid: 2a8093f30ec8bef4b95ae17e96a724ca, type: 3}
       propertyPath: SwapMaxStacks
@@ -549840,6 +549958,7 @@ GameObject:
   - component: {fileID: 1306849103}
   - component: {fileID: 1306849107}
   - component: {fileID: 1306849106}
+  - component: {fileID: 1306849108}
   m_Layer: 8
   m_Name: Tilemap
   m_TagString: Untagged
@@ -573311,6 +573430,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1306849108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306849102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 0
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1389682442
 GameObject:
   m_ObjectHideFlags: 0
@@ -573400,6 +573535,7 @@ GameObject:
   - component: {fileID: 1391362234}
   - component: {fileID: 1391362233}
   - component: {fileID: 1391362232}
+  - component: {fileID: 1391362236}
   m_Layer: 10
   m_Name: Border (1)
   m_TagString: Untagged
@@ -580034,6 +580170,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1391362236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391362230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &1432466960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -580836,6 +580988,7 @@ GameObject:
   - component: {fileID: 1708814224}
   - component: {fileID: 1708814223}
   - component: {fileID: 1708814222}
+  - component: {fileID: 1708814226}
   m_Layer: 8
   m_Name: Border
   m_TagString: Untagged
@@ -587470,6 +587623,22 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1708814226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708814220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!114 &1756434179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587508,6 +587677,7 @@ MonoBehaviour:
   PausedSprite: {fileID: 21300000, guid: b1919bdb48d44784697497e2fd68e898, type: 3}
   UnpausedSprite: {fileID: 21300000, guid: 96af0636a2e0062489482ce82248fbab, type: 3}
   ChallengeModeStatsModifier: 1.1
+  DoNotShowSpawnsGraphic: 0
   StageCompleteConditionType: 1
   StageEvironmentTypes: 
   timeDilation: {fileID: 1855639460}
@@ -587838,3 +588008,4 @@ SceneRoots:
   - {fileID: 1610036535}
   - {fileID: 816661909}
   - {fileID: 1112677750}
+  - {fileID: 1041618463}

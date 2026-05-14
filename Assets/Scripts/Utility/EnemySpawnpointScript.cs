@@ -149,19 +149,23 @@ public class EnemySpawnpointScript : MonoBehaviour
         {
             for (int j = 0; j < Quantity; j++)
             {
+                List<EnemyCheckpointScript> enemyCheckpointsClone = new(enemyCheckpoints);
                 Transform spawnTransform = SpawnPositions[Mathf.Min(i, maxSpawnPositions - 1)];
+                Vector3 spawnPos = spawnTransform.position + new Vector3(Random.Range(-OffsetRadius, OffsetRadius), Random.Range(-OffsetRadius, OffsetRadius));
+
+                spawnTransform.position = spawnPos;
 
                 GameObject o = Instantiate(
                     CharacterPrefabsStorage.EnemyPrefabs[(int)enemyPrefab],
-                    spawnTransform.position + new Vector3(Random.Range(-OffsetRadius, OffsetRadius), Random.Range(-OffsetRadius, OffsetRadius)),
+                    spawnPos,
                     Quaternion.identity);
 
                 EnemyBase enemy = o.GetComponent<EnemyBase>();
 
                 stageManager.OnEnemySpawn(enemy);
 
-                enemyCheckpoints.Insert(0, new EnemyCheckpointScript { Checkpoint = spawnTransform, WaitTime = InitWaittime });
-                enemy.SetCheckpoints(InitWaittime, enemyCheckpoints, showTooltips, TooltipsPriority + InitTooltipsPriority);
+                enemyCheckpointsClone.Insert(0, new EnemyCheckpointScript { Checkpoint = spawnTransform, WaitTime = InitWaittime });
+                enemy.SetCheckpoints(InitWaittime, enemyCheckpointsClone, showTooltips, TooltipsPriority + InitTooltipsPriority);
                 if (showTooltips) TooltipsPriority++;
                 enemy.enabled = true;
                 Spawned = true;

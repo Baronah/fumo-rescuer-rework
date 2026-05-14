@@ -287,6 +287,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: Icon
       value: 
@@ -444,7 +448,7 @@ MonoBehaviour:
   sfxs:
   - {fileID: -5450917385555761551}
   - {fileID: -8733238294579501206}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -452,12 +456,15 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 0.9
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 956203906990441807}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 3
+  size: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 8
   Description: A combatant who has once in the verge of death. The dance on the edge
@@ -470,17 +477,6 @@ MonoBehaviour:
   b_detectionRange: 240
   DangerRange_RatioOfAttackRange: 0.65
   MinimumDistanceFromPlayer: 50
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 3000
-  pathUpdateInterval: 1
-  waypointReachDistance: 70
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 70
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 5
   - 5
