@@ -688,7 +688,7 @@ MonoBehaviour:
   ccBar: {fileID: 946352713013429585}
   AttackAnimation: {fileID: 0}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -696,6 +696,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
@@ -727,6 +728,7 @@ MonoBehaviour:
   WindAnthemAspdBuffCap: 72
   AllowVow: {fileID: 0}
   RockPickEffect: {fileID: 0}
+  UltimateShockwaveEffect: {fileID: 0}
   heavyHitterMaxTimer: 10
 --- !u!114 &8499964098267969337
 MonoBehaviour:
@@ -1593,6 +1595,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1169555893600251434, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}
       propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1401021632072090137, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}
+      propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1965139250549561109, guid: 7dda084e95345cb458f103f859ac5a28, type: 3}

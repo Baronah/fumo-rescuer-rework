@@ -1313,7 +1313,7 @@ public class EntityBase : MonoBehaviour
         if (!statis) return;
 
         string keyAtk = "STATIS_DEBUFF_ATK";
-        if (IsMoving())
+        if (!IsMoving())
         {
             StatisTimer += Time.fixedDeltaTime;
             if (StatisTimer >= StatisRequiredTimer && !enteredStatis)
