@@ -38,6 +38,11 @@ public class Toy : EnemyBase
         base.Move();
     }
 
+    public override bool IsConsideredActive()
+    {
+        return (base.IsConsideredActive() && IsActive) || !IsStarted;
+    }
+
     public override IEnumerator Attack()
     {
         if (!IsActive) yield break;

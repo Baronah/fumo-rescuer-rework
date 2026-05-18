@@ -609828,6 +609828,10 @@ PrefabInstance:
       value: Key
       objectReference: {fileID: 0}
     - target: {fileID: 5076479489115016541, guid: de06f466ade5a1c4fba2d58857693fba, type: 3}
+      propertyPath: ShowSpawnpointIndicator
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5076479489115016541, guid: de06f466ade5a1c4fba2d58857693fba, type: 3}
       propertyPath: TargetObjectsToInteract.Array.data[0]
       value: 
       objectReference: {fileID: 1894229356}

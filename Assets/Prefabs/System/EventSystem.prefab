@@ -6372,7 +6372,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 9500
+  m_SortingOrder: 9001
   m_TargetDisplay: 0
 --- !u!114 &1749711181107341963
 MonoBehaviour:
@@ -7024,8 +7024,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateDegree: 0
-  PulseTime: 3
-  PulseWait: 1
+  PulseTime: 2
+  PulseWait: 0.67
   FinalPulse_Alpha: 0
 --- !u!1 &4264031369070351598
 GameObject:
@@ -9761,7 +9761,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 9499
+  m_SortingOrder: 9000
   m_TargetDisplay: 0
 --- !u!1 &6006784758419182376
 GameObject:

@@ -83,7 +83,7 @@ public class Candle : EnemyBase
 
     public override void OnFirsttimePlayerSpot(bool viaAlert = false) { }
 
-    private float GetLitArena => IsFrozen ? 0 : attackRange + 25f;
+    private float GetLitArena => IsFrozen || IsBlinded ? 0 : attackRange + 25f;
 
     private bool ShouldUpdate()
     {

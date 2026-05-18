@@ -32,9 +32,6 @@ public class PlayerBase : EntityBase
     protected Slider WindanthemSlider;
     protected TMP_Text WindanthemCounter;
 
-    private Transform TransformFeetposition;
-    public Vector3 Feetposition => TransformFeetposition.position;
-
     public List<SkillName> Skills = new();
 
     protected Coroutine SkillCoroutine = null;
@@ -73,7 +70,7 @@ public class PlayerBase : EntityBase
         WindanthemCounter = WindanthemBar.GetComponentInChildren<TMP_Text>();
 
         base.InitializeComponents();
-        TransformFeetposition = transform.Find("Feetposition");
+        FeetPosition = transform.Find("Feetposition");
 
         SetInvulnerable(1f);
 
@@ -599,7 +596,7 @@ public class PlayerBase : EntityBase
     }
 
     readonly float leverCD = 5f;
-    float leverCDTimer = 0f;
+    float leverCDTimer = 9999f;
     void ActivateLever()
     {
         ApplyEffect(Effect.AffectedStat.ATK, "ULTIMATE_ATK_BUFF", 25f, 5f, true, EffectPersistType.DECAY);
@@ -731,7 +728,7 @@ public class PlayerBase : EntityBase
     {
         base.TakeDamage(damage, source, projectileInfo, IgnoreInvulnerability, CalculateDamage);
 
-        if (damage.TotalDamage > 0) RemoveEffect(StartMspdBuffKey);
+        if (damage.TotalDamage > 0 && !isInvulnerable) RemoveEffect(StartMspdBuffKey);
 
         if (source && !isInvulnerable && !IgnoreInvulnerability)
         {

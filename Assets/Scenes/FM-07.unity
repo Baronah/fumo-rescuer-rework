@@ -12388,7 +12388,7 @@ Transform:
   m_GameObject: {fileID: 812497947}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -300, z: 0}
+  m_LocalPosition: {x: 248, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15074,7 +15074,7 @@ Transform:
   m_GameObject: {fileID: 1279469434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 300, z: 0}
+  m_LocalPosition: {x: 248, y: 300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22040,7 +22040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5737578246715313298, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3182
+      value: 3246
       objectReference: {fileID: 0}
     - target: {fileID: 5737578246715313298, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -610529,9 +610529,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f061b25a30fff26498aeb0dadd36b0fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Interval: 0.3
-  TrueDamagePerTick: 5
-  EnemyDamageMultiplier: 1.2
+  Interval: 0.5
+  TrueDamagePerTick: 10
+  EnemyDamageMultiplier: 1
 --- !u!4 &5685513372844459389
 Transform:
   m_ObjectHideFlags: 0

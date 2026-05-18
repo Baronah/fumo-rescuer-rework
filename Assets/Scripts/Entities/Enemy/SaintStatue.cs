@@ -4,7 +4,7 @@ using UnityEngine;
 public class SaintStatue : EnemyBase
 {
     [SerializeField] GameObject HealEffect;
-    [SerializeField] private float DefBuffPercentage = 30f, ResBuffFlat = 20f, SelfHpHealingBonus = 0.005f;
+    [SerializeField] private float DefBuffFlat = 25f, ResBuffFlat = 15f, SelfHpHealingBonus = 0.005f;
     [SerializeField] private float HealOnDeathPercentage = 0.35f, DefFlatBuffOnDeathPercentage = 15f;
 
     public override void Move()
@@ -32,6 +32,9 @@ public class SaintStatue : EnemyBase
         yield break;
     }
 
+    string DefBuffID => "STATUE_DEF_BUFF_" + gameObject.GetInstanceID();
+    string ResBuffID => "STATUE_RES_BUFF_" + gameObject.GetInstanceID();
+
     public override void FixedUpdate()
     {
         HealEffect.SetActive(environmentalTilesStandingOn.Contains(StageManager.EnvironmentType.MEDICAL_TILE) && IsAlive());
@@ -48,8 +51,8 @@ public class SaintStatue : EnemyBase
         EntityManager.Enemies.ForEach(enemy =>
         {
             if (!enemy || !enemy.IsAlive() || enemy == this) return;
-            enemy.ApplyEffect(Effect.AffectedStat.DEF, "STATUE_DEF_BUFF", DefBuffPercentage, 9999f, true);
-            enemy.ApplyEffect(Effect.AffectedStat.RES, "STATUE_RES_BUFF", ResBuffFlat, 9999f, false);
+            enemy.ApplyEffect(Effect.AffectedStat.DEF, DefBuffID, DefBuffFlat, 9999f, false);
+            enemy.ApplyEffect(Effect.AffectedStat.RES, ResBuffID, ResBuffFlat, 9999f, false);
         });
     }
 
@@ -57,8 +60,8 @@ public class SaintStatue : EnemyBase
     {
         EntityManager.Enemies.ForEach(enemy =>
         {
-            if (!enemy || !enemy.IsAlive()) return;
-            Heal(amount + mHealth * SelfHpHealingBonus, enemy);
+            if (!enemy || !enemy.IsAlive() || enemy as SaintStatue) return;
+            Heal(amount + mHealth * SelfHpHealingBonus, enemy, false, false);
         });
     }
 
@@ -75,8 +78,8 @@ public class SaintStatue : EnemyBase
         EntityManager.Enemies.ForEach(enemy =>
         {
             if (!enemy || !enemy.IsAlive() || enemy == this) return;
-            enemy.RemoveEffect("STATUE_DEF_BUFF");
-            enemy.RemoveEffect("STATUE_RES_BUFF");
+            enemy.RemoveEffect(DefBuffID);
+            enemy.RemoveEffect(ResBuffID);
         });
     }
 

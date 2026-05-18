@@ -23,6 +23,11 @@ public class CameraMovement : MonoBehaviour
         size = camera.orthographicSize;
     }
 
+    private void Update()
+    {
+        if (shakeTimer < shakeCooldown) shakeTimer += Time.deltaTime;
+    }
+
     public void UpdatePlayerMovement(Transform targetTransform)
     {
         if (targetTransform == null || isShaking) return;
@@ -63,6 +68,16 @@ public class CameraMovement : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    readonly float shakeCooldown = 0.8f;
+    float shakeTimer = 0f;
+    public void CallShakeCoroutine(float percentageScale)
+    {
+        if (shakeTimer < shakeCooldown) return;
+
+        shakeTimer = 0f;
+        StartCoroutine(Shake(percentageScale));
     }
 
     public IEnumerator Shake(float percentageScale)

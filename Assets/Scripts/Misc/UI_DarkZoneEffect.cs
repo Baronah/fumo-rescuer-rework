@@ -15,24 +15,34 @@ public class UI_DarkZoneEffect : MonoBehaviour
 
     Coroutine pulseCoroutine;
 
+    StageManager stageManager;
+
     public void Initialize(EntityBase targetEntity)
     {
         if (!this) return;
 
         if (!isInitialized)
         {
+            stageManager = FindObjectOfType<StageManager>();
             glowColor = Glowpart.color;
             isInitialized = true;
         }
 
         entity = targetEntity;
-        Glowpart.color = new Color(glowColor.r, glowColor.g, glowColor.b, 0);
+
         gameObject.SetActive(true);
+        Glowpart.color = new Color(glowColor.r, glowColor.g, glowColor.b, 0);
         pulseCoroutine = StartCoroutine(PulseGlow());
     }
 
     IEnumerator PulseGlow()
     {
+        if (stageManager.EnableLowDetail)
+        {
+            Glowpart.color = glowColor;
+            yield break;
+        }
+
         float elapsedTime = 0f;
         while (true)
         {

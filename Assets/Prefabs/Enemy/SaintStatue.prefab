@@ -304,6 +304,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: Name
       value: Archer
@@ -413,8 +417,8 @@ MonoBehaviour:
   MIN_MAGICAL_DMG: 0.1
   health: 500
   atk: 0
-  def: 10
-  res: 80
+  def: 50
+  res: 90
   ASPD: 100
   moveSpeed: 0
   attackRange: 0
@@ -434,6 +438,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 2
@@ -444,7 +449,7 @@ MonoBehaviour:
   ccBar: {fileID: 6547622674933118992}
   AttackAnimation: {fileID: 0}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -452,6 +457,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 6764861229625904772}
@@ -466,25 +472,14 @@ MonoBehaviour:
     can no longer distinguish good from evil, it never forgets its duty, continuing
     to bestow blessings upon those who seek for them.
   Skillset: "\u2022 Does not move and attack, immunes to crowd-controls, and does
-    not count toward battle progress.\n\u2022 Increases the DEF and RES of all presenting
-    enemies on the map.\n\u2022 While standing on a <color=green>Medical Tile</color>,
+    not count toward battle progress.\n\u2022 Increases the DEF and RES of all enemies
+    while present.\n\u2022 While standing on a <color=green>Medical Tile</color>,
     transfers its healing effect to all presenting enemies on the map.\n\u2022 Upon
     defeat, heals your units once and grants them a permanent DEF buff."
   detectionRange: 0
   b_detectionRange: 0
   DangerRange_RatioOfAttackRange: 0
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 3000
-  pathUpdateInterval: 0.5
-  waypointReachDistance: 50
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 100
-  cornerAvoidanceDistance: 75
-  pathSmoothingLookahead: 2
   WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1
   MoveToOverridePositionSpeedMultiplierJump: 0
@@ -492,7 +487,7 @@ MonoBehaviour:
   IsInsignificant: 1
   hasDRWhenNotCombat: 0
   HealEffect: {fileID: 443374613090984116}
-  DefBuffPercentage: 50
+  DefBuffFlat: 15
   ResBuffFlat: 20
   SelfHpHealingBonus: 0.005
   HealOnDeathPercentage: 0.35

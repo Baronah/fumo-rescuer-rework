@@ -601,7 +601,7 @@ public class PlayerManager : MonoBehaviour
         if (strength >= 0.8f) hit_02_sfx.Play();
         else hit_01_sfx.Play();
 
-        if (EnableHitStop) mainCamera.StartCoroutine(mainCamera.Shake(strength));
+        if (EnableHitStop) mainCamera.CallShakeCoroutine(strength);
     }
 
     public void OnPlayerDeath()

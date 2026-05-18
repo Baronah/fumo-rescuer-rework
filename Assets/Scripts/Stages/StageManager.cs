@@ -58,6 +58,8 @@ public class StageManager : MonoBehaviour
 
     public bool DoNotShowSpawnsGraphic = false;
 
+    public bool EnableLowDetail = false;
+
     public enum StageCompleteCondition
     {
         ELIMINATE_ALL_ENEMIES,
@@ -223,7 +225,7 @@ public class StageManager : MonoBehaviour
         "In infinite tries everything is possible.",
         "Welcome back Jonny",
         "Oh nyo you lost the game",
-        "wife:\njustnya, iana, typhon, mulberry, pozy if skin, archetto, vendela, ceylon (skin), rushia, warfarin (stab), lin, santalla, ines, mint?, honeyberry?? (but maybe that's mint's wife?), eyja, erota, pallas, goldenglow (skin), swire, ray, astgenne, virtuoso, weedy, monch, reedalt, indigo, amiya(?), dusk, franka, mudrock, coldshot, jessica2, lemuen, blacknight, valarqvin, skadi, aqua, irene, lolcal\n\ndaughters:\nscene, ros, suzu, ifrit, shamare shama, scene, papika, kafka, cement, podenco, vigna, ceobe, amiya, tomimi, iris, lunacub\n\nno wife:\nsora, qiubai, tomimi, paprika, shu (only looks like wife), exu, sussurro (master's wife), mumu, surtr, degen, whisperain (therapist, friend's wife), mr. nothing, rosa, mint?\n\nhusband: degenbrecher?\n\nirl:\nLessing, Ray, Blacknight's Tapir, Ray's Capybara, Ines, Mandragora\n\nupdated: 25/05/24 12:04 GMT",
+        "You and I we're gonna live forever.",
     };
 
     int[] luckyNumbers = new int[] { 52, 39, 2, 27, 4 };

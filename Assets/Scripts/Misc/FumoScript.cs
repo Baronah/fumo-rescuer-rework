@@ -68,7 +68,7 @@ public class FumoScript : MonoBehaviour
         rangeImg = rangeIndicator.GetComponent<Image>();
         
         initColor = rangeImg.color;
-        glowColor = new Color(initColor.r, initColor.g, initColor.b, initColor.a * 2.35f);
+        glowColor = new Color(0, 1, 0.7f, initColor.a * 2.35f);
 
         if (!canUseSkill) yield break;
 

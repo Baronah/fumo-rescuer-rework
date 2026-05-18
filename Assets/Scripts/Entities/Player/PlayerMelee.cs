@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using static LevelDifficultyModifier;
@@ -106,6 +107,7 @@ public class PlayerMelee : PlayerBase
         }
     }
 
+    bool CanPull, CanDoT, CanCounterAttack, WindAnthem, BeyondNight, CanExtendSkill, CanAfterShock;
     public override void GetSkillTreeEffects()
     {
         short diff = (short)(CharacterPrefabsStorage.DifficultyLevel - 1);
@@ -131,6 +133,14 @@ public class PlayerMelee : PlayerBase
         {
             DashCooldown *= 0.9f;
         }
+
+        CanPull = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_PULL);
+        CanDoT = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_IGNITE);
+        CanCounterAttack = Skills.Contains(SkillTree_Manager.SkillName.DASH_FAITH);
+        WindAnthem = Skills.Contains(SkillTree_Manager.SkillName.WIND_ANTHEM);
+        BeyondNight = Skills.Contains(SkillTree_Manager.SkillName.BEYOND_NIGHT);
+        CanExtendSkill = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_DURATION);
+        CanAfterShock = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_AFTERSHOCK);
     }
 
     public override void OnFieldEnter()
@@ -515,32 +525,39 @@ public class PlayerMelee : PlayerBase
         BL_BuffDur *= 1.2f;
     }
 
+    Coroutine skillCoroutine = null;
     public override void UseSkill()
     {
-        if (!CanUseSkill || IsSkillActive || playerManager.MeleeSealSkill == SkillType.ULTIMATE) return;
+        if (!CanUseSkill || playerManager.MeleeSealSkill == SkillType.ULTIMATE) return;
 
         base.UseSkill();
-        StartCoroutine(ActivateSkill(SkillDuration));
+
+        if (skillCoroutine != null)
+        {
+            StopCoroutine(skillCoroutine);
+            EndSkill();
+        }
+
+        skillCoroutine = StartCoroutine(ActivateSkill(SkillDuration));
     }
 
     bool extendSkillDuration = false;
     float damageTakenDuringSkill = 0;
     float juggernauntCurrentDuration = 0;
+
     IEnumerator ActivateSkill(float duration, bool fromInherit = false)
     {
-        if (!IsAlive() || IsSkillActive || !CanUseSkill) yield break;
+        if (!IsAlive() || !CanUseSkill) yield break;
         if (!fromInherit) StartCoroutine(UltimateLockout());
 
         if (sfxs[2]) sfxs[2].Play();
 
         juggernauntCurrentDuration = 0;
         IsSkillActive = true;
-        bool CanPull = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_PULL),
-             CanDoT = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_IGNITE);
         
         Heal(mHealth * BurstHeal_HpPercentage);
 
-        if (Skills.Contains(SkillTree_Manager.SkillName.WIND_ANTHEM))
+        if (WindAnthem)
         {
             if (AspdBuffs.ContainsKey(WindAnthemKey))
             {
@@ -560,7 +577,7 @@ public class PlayerMelee : PlayerBase
         ApplyEffect(Effect.AffectedStat.RES, "JUGGERNAUNT_SKILL_RES_BUFF", ResBoost, 999f, false, EffectPersistType.PERSIST, false);
         ApplyEffect(Effect.AffectedStat.MSPD, "JUGGERNAUNT_SKILL_MSPD_BUFF", SpeedBoost * 100, 999f, true, EffectPersistType.PERSIST, false);
 
-        if (Skills.Contains(SkillTree_Manager.SkillName.BEYOND_NIGHT))
+        if (BeyondNight)
         {
             playerManager.ClearStageBGM(duration);
             Ambient.Play();
@@ -600,17 +617,22 @@ public class PlayerMelee : PlayerBase
 
             if (t >= 1.0f)
             {
-                ProcessJuggernautTick(CanPull, CanDoT);
+                ProcessJuggernautTick();
                 t = 0;
             }
 
             yield return null;
         }
 
+        EndSkill();
+    }
+
+    void EndSkill()
+    {
         if (Vortex && Vortex.isPlaying) Vortex.Stop();
         if (FireUp && FireUp.isPlaying) FireUp.Stop();
 
-        ProcessJuggernautTick(CanPull, CanDoT);
+        ProcessJuggernautTick();
 
         IsSkillActive = false;
 
@@ -618,15 +640,17 @@ public class PlayerMelee : PlayerBase
         RemoveEffect("JUGGERNAUNT_SKILL_DEF_BUFF");
         RemoveEffect("JUGGERNAUNT_SKILL_RES_BUFF");
         RemoveEffect("JUGGERNAUNT_SKILL_MSPD_BUFF");
-        if (Skills.Contains(SkillTree_Manager.SkillName.BEYOND_NIGHT))
+        if (BeyondNight)
         {
             RemoveEffect("BEYOND_THE_NIGHT");
         }
 
         ReleaseAfterShock();
+
+        skillCoroutine = null;
     }
 
-    void ProcessJuggernautTick(bool CanPull, bool CanDoT)
+    void ProcessJuggernautTick()
     {
         Heal(mHealth * HealPerSecond_HpPercentage);
         if (CanPull)
@@ -724,15 +748,15 @@ public class PlayerMelee : PlayerBase
     [SerializeField] Material ColorOverlayMat;
     public override void TakeDamage(DamageInstance damage, EntityBase source, ProjectileScript projectileInfo = null, bool IgnoreInvulnerability = false, bool CalculateDamage = false)
     {
-        if (IsDashing && Skills.Contains(SkillTree_Manager.SkillName.DASH_FAITH))
+        if (IsDashing && CanCounterAttack)
         {
             CounterAttack(damage, source, projectileInfo);
         }
 
         if (IsSkillActive && IsAlive() && damage.TotalDamage > 0)
         {
-            extendSkillDuration = Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_DURATION);
-            if (Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_AFTERSHOCK))
+            extendSkillDuration = CanExtendSkill;
+            if (CanAfterShock)
             {
                 StoreDamage(damage);
             }

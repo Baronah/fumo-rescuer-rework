@@ -87,7 +87,7 @@ public class EnemyBase : EntityBase
         RaycastHit2D hit = Physics2D.Raycast(
             selfPos, 
             directionToDestination, 
-            Vector2.Distance(selfPos, destination), 
+            Vector2.Distance(selfPos, destination) - 30f, 
             obstacleLayer
             );
 
@@ -106,7 +106,6 @@ public class EnemyBase : EntityBase
     // -------------------------------------------------------------------------
 
     [Header("Checkpoints System")]
-    protected Transform FeetPosition;
     protected List<Transform> Checkpoints = new();
     [SerializeField] private List<float> WaitTimes = new();
 
@@ -126,7 +125,9 @@ public class EnemyBase : EntityBase
     Coroutine MovelockoutCoroutine = null;
     TMP_Text DetectSymbol;
 
-    private const short PathfindCntThreshold = 40, ScanPlayerCntThreshold = 20, MoveCntThreshold = 10;
+    private const short PathfindCntThreshold = 75, ScanPlayerCntThreshold = 20, MoveCntThreshold = 15;
+    bool FirstPathfindAfterSpawn = true;
+
     private short ScanPlayerCnt = 0, MoveCnt = 0, PathfindCnt = 0;
 
     public bool IsInsignificant = false;
@@ -135,9 +136,6 @@ public class EnemyBase : EntityBase
 
     public bool hasDRWhenNotCombat = false;
 
-    // -------------------------------------------------------------------------
-    // Initialisation
-    // -------------------------------------------------------------------------
     public override void InitializeComponents()
     {
         stageManager = FindObjectOfType<StageManager>(true);
@@ -145,8 +143,8 @@ public class EnemyBase : EntityBase
         base.InitializeComponents();
 
         PathfindCnt = (short)UnityEngine.Random.Range(0, PathfindCntThreshold);
-        MoveCnt = (short) (PathfindCnt % MoveCntThreshold + 1);
-        ScanPlayerCnt = (short)UnityEngine.Random.Range(0, MoveCntThreshold);
+        MoveCnt = (short) UnityEngine.Random.Range(0, MoveCntThreshold);
+        ScanPlayerCnt = (short)UnityEngine.Random.Range(0, ScanPlayerCntThreshold);
 
         if (!ViewOnlyMode)
         {
@@ -288,8 +286,10 @@ public class EnemyBase : EntityBase
 
         if (navAgent == null) return;
 
-        if (PathfindCnt <= PathfindCntThreshold) return;
-        PathfindCnt = 0;
+        if (!FirstPathfindAfterSpawn && PathfindCnt <= PathfindCntThreshold) return;
+        
+        if (!FirstPathfindAfterSpawn) PathfindCnt = 0;
+        else FirstPathfindAfterSpawn = false;
 
         Vector3 desiredDestination = GetUniversalDestination();
 
@@ -312,7 +312,7 @@ public class EnemyBase : EntityBase
             isUsingPathfinding() ||
             distTransformToPlayer > attackRange * 1.2f;
 
-        Vector2 playerPos = playerIsFarAway ? SpottedPlayer.Feetposition : SpottedPlayer.transform.position;
+        Vector2 playerPos = playerIsFarAway ? SpottedPlayer.FeetPosition.position : SpottedPlayer.transform.position;
         Vector2 enemyPos = playerIsFarAway ? FeetPosition.position : AttackPosition.position;
 
         switch (attackPattern)
@@ -434,7 +434,7 @@ public class EnemyBase : EntityBase
 
     private void HandleStuckState()
     {
-        if (!IsValidForTerrainIgnore || hasClearSightToTargetOnThisMoveOppoturnity)
+        if (!IsValidForTerrainIgnore)
         {
             stuckTimer = -stuckThreshold;
             return;
@@ -492,6 +492,7 @@ public class EnemyBase : EntityBase
 
     private Vector2 GetAvoidanceDirection(Vector2 originalDirection, float distanceToDestination)
     {
+        if (hasClearSightToTargetOnThisMoveOppoturnity) return originalDirection;
         if (originalDirection == Vector2.zero) return Vector2.zero;
 
         Vector2 currentPos = FeetPosition.position;
@@ -602,12 +603,12 @@ public class EnemyBase : EntityBase
         {
             if (!spottedViaAlert && !CanDetectThroughWalls)
             {
-                float distance = Vector3.Distance(RecentlyScannedPlayer.Feetposition, FeetPosition.position);
+                float distance = Vector3.Distance(RecentlyScannedPlayer.FeetPosition.position, FeetPosition.position);
                 if (distance > Mathf.Max(100f, detectionRange * 0.25f))
                 {
                     var checkObstacle = Physics2D.Raycast(
                         transform.position,
-                        (RecentlyScannedPlayer.Feetposition - FeetPosition.position).normalized,
+                        (RecentlyScannedPlayer.FeetPosition.position - FeetPosition.position).normalized,
                         distance - 30f,
                         obstacleLayer);
 
@@ -635,6 +636,7 @@ public class EnemyBase : EntityBase
         
         navAgent.path.ClearCorners();
         navAgent.ResetPath();
+        FirstPathfindAfterSpawn = true;
     }
 
     public virtual void OnFirsttimePlayerSpot(bool viaAlert = false)
@@ -807,7 +809,7 @@ public class EnemyBase : EntityBase
     protected void MoveTowardTheSourceOfAttack(EntityBase source)
     {
         if (SpottedPlayer) return;
-        if (MoveToOverridePosition && OverridePosition == source.transform.position) return;
+        if (MoveToOverridePosition && OverridePosition == source.FeetPosition.position) return;
 
         ForceChangePath();
         MoveToOverridePositionJumpCnt++;

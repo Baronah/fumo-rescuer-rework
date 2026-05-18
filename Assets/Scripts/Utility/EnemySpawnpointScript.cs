@@ -207,7 +207,7 @@ public class EnemySpawnpointScript : MonoBehaviour
     public virtual void OnSpawnedEnemyDeath()
     {
         if (!doSpawnEnemy || RepeatedSpawn) return;
-        if (SpawnEnemies.Count <= 0 || SpawnEnemies.Any(e => e.IsAlive())) return;
+        if (SpawnEnemies.Count <= 0 || SpawnEnemies.Any(e => e.IsConsideredActive())) return;
 
         SpawnEnemies.Clear();
         foreach (var obj in TargetObjectsToInteract)
@@ -260,7 +260,7 @@ public class EnemySpawnpointScript : MonoBehaviour
         
         if (RepeatedSpawn) return countInfiniteSpawns ? 1 : 0;
 
-        if (Spawned) return SpawnEnemies.Count(e => e.IsAlive() && !e.IsInsignificant);
+        if (Spawned) return SpawnEnemies.Count(e => e.IsConsideredActive() && !e.IsInsignificant);
         return SpawnPositions.Length * Quantity;
     }
 

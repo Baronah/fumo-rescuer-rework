@@ -50,6 +50,8 @@ public class EntityBase : MonoBehaviour
 
     public virtual Type GetGenericType() => typeof(EntityBase);
 
+    public Transform FeetPosition;
+
     public void SetInvulnerable(float duration, bool stack = false)
     {
         if (stack)
@@ -147,6 +149,8 @@ public class EntityBase : MonoBehaviour
 
     public bool IsFrozen => FreezeTimer > 0f;
     public bool IsStunned => StunTimer > 0f;
+
+    public virtual bool IsBlinded => ArngDebuffs.ContainsKey("BLINDNESS") && ArngDebuffs["BLINDNESS"].IsInEffect;
 
     [SerializeField] protected float preferredMoveAnimationPlaySpeed = 1.0f, preferredAttackAnimationSpeed = 1.0f;
 
@@ -1181,6 +1185,8 @@ public class EntityBase : MonoBehaviour
     }
 
     public virtual bool IsAlive() => health > 0;
+
+    public virtual bool IsConsideredActive() => IsAlive();
 
     public virtual void Move()
     {
