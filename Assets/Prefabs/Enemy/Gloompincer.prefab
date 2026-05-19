@@ -539,6 +539,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 15
   size: 0
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: A Gloompincer that escaped from the arenas and adapted to life in

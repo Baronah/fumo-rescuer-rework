@@ -505,7 +505,7 @@ public class LevelSelectionScript : MonoBehaviour
         { 
             Code = enemyCode, 
             LevelIndex = hasStatsChanged ? selectedIndex : -1, 
-            hasChanged = EnemyStatsLookup.HasStatsChange(enemyCode, selectedIndex) 
+            hasChanged = hasStatsChanged,
         };
 
         EnemyBase enemy;

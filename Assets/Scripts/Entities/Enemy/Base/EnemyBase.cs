@@ -48,6 +48,8 @@ public class EnemyBase : EntityBase
 
     public Size size = Size.MEDIUM;
 
+    public bool CanDetectPlayer = true;
+
     private bool SpotPlayerUponSpawn = false;
     [SerializeField] private GameObject TooltipsPrefab;
     private int TooltipsPriority = 0;
@@ -244,7 +246,7 @@ public class EnemyBase : EntityBase
 
             bool isPlayerSpotted = SpottedPlayer && SpottedPlayer.IsAlive();
             DetectSymbol.text = isPlayerSpotted ? "!" : "?";
-            DetectSymbol.gameObject.SetActive(IsAlive() && (isPlayerSpotted || MoveToOverridePosition));
+            DetectSymbol.gameObject.SetActive(IsAlive() && CanDetectPlayer && (isPlayerSpotted || MoveToOverridePosition));
         }
 
         navAgent.nextPosition = FeetPosition.position;
@@ -275,14 +277,13 @@ public class EnemyBase : EntityBase
             : StopVector;
     }
 
-    protected Vector3 StopVector = new Vector3(-1249 + Mathf.Epsilon, -3720 - Mathf.Epsilon, 0);
+    protected static Vector3 StopVector = new Vector3(-12495 + Mathf.Epsilon, -23720 - Mathf.Epsilon, 0);
 
     private void UpdatePathfinding()
     {
         PathfindCnt++;
 
-        if (IsFrozen || IsStunned || !IsAlive() || IsBound || MovementLockout > 0)
-            return;
+        if (!AllowMovement) return;
 
         if (navAgent == null) return;
 
@@ -380,11 +381,13 @@ public class EnemyBase : EntityBase
     private LayerMask obstacleLayer = 1 << 8;
     private float cornerAvoidanceDistance = 100f;
 
+    bool AllowMovement => !IsFrozen && !IsStunned && IsAlive() && !IsMovementLocked && !IsBound;
+
     public override void Move()
     {
         MoveCnt++;
 
-        if (IsFrozen || IsStunned || !IsAlive() || IsMovementLocked || IsBound) return;
+        if (!AllowMovement) return;
 
         if (!SpottedPlayer &&
             MoveToOverridePosition &&
@@ -551,6 +554,8 @@ public class EnemyBase : EntityBase
 
     bool CanFindPlayerFromNearbyAllies()
     {
+        if (!CanDetectPlayer) return false;
+
         var enemies = GetNearbyEnemiesToFindPlayer();
         foreach (var e in enemies)
         {
@@ -582,7 +587,7 @@ public class EnemyBase : EntityBase
         }
         ScanPlayerCnt = 0;
 
-        if (IsFrozen || IsStunned) return;
+        if (IsFrozen || IsStunned || !CanDetectPlayer) return;
 
         bool spottedViaAlert = false;
         if (!SpottedPlayer)
@@ -607,7 +612,7 @@ public class EnemyBase : EntityBase
                 if (distance > Mathf.Max(100f, detectionRange * 0.25f))
                 {
                     var checkObstacle = Physics2D.Raycast(
-                        transform.position,
+                        FeetPosition.position,
                         (RecentlyScannedPlayer.FeetPosition.position - FeetPosition.position).normalized,
                         distance - 30f,
                         obstacleLayer);

@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.07, y: -0.9, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5248043830005596663}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 39bbe35c6eb7727419a280df254129f8, type: 3}
-  m_Color: {r: 0.015579104, g: 1, b: 0, a: 0.7490196}
+  m_Color: {r: 0.015579104, g: 1, b: 0, a: 0.8509804}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,7 +100,7 @@ MonoBehaviour:
   RotateDegree: 45
   PulseTime: 1
   PulseWait: 0.25
-  FinalPulse_Alpha: 0.2
+  FinalPulse_Alpha: 0.4
 --- !u!1 &1012237595048739584
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,11 +426,11 @@ MonoBehaviour:
   attackInterval: 0
   hpRegenFlat: 0
   hpRegenPercentage: 0
-  weight: 4
+  weight: 5
   damageReduction: 0
   damageAmplify: 0
   IsShiftImmune: 0
-  BoundTimer: 0
+  BoundTimer: 9999
   IsFreezeImmune: 1
   IsStunImmune: 1
   IsPhysicalImmune: 0
@@ -466,6 +466,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 19
   size: 1
+  CanDetectPlayer: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 7
   Description: Church statue that has been abandoned for a very long time. Though

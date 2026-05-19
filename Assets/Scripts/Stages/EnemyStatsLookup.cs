@@ -58,6 +58,10 @@ public static class EnemyStatsLookup
 
             case 13:
                 break;
+
+            case 14:
+                codeWithStatsChange = new() { EnemyCode.SENTINEL };
+                break;
         }
 
         if (codeWithStatsChange == null) return false;
@@ -183,6 +187,14 @@ public static class EnemyStatsLookup
                 break;
 
             case 13:
+                break;
+
+            case 14:
+                if (enemy as Sentinel)
+                {
+                    enemy.b_moveSpeed += 50f;
+                    hasChanged = true;
+                }
                 break;
         }
     }

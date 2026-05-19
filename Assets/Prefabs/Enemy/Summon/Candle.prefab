@@ -324,7 +324,7 @@ MonoBehaviour:
   damageReduction: 0
   damageAmplify: 0
   IsShiftImmune: 1
-  BoundTimer: 0
+  BoundTimer: 9999
   IsFreezeImmune: 0
   IsStunImmune: 1
   IsPhysicalImmune: 0
@@ -332,6 +332,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 1
   InvulnerableTimer: 9999
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 0
   damageType: 0
   attackPattern: 2
@@ -359,6 +360,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 17
   size: 1
+  CanDetectPlayer: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: Enemy lore or description

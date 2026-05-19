@@ -174,7 +174,7 @@ MonoBehaviour:
   damageReduction: 0
   damageAmplify: 0
   IsShiftImmune: 0
-  BoundTimer: 0
+  BoundTimer: 9999
   IsFreezeImmune: 0
   IsStunImmune: 0
   IsPhysicalImmune: 0
@@ -182,6 +182,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 2
@@ -192,18 +193,24 @@ MonoBehaviour:
   ccBar: {fileID: 3383678605386129869}
   AttackAnimation: {fileID: 0}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
+  PhysicalDodgeChance: 0
+  MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 8
+  size: 1
+  CanDetectPlayer: 0
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: Enemy lore or description
@@ -212,23 +219,12 @@ MonoBehaviour:
   b_detectionRange: 0
   DangerRange_RatioOfAttackRange: 0.75
   MinimumDistanceFromPlayer: 20
-  gridCellSize: 500
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 500
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1.25
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 1
+  hasDRWhenNotCombat: 0
 --- !u!1 &3383678605386129869 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 773491194806959642, guid: f3221dbae6b487b49907a796747ecac4, type: 3}

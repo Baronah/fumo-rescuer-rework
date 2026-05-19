@@ -48,19 +48,22 @@ public class SaintStatue : EnemyBase
         if (cnt < 30) return;
 
         cnt = 0;
-        EntityManager.Enemies.ForEach(enemy =>
+        if (IsAlive())
         {
-            if (!enemy || !enemy.IsAlive() || enemy == this) return;
-            enemy.ApplyEffect(Effect.AffectedStat.DEF, DefBuffID, DefBuffFlat, 9999f, false);
-            enemy.ApplyEffect(Effect.AffectedStat.RES, ResBuffID, ResBuffFlat, 9999f, false);
-        });
+            EntityManager.Enemies.ForEach(enemy =>
+            {
+                if (!enemy || !enemy.IsAlive()) return;
+                enemy.ApplyEffect(Effect.AffectedStat.DEF, DefBuffID, DefBuffFlat, 9999f, false);
+                enemy.ApplyEffect(Effect.AffectedStat.RES, ResBuffID, ResBuffFlat, 9999f, false);
+            });
+        }
     }
 
     public void OnMedicalTileHealingReceive(float amount)
     {
         EntityManager.Enemies.ForEach(enemy =>
         {
-            if (!enemy || !enemy.IsAlive() || enemy as SaintStatue) return;
+            if (!enemy || !enemy.IsAlive() || enemy == this) return;
             Heal(amount + mHealth * SelfHpHealingBonus, enemy, false, false);
         });
     }
@@ -77,7 +80,7 @@ public class SaintStatue : EnemyBase
 
         EntityManager.Enemies.ForEach(enemy =>
         {
-            if (!enemy || !enemy.IsAlive() || enemy == this) return;
+            if (!enemy || !enemy.IsAlive()) return;
             enemy.RemoveEffect(DefBuffID);
             enemy.RemoveEffect(ResBuffID);
         });
