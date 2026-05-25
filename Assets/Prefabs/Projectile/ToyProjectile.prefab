@@ -253,6 +253,7 @@ MonoBehaviour:
   doesDamage: 1
   TravelSpeed: 25
   Acceleration: 0
+  rb2d: {fileID: 9149983515992083529}
   projectileType: 1
 --- !u!1 &7959097335497915480
 GameObject:

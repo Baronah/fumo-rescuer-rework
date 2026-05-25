@@ -13,8 +13,22 @@ using static LevelDifficultyModifier;
 using static SkillTree_Manager;
 using Image = UnityEngine.UI.Image;
 
+[Singleton]
 public class StageManager : MonoBehaviour
 {
+    public static StageManager _instance { get; private set; }
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     public int LevelIndex = 0;
     protected bool PressedAnyKey = false;
     protected bool IsStageStarted = false;
@@ -82,7 +96,7 @@ public class StageManager : MonoBehaviour
 
     public EnvironmentType[] StageEvironmentTypes;
 
-    private PlayerManager playerManager;
+    private PlayerManager playerManager => PlayerManager._instance;
 
     bool IsStageReady = false,
         IsStageEnd = false,
@@ -91,9 +105,20 @@ public class StageManager : MonoBehaviour
 
     GameObject TopOverlay;
 
+    // Theoria
+    public bool Absolutism, Statis, Gravity, Acceleration, Hunger, Adaption;
+    //
+
     public virtual void Start()
     {
         GlobalStageManager.OnStageStart();
+
+        Absolutism = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ABSOLUTISM);
+        Statis = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.STATIS);
+        Gravity = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GRAVITY);
+        Acceleration = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ACCELERATION);
+        Hunger = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.HUNGER);
+        Adaption = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ADAPTION);
 
         LevelName = SceneManager.GetActiveScene().name;
         Title.text = $"<b><size=120>{LevelName}</size></b>\n{prefabStorage.LevelTitles[LevelIndex]}";
@@ -135,8 +160,6 @@ public class StageManager : MonoBehaviour
         EnableChallengeMode();
 
         enemySpawnpoints = FindObjectsOfType<EnemySpawnpointScript>(true).ToArray();
-
-        playerManager = GetComponent<PlayerManager>();
 
         if (CharacterPrefabsStorage.EnableChallengeMode) LoadingState.transform.position += new Vector3(0, -50);
         LoadingState.text = "<i>Loading stage, please wait...</i>";
@@ -388,11 +411,10 @@ public class StageManager : MonoBehaviour
                     enemy.bAtk = (short)(enemy.bAtk * 1.5f);
                     enemy.ASPD += 30;
                     enemy.lifeSteal += 0.3f;
-                    enemy.mHealth = (int)(enemy.mHealth * 0.6f);
                     break;
 
                 case SkillName.ABSOLUTISM:
-                    if (enemy.attackPattern == EntityBase.AttackPattern.MELEE)
+                    if (enemy.attackPattern == EntityBase.AttackPattern.MELEE || enemy.attackPattern == EntityBase.AttackPattern.NONE)
                     {
                         enemy.mHealth *= 2;
                         enemy.b_moveSpeed *= 1.35f;
@@ -432,8 +454,11 @@ public class StageManager : MonoBehaviour
             player.mHealth *= 2f;
             player.bAtk = (short)(player.bAtk * 1.3f);
         }
+    }
 
-        var Skills = CharacterPrefabsStorage.Skills.Select(s => s.Key).OrderBy(s => s);
+    public void ProcessPlayerSkillTree(PlayerBase player)
+    {
+        var Skills = player.Skills;
         foreach (SkillName skill in Skills)
         {
             switch (skill)
@@ -447,7 +472,6 @@ public class StageManager : MonoBehaviour
                         player.bAtk = (short)(player.bAtk * 1.5f);
                         player.ASPD += 30;
                         player.lifeSteal += 0.3f;
-                        player.mHealth = (int)(player.mHealth * 0.6f);
                     }
                     break;
                 case SkillName.ABSOLUTISM:

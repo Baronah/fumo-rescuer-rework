@@ -7,10 +7,14 @@ namespace DamageCalculation
         public void Process(EntityBase attacker, EntityBase target, DamageInstance instance)
         {
             if (target.damageAmplify != 0) instance.Multiply(1.0f + target.damageAmplify / 100f);
-            if (target.damageReduction != 0) instance.Multiply(1.0f - target.damageReduction / 100f);
+            if (target.damageReduction != 0)
+            {
+                float multiplier = 1.0f - target.damageReduction / 100f;
+                instance.Multiply(multiplier, multiplier, 1f);
+            }
 
             if (target is EnemyBase e && e.hasDRWhenNotCombat && !e.HasSpottedPlayer)
-                instance.Multiply(0.4f, 0.4f, 1f);
+            instance.Multiply(0.4f, 0.4f, 1f);
         }
     }
 

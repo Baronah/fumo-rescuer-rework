@@ -874,6 +874,7 @@ public class PlayerRanged : PlayerBase
         }
     }
 
+    private float BurstHeal_HpPercentage;
     private float HealPerSecond_HpPercentage;
     private float DefBoost;
     private float ResBoost;
@@ -881,6 +882,7 @@ public class PlayerRanged : PlayerBase
     private float SpeedBoost;
     public void SetJuggernauntInherit(float duration, float BurstHeal_HpPercentage, float HPS_Percentage, float DefBoost, float ResBoost, float AtkBoost, float SpeedBoost)
     {
+        this.BurstHeal_HpPercentage = BurstHeal_HpPercentage;
         this.HealPerSecond_HpPercentage = HPS_Percentage;
         this.DefBoost = DefBoost;
         this.ResBoost = ResBoost;
@@ -893,8 +895,13 @@ public class PlayerRanged : PlayerBase
     protected IEnumerator ActivateJuggernaunt(float duration)
     {
         yield return new WaitUntil(() => IsComponentsInitialized);
+        
         JuggEffect.SetActive(true);
         juggernauntCurrentDuration = 0;
+
+        yield return null;
+
+        Heal(mHealth * BurstHeal_HpPercentage);
 
         ApplyEffect(Effect.AffectedStat.ATK, "JUGGERNAUNT_SKILL_ATK_BUFF", AtkBoost * 100, 999f, true, EffectPersistType.PERSIST, false);
         ApplyEffect(Effect.AffectedStat.DEF, "JUGGERNAUNT_SKILL_DEF_BUFF", DefBoost * 100, 999f, true, EffectPersistType.PERSIST, false);

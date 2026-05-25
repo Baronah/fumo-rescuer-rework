@@ -5860,7 +5860,7 @@ MonoBehaviour:
   Name: Player Melee
   Icon: {fileID: 21300000, guid: 16d47974b79ddaf4886e53951e987eab, type: 3}
   mHealth: 200
-  bAtk: 26
+  bAtk: 28
   bDef: 25
   bRes: 10
   defPen: 0
@@ -5897,6 +5897,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 0
@@ -5907,7 +5908,7 @@ MonoBehaviour:
   ccBar: {fileID: 8729259124278131605}
   AttackAnimation: {fileID: 7400000, guid: 38cef02e111cc2741872318b17372723, type: 2}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -5915,6 +5916,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}
@@ -5988,6 +5990,7 @@ MonoBehaviour:
   AfterShockExplodeSlowTime: 1
   TransferBonusDuration: 2
   ExtendDurationOfHit: 0.75
+  ExtendDurationMaxRatio: 1
   AftershockDmgCounter: {fileID: 7148168932227406490}
   Ambient: {fileID: -5044359066298894490}
   Vortex: {fileID: -3648005880966443597}

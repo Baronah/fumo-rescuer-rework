@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Assimilated Originium Spider
   Icon: {fileID: 21300000, guid: df69882a8c471804f99bdd709c35b8b1, type: 3}
-  mHealth: 110
+  mHealth: 100
   bAtk: 15
   bDef: 15
   bRes: 10
@@ -498,6 +498,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 0
@@ -510,7 +511,7 @@ MonoBehaviour:
   sfxs:
   - {fileID: -9120536778963195246}
   - {fileID: -3103988590971960884}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -518,13 +519,16 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1.7
   preferredAttackAnimationSpeed: 0.85
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 417558286537648062}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 11
   size: 0
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 7
   Description: A spider-like creature that has assimilated into the Originium.
@@ -537,17 +541,6 @@ MonoBehaviour:
   b_detectionRange: 185
   DangerRange_RatioOfAttackRange: 1
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 2
   - 5

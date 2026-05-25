@@ -9,21 +9,26 @@ public class Toy : EnemyBase
     public bool WakenUp = false;
     public bool IsActive => WakenUp && IsStarted && IsAlive();
 
+    public override bool IsValidForPlayerDetection()
+    {
+        return base.IsValidForPlayerDetection() && IsActive;
+    }
+
     public override void InitializeComponents()
     {
         base.InitializeComponents();
-        defaultInsignificance = IsInsignificant;
         if (!ViewOnlyMode) StartCoroutine(OnStartCoroutine());
     }
-
-    bool defaultInsignificance;
 
     IEnumerator OnStartCoroutine()
     {
         yield return new WaitForSeconds(StartAni.length);
-        IsStarted = true;
+        
         if (!environmentalTilesStandingOn.Contains(StageManager.EnvironmentType.DARK_ZONE)) OnShroudedZoneExit();
         else OnShroudedZoneEnter();
+
+        yield return null;
+        IsStarted = true;
     }
 
     public override void EnemyFixedBehaviors()
@@ -61,7 +66,7 @@ public class Toy : EnemyBase
 
         float ProjectileAcceleration = 500;
 
-        Vector2 playerDir = (SpottedPlayer.transform.position - AttackPosition.position).normalized;
+        Vector2 playerDir = (SpottedPlayerPositionBeforeAttack - AttackPosition.position).normalized;
         Vector3 sourcePosition = AttackPosition.position;
 
         int projCount = 4;
@@ -99,7 +104,6 @@ public class Toy : EnemyBase
     public void OnShroudedZoneExit()
     {
         WakenUp = false;
-        IsInsignificant = true;
         CanBeHitByProjectiles = false;
         isInvisible = true;
 
@@ -135,7 +139,6 @@ public class Toy : EnemyBase
         }
 
         WakenUp = true;
-        IsInsignificant = defaultInsignificance;
         CanBeHitByProjectiles = true;
         isInvisible = false;
 

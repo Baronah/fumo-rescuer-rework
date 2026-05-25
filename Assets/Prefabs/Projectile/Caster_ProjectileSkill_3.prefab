@@ -178,6 +178,7 @@ MonoBehaviour:
   doesDamage: 1
   TravelSpeed: 25
   Acceleration: 0
+  rb2d: {fileID: 502715722135881361}
   projectileType: 0
 --- !u!96 &-1283343204841064067
 TrailRenderer:

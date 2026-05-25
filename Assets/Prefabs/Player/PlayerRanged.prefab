@@ -1196,11 +1196,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Size.y
-      value: 2.1634867
+      value: 2.163487
       objectReference: {fileID: 0}
     - target: {fileID: 1457099365488019423, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Offset.y
-      value: -0.29538962
+      value: -0.2953896
       objectReference: {fileID: 0}
     - target: {fileID: 1534192039506419080, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_LocalScale.x
@@ -1420,7 +1420,7 @@ MonoBehaviour:
   Name: Player Ranged
   Icon: {fileID: 21300000, guid: 15ee98af90e40a74fb6b25aadaab346a, type: 3}
   mHealth: 150
-  bAtk: 50
+  bAtk: 65
   bDef: 5
   bRes: 30
   defPen: 0
@@ -1457,6 +1457,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 1
   attackPattern: 1
@@ -1524,7 +1525,7 @@ MonoBehaviour:
   SkillCooldown: 25
   SkillDuration: 5
   Skill_DamageMulitplier: 0.25
-  Skill_AtkInterval: 0.15
+  Skill_AtkInterval: 0.18
   Skill_ProjLifeSpan: 1.8
   SkillBarObj: {fileID: 4703740534645977381}
   FreezeRange: 450

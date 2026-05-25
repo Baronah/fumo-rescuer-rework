@@ -204,12 +204,14 @@ public class EnemySpawnpointScript : MonoBehaviour
         OnSpawnedEnemyDeath();
     }
 
+    bool onDeathTriggered = false;
     public virtual void OnSpawnedEnemyDeath()
     {
+        if (onDeathTriggered) return;
         if (!doSpawnEnemy || RepeatedSpawn) return;
-        if (SpawnEnemies.Count <= 0 || SpawnEnemies.Any(e => e.IsConsideredActive())) return;
+        if (SpawnEnemies.Count <= 0 || SpawnEnemies.Any(e => !e.IsComponentsInitialized || e.IsConsideredActive())) return;
 
-        SpawnEnemies.Clear();
+        onDeathTriggered = true;
         foreach (var obj in TargetObjectsToInteract)
         {
             if (!obj) continue;
@@ -247,8 +249,6 @@ public class EnemySpawnpointScript : MonoBehaviour
         }
     }
 
-    private bool IsNotAccountForCounter() { return isInsignificant || (Spawned && SpawnEnemies.All(e => e.IsInsignificant)); }
-
     public virtual int GetEnemiesCount(bool countInfiniteSpawns = false) 
     {
         if (!this.gameObject) return 0;
@@ -256,11 +256,14 @@ public class EnemySpawnpointScript : MonoBehaviour
         if (!stageManager) stageManager = FindObjectOfType<StageManager>(true);
         GetSpawnPositions();
 
-        if (!doSpawnEnemy || SpawnPositions == null || IsNotAccountForCounter()) return 0;
+        int activeCount = SpawnEnemies.Count(e => e.IsConsideredActive() && !e.IsInsignificant);
+        bool IsNotAccountForCounter = isInsignificant || (Spawned && activeCount == 0);
+
+        if (!doSpawnEnemy || SpawnPositions == null || IsNotAccountForCounter) return 0;
         
         if (RepeatedSpawn) return countInfiniteSpawns ? 1 : 0;
 
-        if (Spawned) return SpawnEnemies.Count(e => e.IsConsideredActive() && !e.IsInsignificant);
+        if (Spawned) return activeCount;
         return SpawnPositions.Length * Quantity;
     }
 

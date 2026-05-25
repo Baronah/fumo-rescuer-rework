@@ -9,7 +9,7 @@ public class CasterProjectileScript : ProjectileScript
 
     private HashSet<EnvironmentType> contactedEnvironmentType = new();
     
-    PlayerManager playerManager;
+    PlayerManager playerManager => PlayerManager._instance;
     PlayerRanged caster;
     void GetFieldExpert()
     {
@@ -20,8 +20,6 @@ public class CasterProjectileScript : ProjectileScript
             (caster && caster.Skills.Contains(SkillTree_Manager.SkillName.SPIRAL_FIELD_EXPERT))
             ||
             (playerCasterIllusion && playerCasterIllusion.FieldExpert);
-
-        playerManager = caster ? caster.getPlayerManager : playerCasterIllusion ? playerCasterIllusion.playerManager : null;
     }
 
     public override void ShootTowards(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)

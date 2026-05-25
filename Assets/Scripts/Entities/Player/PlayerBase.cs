@@ -17,10 +17,7 @@ public class PlayerBase : EntityBase
     public Sprite AttackSprite, SkillSprite, SpecialSprite;
     public string AttackDes, SkillName, SkillDes, SpecialName, SpecialDes;
     
-    protected PlayerManager playerManager;
-    public PlayerManager getPlayerManager => playerManager;
-    
-    protected StageManager stageManager;
+    protected static PlayerManager playerManager => PlayerManager._instance;
 
     [SerializeField] protected GameObject HH_Effect_parent;
     [SerializeField] private Material HH_Fill_Material;
@@ -57,13 +54,12 @@ public class PlayerBase : EntityBase
         if (IsComponentsInitialized) return;
         ObstacleLayers = LayerMask.GetMask("Obstacle", "OnedirectionalPassage", "Border");
 
-        stageManager = FindObjectOfType<StageManager>();
-        stageManager.OnPlayerSpawn(this);
+        StageManager.OnPlayerSpawn(this);
 
-        playerManager = FindObjectOfType<PlayerManager>();
         playerManager.Register(this);
 
         GetSkillTreeEffects();
+        StageManager.ProcessPlayerSkillTree(this);
 
         HH_Effect_parent.SetActive(Skills.Contains(SkillTree_Manager.SkillName.HEAVY_HITTER));
         WindanthemSlider = WindanthemBar.GetComponentInChildren<Slider>();
@@ -103,6 +99,11 @@ public class PlayerBase : EntityBase
         WindanthemMaxEffect.SetActive(alive && IsWindAnthemMaxed);
 
         AllowVow.SetActive(alive && canVow && !playerManager.hasVowed);
+    }
+
+    protected override bool TriggerHunger()
+    {
+        return base.TriggerHunger() && IsMoving() && !Skills.Contains(SkillTree_Manager.SkillName.EQUIPMENT_PROVISIONS);
     }
 
     float w_countUp = 0;
@@ -153,6 +154,8 @@ public class PlayerBase : EntityBase
     }
 
     float a_countUp = 0;
+    short attentionMaxReduction = 80;
+    float attentionMinLifesteal = 0.35f;
     bool hasDamageReductionBuffFromAttentionMaxed = false,
          hasLifestealBuffFromAttentionMin = false;
     void AttentionBuff()
@@ -164,13 +167,13 @@ public class PlayerBase : EntityBase
         if (health < mHealth && hasDamageReductionBuffFromAttentionMaxed)
         {
             hasDamageReductionBuffFromAttentionMaxed = false;
-            damageReduction -= 90;
+            damageReduction -= attentionMaxReduction;
         }
 
         if (health > mHealth * 0.3f && hasLifestealBuffFromAttentionMin)
         {
             hasLifestealBuffFromAttentionMin = false;
-            lifeSteal -= 0.35f;
+            lifeSteal -= attentionMinLifesteal;
         }
 
         if (health >= mHealth * 0.85f && Skills.Contains(SkillTree_Manager.SkillName.ATTENTION_BOOK))
@@ -181,7 +184,7 @@ public class PlayerBase : EntityBase
             if (health >= mHealth && !hasDamageReductionBuffFromAttentionMaxed)
             {
                 hasDamageReductionBuffFromAttentionMaxed = true;
-                damageReduction += 90;
+                damageReduction += attentionMaxReduction;
             }
         }
         
@@ -193,7 +196,7 @@ public class PlayerBase : EntityBase
             if (health <= mHealth * 0.3f && !hasLifestealBuffFromAttentionMin)
             {
                 hasLifestealBuffFromAttentionMin = true;
-                lifeSteal += 0.35f;
+                lifeSteal += attentionMinLifesteal;
             }
         }
     }
@@ -854,7 +857,7 @@ public class PlayerBase : EntityBase
 
     public void ResumeStageBGM()
     {
-        stageManager.StageBGM.Play();
+        StageManager.StageBGM.Play();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -864,7 +867,7 @@ public class PlayerBase : EntityBase
         FumoScript fumoScript = collision.gameObject.GetComponent<FumoScript>();
         if (fumoScript && fumoScript.ObjectiveType == FumoScript.FumoObjectiveType.PICK_UP && collision.gameObject.CompareTag("Fumo"))
         {
-            stageManager.OnPlayerFumoPickup(this, collision);
+            StageManager.OnPlayerFumoPickup(this, collision);
         }
     }
 

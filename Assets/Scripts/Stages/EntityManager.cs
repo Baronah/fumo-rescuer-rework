@@ -1,10 +1,25 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
+[Singleton]
 public class EntityManager : MonoBehaviour
 {
+    public static EntityManager _instance { get; private set; }
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     private short EnemyDefeatedCount = 0;
     public short GetEnemyDefeatedCount() => EnemyDefeatedCount;
 

@@ -127,21 +127,17 @@ public class EnemyBase : EntityBase
     Coroutine MovelockoutCoroutine = null;
     TMP_Text DetectSymbol;
 
-    private const short PathfindCntThreshold = 75, ScanPlayerCntThreshold = 20, MoveCntThreshold = 15;
+    private const short PathfindCntThreshold = 75, ScanPlayerCntThreshold = 25, MoveCntThreshold = 15;
     bool FirstPathfindAfterSpawn = true;
 
     private short ScanPlayerCnt = 0, MoveCnt = 0, PathfindCnt = 0;
 
     public bool IsInsignificant = false;
 
-    protected StageManager stageManager;
-
     public bool hasDRWhenNotCombat = false;
 
     public override void InitializeComponents()
     {
-        stageManager = FindObjectOfType<StageManager>(true);
-
         base.InitializeComponents();
 
         PathfindCnt = (short)UnityEngine.Random.Range(0, PathfindCntThreshold);
@@ -231,7 +227,7 @@ public class EnemyBase : EntityBase
         while (!SpottedPlayer || count <= 60)
         {
             yield return null;
-            SpottedPlayer = FindObjectOfType<PlayerBase>();
+            SpottedPlayer = EntityManager.Players.FirstOrDefault(p => p && p.IsAlive());
             count++;
         }
     }
@@ -328,12 +324,13 @@ public class EnemyBase : EntityBase
                 return playerPos;
 
             case AttackPattern.RANGED:
+                float retreatDistance = Mathf.Min(800, attackRange * DangerRange_RatioOfAttackRange);   
                 bool playerIsNearby = playerInRange != null &&
-                                      Vector2.Distance(enemyPos, playerPos) <= attackRange * DangerRange_RatioOfAttackRange;
+                                      Vector2.Distance(enemyPos, playerPos) <= retreatDistance;
                 if (playerIsNearby)
                 {
                     Vector2 dirAway = ((Vector2)transform.position - playerPos).normalized;
-                    return (Vector2)transform.position + dirAway * (attackRange * DangerRange_RatioOfAttackRange);
+                    return (Vector2)transform.position + dirAway * retreatDistance;
                 }
                 else if (RecentlyScannedPlayer && playerInRange)
                 {
@@ -428,7 +425,7 @@ public class EnemyBase : EntityBase
 
         Vector2 direction = destination == StopVector ? Vector3.zero : (destination - selfPosition).normalized;
 
-        Vector2 finalDirection = GetAvoidanceDirection(direction, Vector2.Distance(selfPosition, destination));
+        Vector2 finalDirection = GetAvoidanceDirection(direction, selfPosition, destination);
 
         rb2d.velocity = CalculateMovement(finalDirection);
         animator.SetFloat("move", 1);
@@ -448,7 +445,6 @@ public class EnemyBase : EntityBase
             currentIgnoreCoroutine = StartCoroutine(TemporarilyDisableHitbox());
             stuckTimer = (stuckThreshold + terrainIgnoreDuration) * -1;
         }
-        else Debug.Log("Stuck detected but can not ignore terrain since a similar coroutine is being ran!");
     }
 
     public void StopObstacleIgnore()
@@ -471,8 +467,6 @@ public class EnemyBase : EntityBase
         yield return new WaitForEndOfFrame();
         yield return null;
 
-        Debug.Log("Stuck detected, performing terrain ignore!");
-
         float c = 0;
         while (c < terrainIgnoreDuration && IsValidForTerrainIgnore)
         {
@@ -484,6 +478,11 @@ public class EnemyBase : EntityBase
         StopObstacleIgnore();
     }
 
+    protected override bool TriggerHunger()
+    {
+        return base.TriggerHunger() && SpottedPlayer;
+    }
+
     bool IsValidForTerrainIgnore
         => !IsBeingShifted 
         && !IsStunned 
@@ -493,10 +492,12 @@ public class EnemyBase : EntityBase
         && isUsingPathfinding()
         && !hasClearSightToTargetOnThisMoveOppoturnity;
 
-    private Vector2 GetAvoidanceDirection(Vector2 originalDirection, float distanceToDestination)
+    private Vector2 GetAvoidanceDirection(Vector2 originalDirection, Vector3 selfPosition, Vector3 destination)
     {
-        if (hasClearSightToTargetOnThisMoveOppoturnity) return originalDirection;
+        if (hasClearSightToTargetOnThisMoveOppoturnity || !isUsingPathfinding()) return originalDirection;
         if (originalDirection == Vector2.zero) return Vector2.zero;
+
+        float distanceToDestination = Vector2.Distance(selfPosition, destination);
 
         Vector2 currentPos = FeetPosition.position;
         Vector2 finalDirection = originalDirection;
@@ -518,7 +519,7 @@ public class EnemyBase : EntityBase
 
     private Vector2 GetBestAvoidanceDirection(Vector2 currentPos, Vector2 originalDirection, Vector2 obstaclePoint)
     {
-        float[] angles = { 45f, -45f, 90f, -90f, 30f, -30f, 135f, -135f };
+        float[] angles = { 45f, -45f, 90f, -90f };
         float bestScore = float.MinValue;
         Vector2 bestDirection = originalDirection;
 
@@ -545,22 +546,31 @@ public class EnemyBase : EntityBase
         return bestDirection;
     }
 
-    protected virtual List<EntityBase> GetNearbyEnemiesToFindPlayer()
+    private static readonly List<EnemyBase> _nearbyEnemyBuffer = new();
+    protected virtual List<EnemyBase> GetNearbyEnemiesToFindPlayer()
     {
         var result = SearchForEntitiesAroundSelf(detectionRange, typeof(EnemyBase), true);
-        if (IsStandingOnEnvironmentalTile(StageManager.EnvironmentType.DARK_ZONE)) return result;
-        return result.Where(e => !e.IsStandingOnEnvironmentalTile(StageManager.EnvironmentType.DARK_ZONE)).ToList();
+        if (IsStandingOnEnvironmentalTile(StageManager.EnvironmentType.DARK_ZONE))
+            return result.Cast<EnemyBase>().ToList();
+
+        _nearbyEnemyBuffer.Clear();
+        foreach (var e in result)
+        {
+            if (!e.IsStandingOnEnvironmentalTile(StageManager.EnvironmentType.DARK_ZONE))
+                _nearbyEnemyBuffer.Add(e as EnemyBase);
+        }
+        return _nearbyEnemyBuffer;
     }
 
     bool CanFindPlayerFromNearbyAllies()
     {
-        if (!CanDetectPlayer) return false;
+        if (!IsValidForPlayerDetection()) return false;
 
         var enemies = GetNearbyEnemiesToFindPlayer();
         foreach (var e in enemies)
         {
             EnemyBase enemy = e as EnemyBase;
-            if (!enemy || !enemy.IsAlive() || !enemy.SpottedPlayer) continue;
+            if (!enemy || !enemy.IsAlive() || !enemy.SpottedPlayer || !enemy.IsValidForPlayerDetection()) continue;
 
             RaycastHit2D checkObstacle = Physics2D.Raycast(
                 FeetPosition.position,
@@ -578,6 +588,7 @@ public class EnemyBase : EntityBase
         return false;
     }
 
+    public virtual bool IsValidForPlayerDetection() => CanDetectPlayer && !IsFrozen && !IsStunned;
     public void ScanPlayer()
     {
         if (ScanPlayerCnt < ScanPlayerCntThreshold)
@@ -587,7 +598,7 @@ public class EnemyBase : EntityBase
         }
         ScanPlayerCnt = 0;
 
-        if (IsFrozen || IsStunned || !CanDetectPlayer) return;
+        if (!IsValidForPlayerDetection()) return;
 
         bool spottedViaAlert = false;
         if (!SpottedPlayer)
@@ -656,8 +667,7 @@ public class EnemyBase : EntityBase
 
         if (attackPattern == AttackPattern.NONE)
         {
-            List<EnemyBase> enemies = FindObjectsOfType<EnemyBase>()
-                .Where(e => e && e.IsAlive() && !e.SpottedPlayer).ToList();
+            List<EnemyBase> enemies = EntityManager.Enemies.Where(e => e && e.IsAlive() && !e.SpottedPlayer).ToList();
             foreach (var item in enemies)
             {
                 item.SpottedPlayer = SpottedPlayer;
@@ -666,10 +676,12 @@ public class EnemyBase : EntityBase
         }
     }
 
+    protected Vector3 SpottedPlayerPositionBeforeAttack;
     public override IEnumerator Attack()
     {
         if (IsAttackLocked || attackPattern == AttackPattern.NONE) yield break;
 
+        SpottedPlayerPositionBeforeAttack = SpottedPlayer ? SpottedPlayer.transform.position : transform.position;
         StartCoroutine(base.Attack());
 
         if (attackPattern == AttackPattern.RANGED)
@@ -689,7 +701,7 @@ public class EnemyBase : EntityBase
         if (attackPattern == AttackPattern.RANGED)
         {
             if (ProjectilePrefab)
-                CreateProjectileAndShootToward(SpottedPlayer, ProjectileType);
+                CreateProjectileAndShootToward(SpottedPlayer, SpottedPlayerPositionBeforeAttack, ProjectileType);
             else
                 DealDamage(SpottedPlayer, atk);
         }
@@ -728,7 +740,7 @@ public class EnemyBase : EntityBase
             fumoScript.ObjectiveType == FumoScript.FumoObjectiveType.PROTECT &&
             collision.gameObject.CompareTag("Fumo"))
         {
-            stageManager.OnEnemyFumoPickup(this, collision);
+            StageManager.OnEnemyFumoPickup(this, collision);
         }
     }
 
@@ -761,7 +773,6 @@ public class EnemyBase : EntityBase
         if (CurrentCheckpointIndex >= Checkpoints.Count) CurrentCheckpointIndex = 0;
     }
 
-    readonly protected bool Adaption = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ADAPTION);
     protected float Adaption_DefJump = 5;
     protected float Adaption_ResJump = 3;
     protected short Adaption_MaxCount = 40;
@@ -776,7 +787,7 @@ public class EnemyBase : EntityBase
 
     protected void ProcessAdaption(DamageInstance damage, EntityBase source)
     {
-        if (!source || !Adaption || !IsAlive()) return;
+        if (!source || !StageManager.Adaption || !IsAlive()) return;
 
         if (damage.PhysicalDamage > 0)
         {

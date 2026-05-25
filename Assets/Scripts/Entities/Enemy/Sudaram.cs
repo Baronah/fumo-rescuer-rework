@@ -81,7 +81,7 @@ public class Sudaram : EnemyBase
 
         if (Enhanced)
         {
-            Vector2 playerDir = (SpottedPlayer.transform.position - AttackPosition.position).normalized;
+            Vector2 playerDir = (SpottedPlayerPositionBeforeAttack - AttackPosition.position).normalized;
             Vector3 sourcePosition = AttackPosition.position;
 
             float[] angles = { 0f, 90f, -90f, 180f };

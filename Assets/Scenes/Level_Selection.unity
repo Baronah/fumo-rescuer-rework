@@ -2270,7 +2270,8 @@ MonoBehaviour:
     forms a vow with it. Afterwards, that skill has <color=#ff9717>reduced cool-down</color>,
     <color=#00ff00>enhanced effects</color> and grants you bonus attributes, <color=#5b7ccf>but
     the remaining skill can no longer be used</color>.
-  favorText: '"Oh, I have many threads here. Pick any color you like, then, let''s
+  favorText: '"What are these threads for, you ask? They are just leftovers, but
+    I know a fun thing you can do with them. Pick any color you like, then, let''s
     both tie them around our finger, just like this... Cute, isn''t it? We just made
     a symbol of promise, so don''t forget it! Hehe..."'
   skillDescriptionInShort: Casting a special or ultimate skill for the first time
@@ -4185,12 +4186,13 @@ MonoBehaviour:
     comes here whenever new idea sparks,\r\nTo implement. To experiment. To verify.
     Or simply, to write it down.\r\n\r\nShe also uses this place to store valuable
     items to her, such as samples for experiment, books, novel-looking ores, or just
-    thing she really likes.\r\n\r\nIn short, it's a little of everything!\r\nWelcome
-    to Mint's research.\r\n\r\nFeel free to look around, and if there's something
-    that you need here, you may bring it along.\r\nThough, remember to return them
-    when you're finished. \r\n\r\nYou are welcomed to this place anytime! \r\n\r\n<color=#b1b1b1>Oh,
-    and also, this is her secret base. \r\nShe loves it here more than anywhere.
-    \r\nDon't tell anyone else about it, okay?</color>"
+    thing she really likes.\r\n\r\nIn short, it's a little of everything.\nWelcome
+    to Mint's research!\n\r\nFeel free to look around, and if there's something that
+    you need here, you may bring it along.\r\nThough, remember to return them when
+    you're finished. \rShe might need some of them later.\n\r\nYou are welcomed to
+    this place anytime! \r\n\r\n<color=#b1b1b1>Oh, and also, this is her secret base.
+    \r\nShe loves it here more than anywhere. \r\nDon't tell anyone else about it,
+    okay?</color>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e61686ba236ff04b8632d6a26736acd, type: 2}
   m_sharedMaterial: {fileID: 2509212030381675100, guid: 5e61686ba236ff04b8632d6a26736acd, type: 2}
@@ -9062,7 +9064,7 @@ MonoBehaviour:
   skillNameText: Book that can Bite
   skillDescription: When HP is above 85%, gains <color=#ff4545>+30% ATK</color> and
     <color=#ffd61f>+20 ASPD</color>. At max HP, reduces physical and magical damage
-    taken by 90%.
+    taken by <color=#b1b1b1>80%</color>.
   favorText: '"Ah, sorry, please don''t go touching my book. It might bite your hand
     if you do. No, really, I''m not joking, I''m serious. Look! I even have to tie
     it shut like this."'
@@ -11474,7 +11476,7 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 24
-  skillNameText: Aftershock
+  skillNameText: Caterpillar
   skillDescription: While 'Juggernaut' is active, damage taken is stored. After 'Juggernaut'
     ends or upon swapping it's active, deals <color=#ff4545>physical damage</color>
     equal to <color=#b1b1b1>20% max HP + 80% stored damage</color> to all nearby
@@ -17262,9 +17264,9 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 41
-  skillNameText: Resonance
+  skillNameText: Opera Glasses
   skillDescription: Swapping for the first time during the duration of 'Juggernaut'
-    <color=yellow>retains its effect</color>, and extends it by <color=yellow>2 seconds</color>.
+    <color=yellow>retains its effect</color>, and <color=yellow>resets its duration</color>.
   favorText: The wheel that weaves eternity and infinity, spins the bond between
     you and I.
   skillDescriptionInShort: '''Juggernaut'' can be transferred to the swap in character.'
@@ -27401,7 +27403,7 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 46
-  skillNameText: '''Beyond the Night'''
+  skillNameText: Wonder Future
   skillDescription: Upon 'Juggernaut' activation, <color=yellow>removes all aggro</color>
     from enemies to self. While 'Juggernaut' is active, <color=#5b7ccf>ATK becomes
     0</color>, but renders self to become <color=#b1b1b1>'Invisible'</color> throughout
@@ -28076,12 +28078,12 @@ MonoBehaviour:
     has long gone:\n"Is just not my gote." '
   - Have no love, no future either.\nHave no heart, no sadness either.\nGot no home
     to return to, wandering aimlessly.\nLike a rolling stone, how does that feel?
-  - The worst thing about dying is that you won't be able to see the sunset ever
-    again.
+  - '"But, if I give in and shut tight my eyes, how will I ever get to see the sunset
+    ever again?"'
   - There are many ways to fill up a blank canvas. Regardless of what you choose,
     as long as you do with with your own hands, passion, and creativity, it's all
     beautiful and admirable.\n<color=yellow>Swap cool-down is halved in this level.</color>
-  - The present. Day and night. And even time. I will run through them all.\n<color=yellow>Your
+  - Reality. Present. Day and night. And even time. I will run through them all.\n<color=yellow>Your
     units have increased MSPD in this level.</color>\n<color=red>The 'Sudarim' are
     immune to damage from Originium Pollutions.</color>
   - Just burn them all down if you want.\nFrom above, you woudn't take any damage
@@ -28182,7 +28184,7 @@ MonoBehaviour:
   - Enemies: 01000000020000000c0000000e0000000f000000
   - Enemies: 0c0000000e0000000f00000010000000
   - Enemies: 0e0000001000000012000000
-  - Enemies: 020000000a0000000c000000130000000e0000000f0000001000000012000000
+  - Enemies: 020000000a0000000c000000130000000f0000001000000012000000
   MapPreviewObj: {fileID: 340580784}
   MapPreviewImg: {fileID: 2125190412}
   MapPreviewImgOverlay: {fileID: 1141736479}
@@ -35154,7 +35156,8 @@ MonoBehaviour:
   skillName: 34
   skillNameText: Attention-holding Device
   skillDescription: When HP is below 60%, gains <color=yellow>+30 DEF</color> and
-    <color=#00ffff>+20 RES</color>. At below 30%, additional gains 35% life-steal.
+    <color=#00ffff>+20 RES</color>. At below 30%, additional gains <color=red>35%
+    life-steal</color>.
   favorText: Hand-crafted device, consists of a metronome, sound bath, attention
     span training cards, bandages for when a book bites, pebble, and... a fire extinguisher?
   skillDescriptionInShort: When HP is below 60%, gains bonus DEF and RES. At below
@@ -41075,10 +41078,10 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 21
-  skillNameText: Persistence
-  skillDescription: While 'Juggernaut' is active, receiving damage extends its duration
-    by <color=yellow>0.75 seconds</color>, up to a total bonus of <color=#5b7ccf>100%
-    base duration</color>.
+  skillNameText: Easter
+  skillDescription: While 'Juggernaut' is active, receiving damage <color=green>recovers
+    2% max HP</color> and extends its duration by <color=yellow>0.75 seconds</color>,
+    up to a total bonus of <color=#5b7ccf>100% base duration</color>.
   favorText: It takes a little beating to get good at the game.
   skillDescriptionInShort: '''Juggernaut''''s duration extends upon receiving damage.'
   mutuallyExclusiveSkills: 160000001700000018000000290000002e000000
@@ -41754,12 +41757,12 @@ MonoBehaviour:
   skillNameText: '''Famine'''
   skillDescription: All units have their <color=#ff4545>ATK</color> and <color=#ffd61f>ASPD</color>
     increased by <color=#ff4545>50%</color> and <color=#ffd61f>30</color>, respectively,
-    and restores HP equal to <color=green>30% damage dealt</color>, but have <color=#5b7ccf>-40%
-    max HP</color>.\n\n<i>If <color=#ff00ff>'Equipment - Provision'</color> is selected,
-    you become unaffected.</i>
+    and restores HP equal to <color=green>30% damage dealt</color>. Your units continuously
+    lose HP while moving, enemies continuously lose HP while in combat.\n\n<i>If
+    <color=#ff00ff>'Equipment - Provision'</color> is selected, you become unaffected.</i>
   favorText: 
-  skillDescriptionInShort: Units have increased ATK, ASPD and life-steal, but reduced
-    max HP.
+  skillDescriptionInShort: Units have increased ATK, ASPD and life-steal, but continuously
+    lose HP.
   mutuallyExclusiveSkills: 
   Overlay: {fileID: 0}
 --- !u!114 &1605621095
@@ -46198,7 +46201,7 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 22
-  skillNameText: Pyroclasm
+  skillNameText: Eternal Sunshine
   skillDescription: While 'Juggernaut' is active, a fire ring is created around you,
     dealing <color=#ff4545>34% ATK</color> as physical damage every second and inflicts
     a stacking <color=#5b7ccf>-15% DEF</color> to nearby enemy every second.
@@ -49136,8 +49139,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
-  m_SizeDelta: {x: 1247.4519, y: 267.74}
+  m_AnchoredPosition: {x: 0.00006103516, y: 0}
+  m_SizeDelta: {x: 1247.452, y: 267.74}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1877090104
 MonoBehaviour:
@@ -52101,7 +52104,8 @@ MonoBehaviour:
     <color=yellow>creates another wave of projectiles</color> starting at their position.
     These extra waves can trigger up to <color=#5b7ccf>3 times</color>, and last
     up to <color=#5b7ccf>2 seconds</color>.
-  favorText: I'm just happy to be alive.
+  favorText: Nothing lasts forever, everyone will die someday. Nevertheless, I want
+    to connect to their souls.
   skillDescriptionInShort: When 'Der Tag Neight Sich' defeats an enemy, it creates
     another wave of projectiles starting at their position.
   mutuallyExclusiveSkills: 1b0000001c0000001d00000033000000

@@ -603,6 +603,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 16
   size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: A knight of the Nova Knightclub. With the Candle Knight as its figurehead,

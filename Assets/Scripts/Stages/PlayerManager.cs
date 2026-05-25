@@ -3,18 +3,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using TMPro;
-using TMPro.Examples;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static EntityBase;
 using static LevelDifficultyModifier;
 using static PlayerToxicSmoke;
 
+[Singleton]
 public class PlayerManager : MonoBehaviour
 {
+    public static PlayerManager _instance { get; private set; }
+    private void GetSingleton()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
     private CameraMovement mainCamera;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
@@ -77,7 +89,7 @@ public class PlayerManager : MonoBehaviour
     private AudioSource hit_01_sfx => sfxs[1];
     private AudioSource hit_02_sfx => sfxs[2];
 
-    public StageManager stageManager;
+    public StageManager stageManager => StageManager._instance;
 
     private bool EnableHitStop = true;
     private bool RadioActive = false;
@@ -88,6 +100,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
+        GetSingleton();
+
         SkillView_Overlay.SetActive(false);
         TechInfoSect.SetActive(false);
         PlayerInfoSect.SetActive(true);
@@ -132,7 +146,6 @@ public class PlayerManager : MonoBehaviour
         SwapPlayer();
 
         mainCamera = FindObjectOfType<CameraMovement>();
-        stageManager = FindObjectOfType<StageManager>(true);
     }
 
     private void GetPlayerStartType()

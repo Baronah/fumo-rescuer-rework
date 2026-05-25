@@ -3,15 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static Cinemachine.CinemachineTargetGroup;
 using static Effect;
 using static ProjectileScript;
 using static StageManager;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 
 public class EntityBase : MonoBehaviour
 {
@@ -155,7 +151,8 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected float preferredMoveAnimationPlaySpeed = 1.0f, preferredAttackAnimationSpeed = 1.0f;
 
     protected short UpdateCounter = 0;
-    protected EntityManager EntityManager;
+    protected static EntityManager EntityManager => EntityManager._instance;
+    protected static StageManager StageManager => StageManager._instance;
 
     protected Coroutine AttackCoroutine = null, LockoutMovementOnAttackCoroutine = null;
     protected Animation attackAnimation;
@@ -247,10 +244,6 @@ public class EntityBase : MonoBehaviour
 
     GameObject BlindnessEffect;
     RectTransform GravityCircle;
-    readonly bool absolutism = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ABSOLUTISM);
-    readonly bool statis = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.STATIS);
-    readonly bool gravity = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GRAVITY);
-    readonly bool acceleration = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ACCELERATION);
     public virtual void InitializeComponents()
     {
         Transform Sprite = transform.Find("Sprite");
@@ -276,14 +269,14 @@ public class EntityBase : MonoBehaviour
         if (circleFind)
         {
             GravityCircle = circleFind.GetComponent<RectTransform>();
-            GravityCircle.gameObject.SetActive(gravity);
+            GravityCircle.gameObject.SetActive(StageManager && StageManager.Gravity);
         }
 
         Transform StatisTransform = transform.Find("Statis");
         if (StatisTransform)
         { 
             StatisObj = StatisTransform.gameObject;
-            StatisObj.SetActive(statis);
+            StatisObj.SetActive(StageManager && StageManager.Statis);
         }
 
         Transform BlindnessTransform = transform.Find("Blindness");
@@ -317,7 +310,6 @@ public class EntityBase : MonoBehaviour
 
         if (ViewOnlyMode) return;
 
-        EntityManager = FindObjectOfType<EntityManager>();
         if (EntityManager)
         {
             EntityManager.OnEntitySpawn(this.gameObject);
@@ -334,11 +326,15 @@ public class EntityBase : MonoBehaviour
         if (this as PlayerBase)
         {
             if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.WINGED_STEPS_A)
-            || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.WINGED_STEPS_B))
+            || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.WINGED_STEPS_B)
+            || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.WINGED_STEPS_C))
                 AccelerationBuffPerSec *= 1.5f;
 
             if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ATTENTION_DEVICE))
                 StatisRequiredTimer = 3f;
+
+            HungerDamageCurrentHealthPercentagePerSec /= 2;
+            HungerDamageFlatPerSec /= 2;
         }
     }
 
@@ -419,6 +415,7 @@ public class EntityBase : MonoBehaviour
         DECAY
     };
 
+    #region Buffs & Debuffs
     public void ApplyEffect(AffectedStat affectedStat, string Key, float Value, float Duration, bool IsPercentageBased, EffectPersistType persistType = EffectPersistType.PERSIST, bool transferOnSwap = true)
     {
         bool IsDebuff = Value < 0;
@@ -884,6 +881,9 @@ public class EntityBase : MonoBehaviour
         if (enemyBaseCheck) enemyBaseCheck.detectionRange += prevDrngAdd;
     }
 
+    #endregion
+
+    #region Health Regeneration
     private float regenTimer = 0;
     public void RegenCount()
     {
@@ -908,6 +908,7 @@ public class EntityBase : MonoBehaviour
     {
         return hpRegenFlat + mHealth * hpRegenPercentage;
     }
+    #endregion
 
     public virtual void UpdateCooldowns()
     {
@@ -1186,7 +1187,7 @@ public class EntityBase : MonoBehaviour
 
     public virtual bool IsAlive() => health > 0;
 
-    public virtual bool IsConsideredActive() => IsAlive();
+    public virtual bool IsConsideredActive() => IsAlive() || canRevive;
 
     public virtual void Move()
     {
@@ -1201,6 +1202,7 @@ public class EntityBase : MonoBehaviour
         ProcessAccelaration();
         ProcessGravity();
         ProcessStatis();
+        ProcessHunger();
     }
 
     private float GravityTimerCount = 0f;
@@ -1210,7 +1212,7 @@ public class EntityBase : MonoBehaviour
     private readonly float PullForce_Base = 0.8f, PullForce_Growth = 0.5f;
     protected virtual void ProcessGravity()
     {
-        if (!gravity || weight <= 0) return;
+        if (!StageManager.Gravity || weight <= 0) return;
         GravityTimerCount += Time.fixedDeltaTime;
         if (GravityTimerCount < PullTick) return;
 
@@ -1253,7 +1255,7 @@ public class EntityBase : MonoBehaviour
     private readonly float AcceTick = 0.25f;
     protected virtual void ProcessAccelaration()
     {
-        if (!acceleration) return;
+        if (!StageManager.Acceleration) return;
         AcceTimerCount += Time.fixedDeltaTime;
         if (AcceTimerCount < AcceTick) return;
 
@@ -1308,7 +1310,6 @@ public class EntityBase : MonoBehaviour
     private float StatisTimer = 0f;
     private bool enteredStatis = false;
     private GameObject StatisObj;
-
     public virtual bool IsMoving()
     {
         return rb2d.velocity != Vector2.zero || PrevPosition != transform.position;
@@ -1316,7 +1317,7 @@ public class EntityBase : MonoBehaviour
 
     protected virtual void ProcessStatis()
     {
-        if (!statis) return;
+        if (!StageManager.Statis) return;
 
         string keyAtk = "STATIS_DEBUFF_ATK";
         if (!IsMoving())
@@ -1341,6 +1342,30 @@ public class EntityBase : MonoBehaviour
         }
 
         StatisObj.SetActive(enteredStatis);
+    }
+
+    private float HungerDamageFlatPerSec = 5f;
+    private float HungerDamageCurrentHealthPercentagePerSec = 0.03f;
+    private float HungerTimerCount = 0f;
+    private readonly float HungerTick = 1f;
+
+    protected virtual bool TriggerHunger()
+    {
+        return true;
+    }
+
+    protected virtual void ProcessHunger()
+    {
+        if (!StageManager.Hunger) return;
+
+        HungerTimerCount += Time.fixedDeltaTime;
+        if (HungerTimerCount < HungerTick) return;
+        HungerTimerCount = 0f;
+        
+        if (!TriggerHunger()) return;
+
+        float damage = (HungerDamageFlatPerSec + (health * HungerDamageCurrentHealthPercentagePerSec)) / HungerTick;
+        TakeDamage(new(0, 0, damage), null, null, false, true);
     }
 
     public virtual void StopMovement()
@@ -1906,7 +1931,7 @@ public class EntityBase : MonoBehaviour
         ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
         if (!projectileScript) return;
 
-        if (absolutism)
+        if (StageManager.Absolutism)
         {
             lifeSpan = Mathf.Min(15f, lifeSpan * 1.5f);
         }
@@ -1926,7 +1951,7 @@ public class EntityBase : MonoBehaviour
         ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
         if (!projectileScript) return;
 
-        if (absolutism)
+        if (StageManager.Absolutism)
         {
             lifeSpan = Mathf.Min(15f, lifeSpan * 1.5f);
         }

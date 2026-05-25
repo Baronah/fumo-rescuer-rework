@@ -116,12 +116,18 @@ public class SkillTree_Intro : MonoBehaviour
             {
                 string itemDes = Skill switch
                 {
+                    WINGED_STEPS_A or WINGED_STEPS_B or WINGED_STEPS_C => "Those words I wrote on my art units? Ah, they are lyrics from songs I like a lot. Want to listen to them?",
+                    EQUIPMENT_SCOPE => "Honeyberry really likes jumping off high places for someone to catch her, and that someone is usually me. " +
+                    "It may sound dangerous, but don't worry, she always lands neatly in my arms. I'm pretty good at these sporty activities, after all!",
                     EQUIPMENT_RADIO => "Thanks to that radio, we were able to chat to eachother even when you were far away. It was so fun, sadly the battery ran out mid way...",
                     EQUIPMENT_BLADE => "Hehe... sorry, but I couldn't help imaging you wearing those cat paws during battle. It's cute, right?",
                     EQUIPMENT_PROVISIONS => "Exploring is fun and all, but don't forget to treat yourself properly. I already made some soup, it's kind of basic, but help yourself!",
                     GEOGOLIST_OBSERVE => "Seems like you've taken a liking in geology. Nature is beautiful. Isn't it?",
                     GEOGOLIST_STUDY => "Seems like you've taken a liking in geology. Nature is powerful. Isn't it?",
                     GEOGOLIST_EXPLORE => "Seems like you've taken a liking in geology. Nature is exciting. Isn't it?",
+                    SMOKE_TOXIC => "Don't worry, before leaving, I already sprayed this bug spray everywhere. Now you can rest without worrying about bugs landing on your face anymore!",
+                    SMOKE_BLIND => "That pepper spray is very dangerous. If it happens to get caught in your eyes, rinse it off with water immediately! " +
+                    "Oh no... how will you even read this if that was really the case... I should have warned you earlier......",
                     BUBBLE_ARTS => "That bubble-making staff was really awesome, right? Aroma said that if the soap inside ever runs out, just bring it to her for refill.",
                     AMULET => "Did you get hurt somewhere? If anything, there's aid kit on the table, and some medicines on shelf too! Oh, and, make sure you take a good rest before leaving!!",
                     KNOTS => "These tied knots, let's keep it that way. Yes?",
@@ -144,7 +150,7 @@ public class SkillTree_Intro : MonoBehaviour
                     _ => string.Empty,
                 };
 
-                if (itemDes == string.Empty) continue;
+                if (itemDes == string.Empty || skillContent.Contains(itemDes)) continue;
 
                 skillContent += $"\n\n{itemDes}";
             }

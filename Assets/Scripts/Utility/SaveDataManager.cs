@@ -208,7 +208,7 @@ public class SaveDataManager
     {
         var (nmDiff, cmDiff) = GetLevelHighestDifficulty(LevelName);
 
-        if (cmDiff >= 6) return CompletionType.CHALLENGE_MODE_DIFF_HIGH;
+        if (cmDiff >= 7) return CompletionType.CHALLENGE_MODE_DIFF_HIGH;
         if (cmDiff > 1) return CompletionType.CHALLENGE_MODE_DIFF;
         if (cmDiff == 1) return CompletionType.CHALLENGE_MODE;
         if (nmDiff > 1) return CompletionType.NORMAL_DIFF;

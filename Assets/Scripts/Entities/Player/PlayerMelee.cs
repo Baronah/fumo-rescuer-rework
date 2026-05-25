@@ -45,9 +45,10 @@ public class PlayerMelee : PlayerBase
                            PullDebuffValue = 33f,
                            AfterShockDamageConversionRatio = 0.75f,
                            AfterShockMhpScale = 0.1f,
-                           AfterShockExplodeSlowTime = 1f,  
-                           TransferBonusDuration = 2f,
-                           ExtendDurationOfHit = 0.75f;
+                           AfterShockExplodeSlowTime = 1f,
+                           HpRestoreOnHit = 0.02f,
+                           ExtendDurationOfHit = 0.75f,
+                           ExtendDurationMaxRatio = 1f;
     [SerializeField] TMP_Text AftershockDmgCounter;
 
     [SerializeField] AudioSource Ambient, Vortex, Shock, Counter, FireUp, BlackflashSfx;
@@ -201,15 +202,15 @@ public class PlayerMelee : PlayerBase
             DoTRadius += 100f;
             AoERadius += 50f;
 
+            ExtendDurationMaxRatio += 1f;
+
             RimDoTAtkScale += 0.125f;
             RimDefShredValue += 5f;
 
             PullDebuffValue += 17f;
 
-            AfterShockDamageConversionRatio += 0.25f;
+            AfterShockDamageConversionRatio = 1f;
             AfterShockExplodeSlowTime += 0.5f;
-
-            TransferBonusDuration += 2f;
         }
     }
 
@@ -608,7 +609,7 @@ public class PlayerMelee : PlayerBase
 
             SkillBar.value = d - juggernauntCurrentDuration;
             
-            if (extendSkillDuration && durationAdded < d)
+            if (extendSkillDuration && durationAdded < d * ExtendDurationMaxRatio)
             {
                 juggernauntCurrentDuration -= ExtendDurationOfHit;
                 durationAdded += ExtendDurationOfHit;
@@ -699,10 +700,8 @@ public class PlayerMelee : PlayerBase
         if (swapInPlayer && Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_SHINDOUKAKU)
             && IsSkillActive)
         {
-            float transferDuration = SkillDuration - juggernauntCurrentDuration + TransferBonusDuration;
-
             PlayerRanged ranged = swapInPlayer.GetComponent<PlayerRanged>();
-            ranged.SetJuggernauntInherit(transferDuration,
+            ranged.SetJuggernauntInherit(SkillDuration,
                 BurstHeal_HpPercentage, 
                 HealPerSecond_HpPercentage,
                 DefBoost,
@@ -755,7 +754,12 @@ public class PlayerMelee : PlayerBase
 
         if (IsSkillActive && IsAlive() && damage.TotalDamage > 0)
         {
-            extendSkillDuration = CanExtendSkill;
+            if (CanExtendSkill)
+            {
+                extendSkillDuration = CanExtendSkill;
+                Heal(mHealth * HpRestoreOnHit);
+            }
+
             if (CanAfterShock)
             {
                 StoreDamage(damage);
@@ -907,7 +911,7 @@ public class PlayerMelee : PlayerBase
             info.SkillText =
                 $"Immediately heals self for {BurstHeal_HpPercentage * 100}% max HP. In the next {SkillDuration} seconds: " +
                 $"ATK +{AtkBoost * 100}%, DEF +{DefBoost * 100}%, RES +{ResBoost}, MSPD +{SpeedBoost * 100}% and " +
-                $"regenerate {HealPerSecond_HpPercentage * 100}% max HP every second. Receiving damage during this period extends skill duration by additional {ExtendDurationOfHit}s (up to +{SkillDuration}s). ";
+                $"regenerate {HealPerSecond_HpPercentage * 100}% max HP every second. Receiving damage during this period recovers 2% max HP and extends skill duration by additional {ExtendDurationOfHit}s (up to +{SkillDuration * ExtendDurationMaxRatio}s). ";
         }
         else if (Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_IGNITE))
         {
@@ -932,7 +936,7 @@ public class PlayerMelee : PlayerBase
             info.SkillText =
                 $"Immediately heals self for {BurstHeal_HpPercentage * 100}% max HP. In the next {SkillDuration} seconds: " +
                 $"ATK +{AtkBoost * 100}%, DEF +{DefBoost * 100}%, RES +{ResBoost}, MSPD +{SpeedBoost * 100}%. " +
-                $"Upon swapping, transfers this effect to the swapped in character and extends its duration for {TransferBonusDuration} more seconds. ";
+                $"Upon swapping, transfers this effect to the swapped in character and resets its duration. ";
         }
         else if (Skills.Contains(SkillTree_Manager.SkillName.BEYOND_NIGHT))
         {

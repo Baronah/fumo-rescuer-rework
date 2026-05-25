@@ -28,7 +28,7 @@ public class Matterllurgist : EnemyBase
 
         short ProjectileBaseSpeed = 600, ProjectileAcceleration = 250;
 
-        Vector2 playerDir = (SpottedPlayer.transform.position - AttackPosition.position).normalized;
+        Vector2 playerDir = (SpottedPlayerPositionBeforeAttack - AttackPosition.position).normalized;
         Vector3 sourcePosition = AttackPosition.position;
 
         float[] angles = { 0f, -15f, 15f };

@@ -135,7 +135,7 @@ public class Candleknight : EnemyBase
     void PlaceCandle()
     {
         GameObject o = Instantiate(Candle, transform.position, Quaternion.identity);
-        stageManager.OnEnemySpawn(o.GetComponent<EnemyBase>());
+        StageManager.OnEnemySpawn(o.GetComponent<EnemyBase>());
         CandlesPlaced.Add(o.GetComponent<Candle>());
     }
 

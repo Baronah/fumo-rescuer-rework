@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 
 public class ProjectileScript : MonoBehaviour
@@ -24,15 +22,10 @@ public class ProjectileScript : MonoBehaviour
 
     protected Vector3 targetDirection;
     protected Collider2D Target = null;
-	protected Rigidbody2D rb2d;
+	[SerializeField] protected Rigidbody2D rb2d;
     protected bool allowingUpdate = false;
 
     protected EntityBase excludedTarget = null;
-
-    private void Start()
-    {
-        rb2d = GetComponent<Rigidbody2D>();
-    }
 
     public enum ProjectileType
 	{
@@ -67,7 +60,7 @@ public class ProjectileScript : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0f, 0f, desiredZRotation);
 
-        DamageScaleWithDistance = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.ABSOLUTISM);
+        DamageScaleWithDistance = StageManager._instance.Absolutism;
 
         allowingUpdate = true;
     }

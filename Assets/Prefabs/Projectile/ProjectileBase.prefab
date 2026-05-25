@@ -177,4 +177,5 @@ MonoBehaviour:
   doesDamage: 1
   TravelSpeed: 25
   Acceleration: 0
+  rb2d: {fileID: 6185428280630795640}
   projectileType: 1
