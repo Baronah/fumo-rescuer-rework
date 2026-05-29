@@ -60,7 +60,7 @@ public class Candleknight : EnemyBase
     {
         base.EnemyFixedBehaviors();
 
-        cooldownTimer += Time.deltaTime;
+        cooldownTimer += Time.fixedDeltaTime;
         if (CanPlaceCandle())
         {
             StartPlacingCandle();

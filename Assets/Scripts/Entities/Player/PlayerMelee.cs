@@ -82,6 +82,7 @@ public class PlayerMelee : PlayerBase
     short FUpdateCnt = 0;
     public override void FixedUpdate()
     {
+        if (Time.timeScale <= 0) return;
         base.FixedUpdate();
 
         FUpdateCnt++;

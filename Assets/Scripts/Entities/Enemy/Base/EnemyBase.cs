@@ -232,7 +232,7 @@ public class EnemyBase : EntityBase
 
     public override void FixedUpdate()
     {
-        if (ViewOnlyMode) return;
+        if (ViewOnlyMode || Time.timeScale <= 0) return;
 
         if (DetectSymbol)
         {
@@ -252,7 +252,7 @@ public class EnemyBase : EntityBase
 
     public virtual void EnemyFixedBehaviors()
     {
-        if (!IsAlive() || ViewOnlyMode) return;
+        if (Time.timeScale <= 0 || !IsAlive() || ViewOnlyMode) return;
         ScanPlayer();
         UpdatePathfinding();
         Move();
@@ -454,7 +454,9 @@ public class EnemyBase : EntityBase
 
         currentIgnoreCoroutine = null;
 
-        Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, false);
+        if (StageManager.ObstacleCollider) 
+            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, false);
+
         stuckTimer = -1f;
     }
 
@@ -465,12 +467,14 @@ public class EnemyBase : EntityBase
         yield return new WaitForEndOfFrame();
         yield return null;
 
+        if (StageManager.ObstacleCollider) 
+            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, true);
+
         float c = 0;
         while (c < terrainIgnoreDuration && IsValidForTerrainIgnore)
         {
-            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, IsValidForTerrainIgnore);
-            c += Time.deltaTime;
-            yield return null;
+            c += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
 
         StopObstacleIgnore();
@@ -485,7 +489,8 @@ public class EnemyBase : EntityBase
         => !IsBeingShifted 
         && !IsStunned 
         && !IsFrozen 
-        && !IsMovementLocked;
+        && !IsMovementLocked
+        && rb2d.velocity.magnitude > 0;
 
     private Vector2 GetAvoidanceDirection(Vector2 originalDirection, Vector3 selfPosition, Vector3 destination)
     {

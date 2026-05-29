@@ -375,6 +375,8 @@ public class EntityBase : MonoBehaviour
     short BDB_Cnt = 0;
     public virtual void FixedUpdate()
     {
+        if (Time.timeScale <= 0) return;
+
         if (!IsAlive() && !TriggeredOnDeath && !canRevive) OnDeath();
 
         RegenCount();
@@ -1167,9 +1169,9 @@ public class EntityBase : MonoBehaviour
         while (c < d)
         {
             spriteRenderer.color = Color.Lerp(Color.red, InitSpriteColor, c * 1.0f / d);
-            c += Time.deltaTime;
+            c += Time.fixedDeltaTime;
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         spriteRenderer.color = InitSpriteColor;
@@ -1846,7 +1848,7 @@ public class EntityBase : MonoBehaviour
             }
             else directionVector = referencePosition;
 
-            ForceMode2D mode =ForceMode2D.Force;
+            ForceMode2D mode = ForceMode2D.Force;
             if (isPull)
             {
                 float progress = 1f - (currentDistance / initialDistance);

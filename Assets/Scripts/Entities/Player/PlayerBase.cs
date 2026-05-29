@@ -76,6 +76,7 @@ public class PlayerBase : EntityBase
     [SerializeField] GameObject AllowVow;
     public override void FixedUpdate()
     {
+        if (Time.timeScale <= 0) return;
         base.FixedUpdate();
 
         bool alive = IsAlive();

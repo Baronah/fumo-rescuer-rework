@@ -49,6 +49,8 @@ public class PlayerRanged : PlayerBase
     {
         BounceSfxTimeLockout -= Time.fixedUnscaledDeltaTime;
         EnhanceSfxTimeLockout -= Time.fixedUnscaledDeltaTime;
+
+        if (Time.timeScale <= 0) return;
         base.FixedUpdate();
 
         fixedUpdateCnt++;

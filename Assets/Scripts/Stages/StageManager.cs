@@ -345,10 +345,10 @@ public class StageManager : MonoBehaviour
             float count = 0;
             while (count < timeDilationScript.cycleSwap)
             {
-                count += Time.deltaTime;
+                count += Time.fixedDeltaTime;
                 timeDilationSlider.value = count;
 
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             // recover phase
@@ -357,9 +357,9 @@ public class StageManager : MonoBehaviour
 
             while (count < timeDilationScript.cooldown)
             {
-                count += Time.deltaTime;
+                count += Time.fixedDeltaTime;
                 timeDilationSlider.value = timeDilationScript.cooldown - count;
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             // fast phase
@@ -375,9 +375,9 @@ public class StageManager : MonoBehaviour
             count = 0f;
             while (count < timeDilationScript.cycleSwap)
             {
-                count += Time.deltaTime;
+                count += Time.fixedDeltaTime;
                 timeDilationSlider.value = count;
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             count = 0f;
@@ -385,9 +385,9 @@ public class StageManager : MonoBehaviour
 
             while (count < timeDilationScript.cooldown)
             {
-                count += Time.deltaTime;
+                count += Time.fixedDeltaTime;
                 timeDilationSlider.value = timeDilationScript.cooldown - count;
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
         }
     }
@@ -667,6 +667,8 @@ public class StageManager : MonoBehaviour
     private short SearchCnt = 0;
     protected virtual void OnStageUpdate() 
     { 
+        if (IsStagePaused) return;
+
         SearchCnt++;
         if (SearchCnt >= 10 && RemainingEnemiesGO.activeSelf)
         {
