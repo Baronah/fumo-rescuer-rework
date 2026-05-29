@@ -537,9 +537,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Candleknight
   Icon: {fileID: 21300000, guid: 26eac13c51e901749a085ef103301ab1, type: 3}
-  mHealth: 250
+  mHealth: 230
   bAtk: 50
-  bDef: 25
+  bDef: 15
   bRes: 60
   defPen: 0
   defIgn: 0
@@ -585,6 +585,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 7452489761946870605}
   AttackAnimation: {fileID: 7400000, guid: 44edda84edd21824097819b9c8b21de8, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -626,7 +627,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   Candle: {fileID: 3258101646320977294, guid: 1924109d180a6d941b4e4e68dc0f17d3, type: 3}
   MaxCandles: 3
   candleDropCooldown: 20

@@ -5095,7 +5095,7 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: f88ba66dee8ca814887bca306fff14ed, type: 3}
   mHealth: 100
   bAtk: 35
-  bDef: 0
+  bDef: 5
   bRes: 0
   defPen: 0
   defIgn: 0
@@ -5131,6 +5131,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 1
@@ -5140,9 +5141,10 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 2787112311692162125}
   AttackAnimation: {fileID: 7400000, guid: 3d57bdd9bab37a64fb086ac50f47c812, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: -2903497213624986761}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -5150,12 +5152,16 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 2418862577888199385}
+  HealingEffectiveness: 1
   reviveDuration: 5
   postReviveDuration: 0
   enemyCode: 6
+  size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: A crossbowman that is adept at hiding in the darkness and assassinating
@@ -5166,17 +5172,6 @@ MonoBehaviour:
   b_detectionRange: 420
   DangerRange_RatioOfAttackRange: 0.9
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 0.5
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 300
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 2
   - 5
@@ -5185,7 +5180,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   AtkPercentageUp_perSecond: 0.05
   AtkPercentageUp_cap: 2
   PS: {fileID: 7906865763794752210}

@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using static EnemyBase;
 using static LevelDifficultyModifier;
@@ -105,10 +106,13 @@ public class StageManager : MonoBehaviour
 
     GameObject TopOverlay;
 
+    public Collider2D ObstacleCollider;
+
     // Theoria
     public bool Absolutism, Statis, Gravity, Acceleration, Hunger, Adaption;
     //
 
+    [SerializeField] GameObject ExtraEnemySpawn;
     public virtual void Start()
     {
         GlobalStageManager.OnStageStart();
@@ -135,6 +139,8 @@ public class StageManager : MonoBehaviour
         TopOverlay = GameObject.Find("OnTopOverlay");
         TopOverlay.SetActive(false);
 
+        ObstacleCollider = FindObjectsOfType<TilemapCollider2D>().FirstOrDefault(t => t.gameObject.layer == 8);
+
         GameObject TheoryWorld = GameObject.Find("TheoryWorld");
         TheoryWorld.SetActive(CharacterPrefabsStorage.Skills.Any(s => s.Value.skillType == SkillType.THEORIA));
         if (!TheoryWorld.activeSelf) Destroy(TheoryWorld);
@@ -150,6 +156,12 @@ public class StageManager : MonoBehaviour
         foreach (var item in sfxs)
         {
             item.volume = sfxValue;
+        }
+
+        if (!ExtraEnemySpawn) ExtraEnemySpawn = GameObject.Find("Researcher_ExtraEnemies");
+        if (ExtraEnemySpawn && CharacterPrefabsStorage.DifficultyLevel - 1 < (int) DiffType.ExtraEnemies)
+        {
+            Destroy(ExtraEnemySpawn);
         }
 
         timeDilation.SetActive(CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.TIME_DILATION));

@@ -64,10 +64,12 @@ public class LevelDifficultyModifier : MonoBehaviour
     {
         Observer = 0,
         Normal = 1,
-        EnemiesDefenseSurvivalBuff = 4,
-        EnemiesRescueBuff = 5,
-        EnemiesAnnihilationBuff = 6,
-        EnemiesUncombatDRBuff = 7,
+        EnemiesMissionTypesBuffs_1 = 2,
+        EnemiesMissionTypesBuffs_2 = 3,
+        EnemiesUncombatDRBuff_1 = 4,
+        EnemiesUncombatDRBuff_2 = 5,
+        ExtraEnemies = 6,
+        EnemiesAlertBuff = 7,
         EnemiesStatusResistant = 8,
         PlayerCD_1 = 9, 
         PlayerCD_2 = 10,
@@ -104,27 +106,39 @@ public class LevelDifficultyModifier : MonoBehaviour
             ModifierDetail.text =
                 $"<i>The battle receives these following changes:</i>\n\n" +
                 $"All enemies have their <color=green>HP</color> and <color=#ff4545>ATK</color> increased by " +
-                $"<color=green>{Mathf.CeilToInt(CharacterPrefabsStorage.GetEnemiesHpMultiplier() * 100)}%</color> and " +
-                $"<color=#ff4545>{Mathf.CeilToInt(CharacterPrefabsStorage.GetEnemiesAtkMultiplier() * 100)}%</color>, respectively.";
+                $"<color=green>{Mathf.CeilToInt(EnemyStatsLookup.GetEnemiesHpMultiplier() * 100)}%</color> and " +
+                $"<color=#ff4545>{Mathf.CeilToInt(EnemyStatsLookup.GetEnemiesAtkMultiplier() * 100)}%</color>, respectively.";
 
-            if (ConvertedDiffLevel >= (int) DiffType.EnemiesDefenseSurvivalBuff)
-                ModifierDetail.text += 
-                    "\n\nAll enemies additionally have <color=yellow>+10 DEF</color> " +
-                    "and <color=#00ffbf>+5% MSPD</color>, quadrupled in <color=yellow>survival and defense</color> mission.";
-
-            if (ConvertedDiffLevel >= (int) DiffType.EnemiesRescueBuff)
+            if (ConvertedDiffLevel == (int)DiffType.EnemiesMissionTypesBuffs_1)
+            { 
                 ModifierDetail.text +=
-                    "\n\nAll enemies additionally have <color=#00ffff>+10 RES</color> and <color=#ffd61f>+5 ASPD</color>, " +
-                    "quadrupled in <color=#00ffbf>rescue</color> mission.";
+                "\n\nIn <color=yellow>survival and defense</color> mission, all enemies have <color=yellow>+20 DEF</color> and <color=#00ffbf>+10% MSPD</color>."
+                +
+                "\n\nIn <color=#00ffbf>rescue</color> mission, enemies have <color=#00ffff>+20 RES</color> and <color=#ffd61f>+10 ASPD</color>."
+                +
+                $"\n\nIn <color=red>annihilation</color> mission, enemies have <color=green>+15% HP</color> and <color=#ff4545>+10% ATK</color>.";
+            }
+            else if (ConvertedDiffLevel >= (int)DiffType.EnemiesMissionTypesBuffs_2)
+            {
+                ModifierDetail.text +=
+                "\n\nIn <color=yellow>survival and defense</color> mission, all enemies have <color=yellow>+40 DEF</color> and <color=#00ffbf>+25% MSPD</color>."
+                +
+                "\n\nIn <color=#00ffbf>rescue</color> mission, enemies have <color=#00ffff>+40 RES</color> and <color=#ffd61f>+25 ASPD</color>."
+                +
+                $"\n\nIn <color=red>annihilation</color> mission, enemies have <color=green>+25% HP</color> and <color=#ff4545>+20% ATK</color>.";
+            }
 
-            if (ConvertedDiffLevel >= (int) DiffType.EnemiesAnnihilationBuff)
-                ModifierDetail.text += 
-                    $"\n\nAll enemies additionally have <color=green>+5% HP</color> and <color=#ff4545>+5% ATK</color>, " +
-                    $"quadrupled in <color=red>annihilation</color> mission.";
-
-            if (ConvertedDiffLevel >= (int) DiffType.EnemiesUncombatDRBuff)
+            if (ConvertedDiffLevel == (int)DiffType.EnemiesUncombatDRBuff_1)
+                ModifierDetail.text += $"\n\nEnemies who are not in combat mode takes <color=yellow>30% less</color> physical and magical damage.";
+            else if (ConvertedDiffLevel >= (int)DiffType.EnemiesUncombatDRBuff_2)
                 ModifierDetail.text += $"\n\nEnemies who are not in combat mode takes <color=yellow>60% less</color> physical and magical damage.";
-            
+
+            if (ConvertedDiffLevel >= (int)DiffType.ExtraEnemies)
+                ModifierDetail.text += "\n\nMore enemies will appear.";
+
+            if (ConvertedDiffLevel >= (int)DiffType.EnemiesAlertBuff)
+                ModifierDetail.text += "\n\nWhen patrolling enemies are attacked, they gain <color=yellow>+30% MSPD</color> when moving toward the source of the attack.";
+
             if (ConvertedDiffLevel >= (int) DiffType.EnemiesStatusResistant)
                 ModifierDetail.text += $"\n\nMelee enemies gains <color=#ff00ff>status resistance</color>, which halves the durations of negative statuses on them.";
 
@@ -145,6 +159,9 @@ public class LevelDifficultyModifier : MonoBehaviour
 
             if (ConvertedDiffLevel >= (int) DiffType.Player1HP)
                 ModifierDetail.text += "\n\nUpon entering the stage, <color=red>your HP becomes 1</color>. Afterward, healing effectiveness -90%, effect gradually expires over 40 seconds.";
+        
+            if (ConvertedDiffLevel >= (int) DiffType.ExtraEnemies)
+                ModifierDetail.text += "\n\n<color=#00FFD5><i>Unveils something interesting when completed in Challenge Mode ;)</i></color>";
         }
     }
 
@@ -200,7 +217,7 @@ public class LevelDifficultyModifier : MonoBehaviour
             textGradientOut.topLeft = textGradientOut.bottomLeft = Color.red;
             textGradientOut.topRight = textGradientOut.bottomRight = new(0.62f, 0.28f, 0.28f);
         }
-        else if (Diff >= (int) DiffType.EnemiesDefenseSurvivalBuff)
+        else if (Diff >= (int) DiffType.ExtraEnemies)
         {
             textGradientOut.topLeft = textGradientOut.bottomLeft = new(1, 0.565f, 0);
             textGradientOut.topRight = textGradientOut.bottomRight = new(0.76f, 0.63f, 0.22f);

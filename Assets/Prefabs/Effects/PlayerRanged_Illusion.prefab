@@ -349,7 +349,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: ed35ff5891df98741bab6d8f5d83c421, type: 3}
     - target: {fileID: 1929991105562868378, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Color.a
-      value: 0.4
+      value: 0.5019608
       objectReference: {fileID: 0}
     - target: {fileID: 1929991105562868378, guid: 471a8ca8ee5aa634b8a85b8fac5cd431, type: 3}
       propertyPath: m_Color.b
@@ -567,6 +567,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 999
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 1
   attackPattern: 1
@@ -577,7 +578,7 @@ MonoBehaviour:
   ccBar: {fileID: 8143205137011210618}
   AttackAnimation: {fileID: 7400000, guid: cfc2392c28256a7458936cb08b03e7ce, type: 2}
   sfxs: []
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -585,6 +586,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 0.85
   preferredAttackAnimationSpeed: 0.9
+  IsComponentsInitialized: 0
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 0}

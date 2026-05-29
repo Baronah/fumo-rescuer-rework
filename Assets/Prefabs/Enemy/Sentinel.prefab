@@ -670,7 +670,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   SpeedBuffOnAlert: 0.35
   AtkBuffOnAlert: 0.5
   DetectCircle: {fileID: 5466385592610398606}

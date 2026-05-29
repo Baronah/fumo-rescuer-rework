@@ -5860,7 +5860,7 @@ MonoBehaviour:
   Name: Player Melee
   Icon: {fileID: 21300000, guid: 16d47974b79ddaf4886e53951e987eab, type: 3}
   mHealth: 200
-  bAtk: 28
+  bAtk: 30
   bDef: 25
   bRes: 10
   defPen: 0
@@ -5988,7 +5988,7 @@ MonoBehaviour:
   AfterShockDamageConversionRatio: 0.8
   AfterShockMhpScale: 0.2
   AfterShockExplodeSlowTime: 1
-  TransferBonusDuration: 2
+  HpRestoreOnHit: 0.02
   ExtendDurationOfHit: 0.75
   ExtendDurationMaxRatio: 1
   AftershockDmgCounter: {fileID: 7148168932227406490}

@@ -49,29 +49,20 @@ public class OneDirectionalPassage : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (!selfCollider || !collision.collider || !collision.gameObject) return;
+        if (!selfCollider || !collision.collider || !collision.gameObject || collision.collider.isTrigger) return;
 
         Physics2D.IgnoreCollision(selfCollider, collision.collider, false);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!collision.collider || !collision.gameObject) return;
-
-        CheckDirection(collision.collider);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision || !collision.gameObject) return;
-
+        if (!collision || !collision.gameObject || collision.isTrigger) return;
         CheckDirection(collision);
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!selfCollider || !collision || !collision.gameObject) return;
-
-        Physics2D.IgnoreCollision(selfCollider, collision, false);
+        if (!collision || !collision.gameObject || collision.isTrigger) return;
+        CheckDirection(collision);
     }
 }

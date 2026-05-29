@@ -287,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 5e8a4bfa5f417174e9d419b730404464, type: 3}
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Color.a
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5288166252650138663, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_IsActive
@@ -343,6 +343,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7812674171163360202, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -472,6 +476,7 @@ MonoBehaviour:
   canRevive: 1
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 0
@@ -481,11 +486,12 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 8424772178851792652}
   AttackAnimation: {fileID: 7400000, guid: 36b864448fe6280478c168bbf0a532f7, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: 1763570007023390080}
   - {fileID: 6015849564817278638}
   - {fileID: 4276608119510497328}
-  IsBeingShifted: 0
+  BeingShiftState: 0
   FreezeTimer: 0
   StunTimer: 0
   StatusResistTimer: 0
@@ -493,54 +499,48 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 0.9
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 8347005171171750296}
+  HealingEffectiveness: 1
   reviveDuration: 10
   postReviveDuration: 2
   enemyCode: 13
   size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: Assassin who has abandoned his name and covered his face. Behind that
     pall is a burning fanaticism and a destined fate.
-  Skillset: "\u2022 [Feud Bonding] Receiving damage from the player unit builds up
-    \"Feud\" on them (has a limit). Self takes reduced damage from the attacker based
-    on how much \"Feud\" they have built up, up to 100%. Gains greatly increased
-    MSPD when the target has their \"Feud\" maxed out.\n\n\u2022 [Silencer] Receving
-    damage increases ATK (stacks to a limit) and shortens the cool-down of the next
-    [Pack Up] and [Wrapped Shroud] use. After using [Pack Up] or [Wrapped Shroud],
-    follows with a dash toward the player position and resets the ATK buff.\n\n<b><color=red>FIRST
-    PHASE</color></b>\n\n\u2022 [Pack Up] Stops moving, creates an illusion behind
-    the player then dashes toward it, dealing physical damage if collides. Cool-down
-    is refunded if interrupted.\n\n\u2022 [Held Breath] When HP reaches 0, enters
-    a revival state: Gradually recovers HP to full while continuously builds up \"Feud\"
-    and spawns illusion at the player position throughout the duration. When finished,
-    cast [Pack Up] on them. Enters the second phase afterward.\n\n<b><color=red>SECOND
-    PHASE</color></b>\n\n\u2022 [Overflowing Hatred] \"Feud\" is now gradually builds
-    up overtime, and 'slows' the player at max stacks.\n\n\u2022 [Wrapped Shroud]
-    Stops moving, creates multiple illusion of self then dashes toward them in quick
-    succession, damages the player if collides. Dash speed increases as HP decreases.
-    Cool-down is refunded if interrupted.\n\n\u2022 [Toward Death] When HP falls
-    below 35% for the first time: Stops attacking and becomes 'Invisible'. Periodically
-    reappears to cast [Wrapped Shroud], disables 'Invisibility' during the process
-    and resumes them after finished. When inflicted by stun or freeze while casting
-    [Wrapped Shroud], both the skill and that effect will be prematurely ended."
+  Skillset: "\u2022 Any damage received that is not from the target for [Feud Bonding]
+    is greatly reduced.\n\n\u2022 [Feud Bonding] Receiving damage from the player
+    unit builds up \"Feud\" on them (has a limit). Self takes reduced damage from
+    the attacker based on how much \"Feud\" they have built up, up to 100%. Gains
+    greatly increased MSPD when the target has their \"Feud\" maxed out.\n\n\u2022
+    [Silencer] Receving damage increases ATK (stacks to a limit) and shortens the
+    cool-down of the next [Pack Up] and [Wrapped Shroud] use. After using [Pack Up]
+    or [Wrapped Shroud], follows with a dash toward the player position and resets
+    the ATK buff.\n\n<b><color=red>FIRST PHASE</color></b>\n\n\u2022 [Pack Up] Stops
+    moving, creates an illusion behind the player then dashes toward it, dealing
+    physical damage if collides. Cool-down is refunded if interrupted.\n\n\u2022
+    [Held Breath] When HP reaches 0, enters a revival state: Gradually recovers HP
+    to full while continuously builds up \"Feud\" and spawns illusion at the player
+    position throughout the duration. When finished, cast [Pack Up] on them. Enters
+    the second phase afterward.\n\n<b><color=red>SECOND PHASE</color></b>\n\n\u2022
+    [Overflowing Hatred] \"Feud\" is now gradually builds up overtime, and 'slows'
+    the player at max stacks.\n\n\u2022 [Wrapped Shroud] Stops moving, creates multiple
+    illusion of self then dashes toward them in quick succession, damages the player
+    if collides. Dash speed increases as HP decreases. Cool-down is refunded if interrupted.\n\n\u2022
+    [Toward Death] When HP falls below 35% for the first time: Stops attacking and
+    becomes 'Invisible'. Periodically reappears to cast [Wrapped Shroud], disables
+    'Invisibility' during the process and resumes them after finished. When inflicted
+    by stun or freeze while casting [Wrapped Shroud], both the skill and that effect
+    will be prematurely ended."
   detectionRange: 500
   b_detectionRange: 500
   DangerRange_RatioOfAttackRange: 0.8
   MinimumDistanceFromPlayer: 20
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  pathfindingRadius: 2000
-  pathUpdateInterval: 1
-  waypointReachDistance: 25
-  showPathGizmos: 1
-  allowDiagonalMovement: 1
-  pathfindingDistanceThreshold: 50
-  cornerAvoidanceDistance: 100
-  pathSmoothingLookahead: 3
   WaitTimes:
   - 2
   - 5
@@ -549,7 +549,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   shadowClonePrefab: {fileID: 6227222074570190167, guid: aaa7e34ade2686643ad8b54869a8f08b, type: 3}
   feudBond: {fileID: 8026367807147734761, guid: 4d80df3aa8c3d4149a2671152919af1e, type: 3}
   atkUpEffect: {fileID: 5224443871440477138}

@@ -5193,7 +5193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Sentinent Toy
   Icon: {fileID: 21300000, guid: e948b2d47d39687418ac01649bb1fba6, type: 3}
-  mHealth: 235
+  mHealth: 200
   bAtk: 40
   bDef: 25
   bRes: 30
@@ -5241,6 +5241,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 7519351199644919705}
   AttackAnimation: {fileID: 7400000, guid: ea423b279495f9a459aa0f1d64a074aa, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: 1879331722200618134}
   BeingShiftState: 0
@@ -5283,7 +5284,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   StartAni: {fileID: 7400000, guid: bdb1fca197cb2c444b88a3670da45db3, type: 2}
   WakenUp: 0
 --- !u!212 &8027194920986628365 stripped

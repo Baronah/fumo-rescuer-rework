@@ -398,10 +398,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Zealot
   Icon: {fileID: 21300000, guid: 727115dcf85547a49b8c33392336b1e2, type: 3}
-  mHealth: 160
+  mHealth: 180
   bAtk: 50
   bDef: 30
-  bRes: 20
+  bRes: 15
   defPen: 0
   defIgn: 0
   resPen: 0
@@ -446,6 +446,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 754730279402599387}
   AttackAnimation: {fileID: 7400000, guid: a09a6a5b301f7034a95e77b2c60a63a9, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: -5450917385555761551}
   - {fileID: -8733238294579501206}
@@ -487,7 +488,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   barrierEffect: {fileID: 4804839738491929246}
   barrierMaxHealth: 100
   speedMultuplierOnBarrierBreak: 1.75

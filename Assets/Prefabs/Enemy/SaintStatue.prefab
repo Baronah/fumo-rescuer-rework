@@ -486,7 +486,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0
   CanDetectThroughWalls: 0
   IsInsignificant: 1
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   HealEffect: {fileID: 443374613090984116}
   DefBuffFlat: 15
   ResBuffFlat: 20

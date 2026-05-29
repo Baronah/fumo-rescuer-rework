@@ -54765,8 +54765,15 @@ MonoBehaviour:
   UnpausedSprite: {fileID: 21300000, guid: 96af0636a2e0062489482ce82248fbab, type: 3}
   ChallengeModeStatsModifier: 1.2
   DoNotShowSpawnsGraphic: 0
+  EnableLowDetail: 0
   StageCompleteConditionType: 0
   StageEvironmentTypes: 0400000001000000
+  Absolutism: 0
+  Statis: 0
+  Gravity: 0
+  Acceleration: 0
+  Hunger: 0
+  Adaption: 0
   timeDilation: {fileID: 188702154}
   activateSudaram: {fileID: 566070260}
   activateStatue: {fileID: 1351099970}
@@ -54899,13 +54906,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1601f1c97ecd14fa8e3ec89e8518f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1284863255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1284863256}
+  m_Layer: 0
+  m_Name: Researcher_ExtraEnemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1284863256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284863255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4979.76, y: -1515.526, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1351099972}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1351099969
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1284863256}
     m_Modifications:
     - target: {fileID: 2297324188542933895, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_Name
@@ -54965,11 +55004,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4151136268530471499, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4979.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4151136268530471499, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1515.526
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4151136268530471499, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -55032,6 +55071,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1601f1c97ecd14fa8e3ec89e8518f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1351099972 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4151136268530471499, guid: 677b10a779982cb4ca974f8ec47f17f5, type: 3}
+  m_PrefabInstance: {fileID: 1351099969}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1377679402
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -426125,6 +426169,6 @@ SceneRoots:
   - {fileID: 8507892374141929949}
   - {fileID: 949053462}
   - {fileID: 566070261}
-  - {fileID: 1351099969}
+  - {fileID: 1284863256}
   - {fileID: 2066213505}
   - {fileID: 1080136260}

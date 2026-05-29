@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 155535948512199076, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.84
+      value: -1.9
       objectReference: {fileID: 0}
     - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -141,7 +141,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 653a135813b57c14e844d191cf51a020, type: 3}
     - target: {fileID: 5250980034755208933, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Color.a
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5288166252650138663, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_IsActive
@@ -198,6 +198,14 @@ PrefabInstance:
     - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_Radius
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_Offset.y
+      value: -1.85
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
@@ -286,6 +294,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 0
@@ -295,6 +304,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 6784049404754971277}
   AttackAnimation: {fileID: 7400000, guid: ef78f774e1b926f4c9e8d58a5c5dfa3c, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -313,6 +323,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 0
   size: 0
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 5
   Description: A hunting hound trained and utilized by locals since ancient times.
@@ -327,7 +338,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
 --- !u!1 &6784049404754971277 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 773491194806959642, guid: f3221dbae6b487b49907a796747ecac4, type: 3}

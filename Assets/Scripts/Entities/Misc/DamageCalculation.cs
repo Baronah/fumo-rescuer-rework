@@ -13,8 +13,11 @@ namespace DamageCalculation
                 instance.Multiply(multiplier, multiplier, 1f);
             }
 
-            if (target is EnemyBase e && e.hasDRWhenNotCombat && !e.HasSpottedPlayer)
-            instance.Multiply(0.4f, 0.4f, 1f);
+            if (target is EnemyBase e && !e.HasSpottedPlayer)
+            {
+                float multiplier = 1.0f - e.DamageReductionOutsideCombat;
+                instance.Multiply(multiplier, multiplier, 1f);
+            }
         }
     }
 

@@ -103,8 +103,8 @@ public class EnemyBase : EntityBase
     // Stuck detection
     private float stuckTimer = 0f;
     private Vector2 lastPosition = Vector2.zero;
-    private readonly float stuckThreshold = 1f;
-    private readonly float stuckMovementThreshold = 30f;
+    private readonly float stuckThreshold = 0.9f;
+    private readonly float stuckMovementThreshold = 15f;
     // -------------------------------------------------------------------------
 
     [Header("Checkpoints System")]
@@ -113,7 +113,7 @@ public class EnemyBase : EntityBase
 
     private readonly float OverridePositionCheckRadius = 75f;
     private Vector3 OverridePosition;
-    [SerializeField] private float MoveToOverridePositionSpeedMultiplier = 1.5f, MoveToOverridePositionSpeedMultiplierJump = 0.35f;
+    [SerializeField] public float MoveToOverridePositionSpeedMultiplier = 1.5f, MoveToOverridePositionSpeedMultiplierJump = 0.35f;
     private short MoveToOverridePositionJumpCnt = 0;
     private bool MoveToOverridePosition = false;
 
@@ -134,7 +134,7 @@ public class EnemyBase : EntityBase
 
     public bool IsInsignificant = false;
 
-    public bool hasDRWhenNotCombat = false;
+    public float DamageReductionOutsideCombat = 0f;
 
     public override void InitializeComponents()
     {
@@ -188,8 +188,6 @@ public class EnemyBase : EntityBase
         WriteStats();
         if (!ViewOnlyMode)
         {
-            hasDRWhenNotCombat = (CharacterPrefabsStorage.DifficultyLevel - 1) >= (int)DiffType.EnemiesUncombatDRBuff;
-
             if (SpotPlayerUponSpawn) ForceSpotPlayer();
 
             IsComponentsInitialized = true;
@@ -456,7 +454,7 @@ public class EnemyBase : EntityBase
 
         currentIgnoreCoroutine = null;
 
-        Physics2D.IgnoreLayerCollision(gameObject.layer, obstacleLayerIndex, false);
+        Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, false);
         stuckTimer = -1f;
     }
 
@@ -470,7 +468,7 @@ public class EnemyBase : EntityBase
         float c = 0;
         while (c < terrainIgnoreDuration && IsValidForTerrainIgnore)
         {
-            Physics2D.IgnoreLayerCollision(gameObject.layer, obstacleLayerIndex, true);
+            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, IsValidForTerrainIgnore);
             c += Time.deltaTime;
             yield return null;
         }
@@ -480,17 +478,14 @@ public class EnemyBase : EntityBase
 
     protected override bool TriggerHunger()
     {
-        return base.TriggerHunger() && SpottedPlayer;
+        return base.TriggerHunger() && SpottedPlayer && SpottedPlayer.IsAlive();
     }
 
     bool IsValidForTerrainIgnore
         => !IsBeingShifted 
         && !IsStunned 
         && !IsFrozen 
-        && !IsMovementLocked 
-        && rb2d.velocity.magnitude > 0
-        && isUsingPathfinding()
-        && !hasClearSightToTargetOnThisMoveOppoturnity;
+        && !IsMovementLocked;
 
     private Vector2 GetAvoidanceDirection(Vector2 originalDirection, Vector3 selfPosition, Vector3 destination)
     {
@@ -519,7 +514,7 @@ public class EnemyBase : EntityBase
 
     private Vector2 GetBestAvoidanceDirection(Vector2 currentPos, Vector2 originalDirection, Vector2 obstaclePoint)
     {
-        float[] angles = { 45f, -45f, 90f, -90f };
+        float[] angles = { 45f, -45f, 135f, -135f };
         float bestScore = float.MinValue;
         Vector2 bestDirection = originalDirection;
 

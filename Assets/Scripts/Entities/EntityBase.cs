@@ -116,6 +116,7 @@ public class EntityBase : MonoBehaviour
 
     protected Collider2D[] colliders;
     public Collider2D[] selfColliders => colliders;
+    public Collider2D FeetCollider;
 
     public AudioSource[] sfxs;
 
@@ -251,6 +252,7 @@ public class EntityBase : MonoBehaviour
         animator = Sprite.GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         colliders = GetComponents<Collider2D>();
+        FeetCollider = colliders.FirstOrDefault(c => !c.isTrigger);
         sfxs = GetComponents<AudioSource>();
 
         LevitationEffect = spriteRenderer.transform.Find("Bubble").GetComponent<SpriteRenderer>();
@@ -1063,6 +1065,7 @@ public class EntityBase : MonoBehaviour
 
     public virtual void OnSuccessfulAttack(EntityBase target, DamageInstance damage)
     {
+        if (!target || target.isInvulnerable) return;
         if (lifeSteal > 0)
         {
             Heal(damage.TotalDamage * lifeSteal);

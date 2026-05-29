@@ -324,6 +324,8 @@ public class PlayerMelee : PlayerBase
 
         DashCollider.enabled = true;
 
+        SetInvulnerable(0.3f);
+
         if (Skills.Contains(SkillTree_Manager.SkillName.DASH_AFTERIMAGES))
         {
             if (DashAfterImages) Destroy(DashAfterImages.gameObject);

@@ -5144,7 +5144,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   EnhanceEffect: {fileID: 2732271396439068087}
 --- !u!1 &446298989067341241 stripped
 GameObject:

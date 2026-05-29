@@ -76,8 +76,7 @@ public class DarkTile : EnvironmentalTileBase
 
         base.OnEntityEnter(entity);
 
-        if (entity is HibernatorKnight h) h.OnShroudedZoneEnter();
-        else if (entity is Gloompincer g) g.OnShroudedZoneEnter();
+        if (entity is Gloompincer g) g.OnShroudedZoneEnter();
         else if (entity is Toy t) t.OnShroudedZoneEnter();
     }
 

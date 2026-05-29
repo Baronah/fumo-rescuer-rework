@@ -5044,7 +5044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: '"Wetwork" Operative'
   Icon: {fileID: 21300000, guid: 3e4db170e0454e743b751aaebc755b22, type: 3}
-  mHealth: 130
+  mHealth: 125
   bAtk: 35
   bDef: 5
   bRes: 0
@@ -5082,6 +5082,7 @@ MonoBehaviour:
   canRevive: 0
   isInvisible: 0
   InvulnerableTimer: 0
+  FeetPosition: {fileID: 0}
   CanBeHitByProjectiles: 1
   damageType: 0
   attackPattern: 0
@@ -5091,6 +5092,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 6580482464572689602}
   AttackAnimation: {fileID: 7400000, guid: bdfcfd76ef9b1f744b1bd42a3e4bedcc, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: -3934596599787445615}
   BeingShiftState: 0
@@ -5110,6 +5112,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 7
   size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: An assassin who makes up for their average skills with clever plots.
@@ -5126,7 +5129,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.1
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   DefPenUp_perSecond: 1
   DefPenUp_cap: 50
   AtkPercentageUp_perSecond: 0.05

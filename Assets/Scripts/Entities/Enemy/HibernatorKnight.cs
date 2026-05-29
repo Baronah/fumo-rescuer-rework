@@ -15,11 +15,6 @@ public class HibernatorKnight : EnemyBase
     public override void InitializeComponents()
     {
         base.InitializeComponents();
-        if (!IsSleeping)
-        {
-            ApplyEffect(Effect.AffectedStat.DEF, "HIBERNATOR_NATURAL_DEF_BUFF", DefBuff, 9999f, false);
-            ApplyEffect(Effect.AffectedStat.RES, "HIBERNATOR_NATURAL_RES_BUFF", ResBuff, 9999f, false);
-        }
     }
 
     public override void FixedUpdate()
@@ -56,6 +51,9 @@ public class HibernatorKnight : EnemyBase
 
     void Sleep()
     {
+        ApplyEffect(Effect.AffectedStat.DEF, "HIBERNATOR_NATURAL_DEF_DEBUFF", -100f, 9999f, false);
+        ApplyEffect(Effect.AffectedStat.RES, "HIBERNATOR_NATURAL_RES_DEBUFF", -100f, 9999f, false);
+
         CancelAttack();
         StopMovement();
         animator.SetBool("sleep", true);
@@ -79,18 +77,11 @@ public class HibernatorKnight : EnemyBase
         base.OnAttackReceive(source);
     }
 
-    [SerializeField] private float DefBuff = 40, ResBuff = 20;
-    public void OnShroudedZoneEnter()
-    {
-        RemoveEffect("HIBERNATOR_NATURAL_DEF_BUFF");
-        RemoveEffect("HIBERNATOR_NATURAL_RES_BUFF");
-    }
-
     [SerializeField] public float Wake_AtkBuff = 0.5f, Wake_MspdBuff = 0.3f, Wake_Buff_Duration = 3f;
     public void OnShroudedZoneExit()
     {
-        ApplyEffect(Effect.AffectedStat.DEF, "HIBERNATOR_NATURAL_DEF_BUFF", DefBuff, 9999f, false);
-        ApplyEffect(Effect.AffectedStat.RES, "HIBERNATOR_NATURAL_RES_BUFF", ResBuff, 9999f, false);
+        RemoveEffect("HIBERNATOR_NATURAL_DEF_DEBUFF");
+        RemoveEffect("HIBERNATOR_NATURAL_RES_DEBUFF");
         
         if (IsSleeping)
         {
@@ -108,11 +99,10 @@ public class HibernatorKnight : EnemyBase
             "They're often found passed out drunk in dark alleyways, " +
             "and should be avoided as they demonstrate ferociously violent tendencies when woken up.";
         Skillset = 
-            "• Normally has increased DEF and RES, disabled under shrouded zones.\n" +
-            $"• After staying inside shrouded zones for more than {SleepCountTime} seconds, falls asleep and becomes unable to act.\n" +
+            $"• After staying inside shrouded zones for more than {SleepCountTime} seconds: falls asleep, becomes unable to act and loses all DEF and RES.\n" +
             $"• Upon waking up, has increased ATK and MSPD for a period of time.";
-        TooltipsDescription = "Has increased DEF and RES. While in shrouded zones, the effect is disabled, and will <color=yellow>fall asleep</color> " +
-            $"after staying inside for more than {SleepCountTime} seconds.";
+        TooltipsDescription = 
+            $"<color=yellow>Falls asleep</color> after staying inside shrouded area for more than {SleepCountTime} seconds, loses all DEF and RES and becomes unable to act.";
 
         base.WriteStats();
     }

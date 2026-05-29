@@ -41,7 +41,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 155535948512199076, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.29
+      value: -1.25
       objectReference: {fileID: 0}
     - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -239,6 +239,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_Offset.y
+      value: -1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
       value: 60
@@ -305,7 +309,7 @@ MonoBehaviour:
   res: 30
   ASPD: 100
   moveSpeed: 90
-  attackRange: 30
+  attackRange: 35
   attackWindupTime: 0.09
   attackInterval: 0.14
   hpRegenFlat: 0
@@ -361,14 +365,14 @@ MonoBehaviour:
     for the first time.\n\u2022 Attacks restore HP proportional to damage dealt."
   detectionRange: 140
   b_detectionRange: 140
-  DangerRange_RatioOfAttackRange: 1
+  DangerRange_RatioOfAttackRange: 0.95
   MinimumDistanceFromPlayer: 10
   WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1
   MoveToOverridePositionSpeedMultiplierJump: 0
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   speedMultiplierOnPlayerSpot: 2
 --- !u!82 &7424751633068628821
 AudioSource:

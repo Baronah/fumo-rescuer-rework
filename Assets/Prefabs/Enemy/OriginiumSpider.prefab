@@ -292,6 +292,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 155535948512199076, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.55
+      objectReference: {fileID: 0}
     - target: {fileID: 226924004796394608, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -428,6 +432,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_Offset.y
+      value: -1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
       value: 120
@@ -563,7 +571,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   explosionDelay: 1
   explosionAtkScale: 2.5
   explosionRadius: 175

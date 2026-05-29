@@ -5027,9 +5027,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Sudaram
   Icon: {fileID: 21300000, guid: 8f99a019b0d6d6944968ca76a1e585fa, type: 3}
-  mHealth: 260
+  mHealth: 280
   bAtk: 55
-  bDef: 40
+  bDef: 35
   bRes: 50
   defPen: 0
   defIgn: 5
@@ -5075,6 +5075,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 3483630152131767987}
   AttackAnimation: {fileID: 7400000, guid: 3d57bdd9bab37a64fb086ac50f47c812, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: 6578555615704739346}
   - {fileID: -760533550074903822}
@@ -5095,6 +5096,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 12
   size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: "The Sudaram is the shroud of the dead. Once gaunt from hunger, it
@@ -5117,7 +5119,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   originiumPollutionEffect: {fileID: 1025464345471623337}
   originiumPollutionBonusASPD: 60
   originiumPollutionDamageMultiplier: 0.25

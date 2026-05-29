@@ -633,10 +633,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Knight Territory Hibernator
   Icon: {fileID: 21300000, guid: 8254a68c3209bcf4f922652ae97b1844, type: 3}
-  mHealth: 400
+  mHealth: 350
   bAtk: 75
-  bDef: 30
-  bRes: 10
+  bDef: 70
+  bRes: 40
   defPen: 0
   defIgn: 0
   resPen: 0
@@ -681,6 +681,7 @@ MonoBehaviour:
   DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 7890296202755098160}
   AttackAnimation: {fileID: 7400000, guid: e6bd9b952bdbf8b44b629bec61f89a35, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -699,6 +700,7 @@ MonoBehaviour:
   postReviveDuration: 0
   enemyCode: 14
   size: 1
+  CanDetectPlayer: 1
   TooltipsPrefab: {fileID: 1652133031232168661, guid: 9194e1666b4b1db4b8a691a7e38af9ef, type: 3}
   TooltipsHoldtime: 6
   Description: A commonly seen burly knight whose Knightclub affiliation is unknown,
@@ -718,12 +720,10 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
   SleepEffect: {fileID: 5249531247759391519}
   SleepFill: {fileID: 5243561150908866210}
   SleepCountTime: 5
-  DefBuff: 50
-  ResBuff: 30
   Wake_AtkBuff: 0.5
   Wake_MspdBuff: 0.3
   Wake_Buff_Duration: 3

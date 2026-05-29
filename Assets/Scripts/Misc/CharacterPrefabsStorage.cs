@@ -21,42 +21,6 @@ public class CharacterPrefabsStorage : ScriptableObject
 	public static Dictionary<SkillTree_Manager.SkillName, SkillDataSet> Skills = new();
 
 	public static short DifficultyLevel = 1;
-	public static float DifficultyHpMultiplierBase => 0.05f;
-    public static float DifficultyAtkMultiplierBase => 0.0225f;
-
-    static int GetDiff => Mathf.Min(DifficultyLevel - 1, 15);
-
-    public static float GetEnemiesHpMultiplier()
-	{
-		if (DifficultyLevel <= 1) return 0;
-
-		int Diff = GetDiff;
-		
-		float finalMul = 0;
-		for (int i = 1; i <= Diff; i++)
-		{
-			if (i <= 3) finalMul += DifficultyHpMultiplierBase * 4;
-			else finalMul += DifficultyHpMultiplierBase;
-		}
-
-		return finalMul;
-	}
-
-    public static float GetEnemiesAtkMultiplier()
-	{
-        if (DifficultyLevel <= 1) return 0;
-
-        int Diff = GetDiff;
-
-        float finalMul = 0;
-        for (int i = 1; i <= Diff; i++)
-        {
-            if (i <= 3 || i == 15) finalMul += DifficultyAtkMultiplierBase * 4;
-            else finalMul += DifficultyAtkMultiplierBase;
-        }
-
-        return finalMul;
-    }
 
     public static string GetSkillName(SkillTree_Manager.SkillName skill)
 	{
