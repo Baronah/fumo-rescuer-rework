@@ -711,7 +711,7 @@ public class StageManager : MonoBehaviour
     Coroutine HDCoroutine = null;
     public void CheckWinWithHeathDeath()
     {
-        HDCoroutine = StartCoroutine(HeatDeathEffect());
+        HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(Color.white, 0.5f, 1f));
         
         UpdateEnemyCountUI();
         RemainingEnemiesGO.SetActive(true);
@@ -724,28 +724,29 @@ public class StageManager : MonoBehaviour
         FadeInResult();
     }
 
-    IEnumerator HeatDeathEffect()
+    IEnumerator ShowOverlayFadeInToColorThenFadeOut(Color toColor, float inDuration, float holdDuration)
     {
+        Color clearColor = new Color(toColor.r, toColor.g, toColor.b, 0);
         Image screen = TopOverlay.GetComponentInChildren<Image>();
-        screen.color = Color.clear;
+        screen.color = clearColor;
 
         TopOverlay.SetActive(true);
-        float c = 0, d = 0.5f, cJump = 0.02f;
+        float c = 0, d = inDuration, cJump = 0.02f;
         while (c < d)
         {
-            screen.color = Color.Lerp(Color.clear, Color.white, c * 1.0f / d);
+            screen.color = Color.Lerp(clearColor, toColor, c * 1.0f / d);
             c += cJump;
             yield return new WaitForSecondsRealtime(cJump);
         }
 
-        screen.color = Color.white;
-        yield return new WaitForSecondsRealtime(1f);
+        screen.color = toColor;
+        yield return new WaitForSecondsRealtime(holdDuration);
 
         c = 0;
-        d = 0.5f;
+        d = inDuration;
         while (c < d)
         {
-            screen.color = Color.Lerp(Color.white, Color.clear, c * 1.0f / d);
+            screen.color = Color.Lerp(toColor, clearColor, c * 1.0f / d);
             c += cJump;
             yield return new WaitForSecondsRealtime(cJump);
         }
@@ -766,6 +767,9 @@ public class StageManager : MonoBehaviour
     }
     public virtual void OnStageEnd(ResultType resultType)
     {
+        if (HDCoroutine == null && resultType == ResultType.ENEMIES_DEFEATED) 
+            HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(new Color(0, 1f, 0.63f), 0.35f, 0.25f));
+
         Cursor.visible = true;
 
         UpdateEnemyCountUI();

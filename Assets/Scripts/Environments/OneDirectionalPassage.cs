@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public class OneDirectionalPassage : MonoBehaviour
         Vector2 velocity = rb.velocity;
         bool allowPass = IsCorrectDirection(velocity, AllowPassingThroughDirection);
 
-        Physics2D.IgnoreCollision(selfCollider, collider, allowPass);
+        Physics2D.IgnoreCollision(selfCollider, collider, true);
     }
 
     bool IsCorrectDirection(Vector3 direction, TargetDirection targetDirection)
@@ -47,13 +48,6 @@ public class OneDirectionalPassage : MonoBehaviour
         };
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (!selfCollider || !collision.collider || !collision.gameObject || collision.collider.isTrigger) return;
-
-        Physics2D.IgnoreCollision(selfCollider, collision.collider, false);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision || !collision.gameObject || collision.isTrigger) return;
@@ -64,5 +58,11 @@ public class OneDirectionalPassage : MonoBehaviour
     {
         if (!collision || !collision.gameObject || collision.isTrigger) return;
         CheckDirection(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!collision || !collision.gameObject || collision.isTrigger) return;
+        Physics2D.IgnoreCollision(selfCollider, collision, false);
     }
 }
