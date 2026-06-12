@@ -20,6 +20,7 @@ public class ProjectileScript : MonoBehaviour
 	public float TravelSpeed = 25f;
     public float Acceleration = 0f;
 
+    protected TrailRenderer trail;
     protected Vector3 targetDirection;
     protected Collider2D Target = null;
 	[SerializeField] protected Rigidbody2D rb2d;
@@ -36,6 +37,18 @@ public class ProjectileScript : MonoBehaviour
 	public ProjectileType projectileType;
     bool DamageScaleWithDistance = false;
 
+    public virtual void StartShooting(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false)
+    {
+        if (!trail) trail = GetComponent<TrailRenderer>();
+        ShootTowards(targetPosition, enemy, projectileType, ProjectileLifespan, useAbsoluteDirection);
+    }
+
+    public virtual void StartShooting(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)
+    {
+        if (!trail) trail = GetComponent<TrailRenderer>();
+        ShootTowards(targetPosition, projectileType, ProjectileLifespan, useAbsoluteDirection, enemy);
+    }
+
 	public void ShootTowards(EntityBase enemy, ProjectileType projectileType, bool useAbsoluteDirection = false)
 	{
 		ShootTowards(enemy.transform.position, enemy, projectileType, ProjectileLifespan, useAbsoluteDirection);
@@ -51,7 +64,11 @@ public class ProjectileScript : MonoBehaviour
             Target = enemy.GetComponent<Collider2D>();
         }
 
-        ProjectileTargetedTypes.Add(enemy.GetType());
+        ProjectileTargetedTypes = new()
+        {
+            enemy.GetType()
+        };
+
         targetDirection = useAbsoluteDirection ? targetPosition : (targetPosition - transform.position).normalized;
 
         Lifespan = ProjectileLifespan;
@@ -69,7 +86,9 @@ public class ProjectileScript : MonoBehaviour
     {
         this.projectileType = projectileType;
 
+        ProjectileTargetedTypes = new();
         ProjectileTargetedTypes.AddRange(enemy);
+
         targetDirection = useAbsoluteDirection ? targetPosition : (targetPosition - transform.position).normalized;
 
         Lifespan = ProjectileLifespan;
@@ -93,9 +112,7 @@ public class ProjectileScript : MonoBehaviour
         if (projectileType == ProjectileType.HOMING_TO_SPECIFIC_TARGET && ProjectileDestination && !ProjectileDestination.IsAlive()) Lifespan = 0f;
         if (Lifespan <= 0f)
         {
-            allowingUpdate = false;
-            gameObject.SetActive(false);
-            Destroy(this.gameObject, 0.1f);
+            ReturnToPool();
             return;
         }
 
@@ -135,8 +152,8 @@ public class ProjectileScript : MonoBehaviour
 		}
 
 		if (displayMsg != string.Empty) ProjectileFirer.DisplayDamage(displayMsg, msgDisplayOffset);
-        gameObject.SetActive(false);
-        Destroy(this.gameObject, 0.5f);
+        
+        ReturnToPool();
     }
 
     public virtual void HandleHit(GameObject other)
@@ -153,6 +170,13 @@ public class ProjectileScript : MonoBehaviour
         {
             OnHitEvent(entity);
         }
+    }
+
+    public virtual void ReturnToPool()
+    {
+        allowingUpdate = false;
+        trail.enabled = false;
+        ProjectileObjectPooling.Instance.ReturnProjectile(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) => HandleHit(collision.gameObject);

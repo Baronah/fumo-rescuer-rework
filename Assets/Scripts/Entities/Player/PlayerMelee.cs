@@ -791,14 +791,10 @@ public class PlayerMelee : PlayerBase
         // reflect projectile if catches one
         if (source && projectileInfo != null)
         {
-            SpriteRenderer projectileRenderer = projectileInfo.GetComponent<SpriteRenderer>();
-            projectileRenderer.material = ColorOverlayMat;
-            projectileRenderer.color = Color.yellow;
-            
             DamageInstance reflectedDamage = new DamageInstance(projectileInfo.DamageInstance);
             reflectedDamage.PhysicalDamage += atk;
 
-            CreateProjectileAndShootToward(
+            GameObject projectileGet = CreateProjectileAndShootToward(
                 projectileInfo.gameObject,
                 reflectedDamage,
                 transform.position,
@@ -808,6 +804,11 @@ public class PlayerMelee : PlayerBase
                 projectileInfo.Acceleration,
                 8,
                 typeof(EnemyBase));
+
+            SpriteRenderer projectileRenderer = projectileGet.GetComponent<SpriteRenderer>();
+            projectileRenderer.material = ColorOverlayMat;
+            projectileRenderer.color = Color.yellow;
+
         }
         // otherwise reflect incoming attack as AOE
         else

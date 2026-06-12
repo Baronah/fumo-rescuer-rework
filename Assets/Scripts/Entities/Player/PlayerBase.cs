@@ -835,6 +835,8 @@ public class PlayerBase : EntityBase
 
     public override void OnDeath()
     {
+        if (!gameObject.activeSelf) return;
+
         if (!IsAlive() && playerManager.MintBlessing)
         {
             MintRevive();

@@ -395,6 +395,11 @@ public class EnemyBase : EntityBase
         if (MoveCnt < MoveCntThreshold) return;
         MoveCnt = 0;
 
+        if (MoveToOverridePosition && SpottedPlayer)
+        {
+            MoveToOverridePosition = false;
+        }
+
         hasClearSightToTargetOnThisMoveOppoturnity = hasClearSightToTarget();
 
         Vector2 currentPos = FeetPosition.position;
@@ -497,13 +502,10 @@ public class EnemyBase : EntityBase
         if (hasClearSightToTargetOnThisMoveOppoturnity || !isUsingPathfinding()) return originalDirection;
         if (originalDirection == Vector2.zero) return Vector2.zero;
 
-        float distanceToDestination = Vector2.Distance(selfPosition, destination);
-
         Vector2 currentPos = FeetPosition.position;
         Vector2 finalDirection = originalDirection;
 
-        float checkDistance = Mathf.Min(cornerAvoidanceDistance, distanceToDestination);
-        RaycastHit2D frontHit = Physics2D.Raycast(currentPos, finalDirection, checkDistance, obstacleLayer);
+        RaycastHit2D frontHit = Physics2D.Raycast(currentPos, finalDirection, cornerAvoidanceDistance, obstacleLayer);
 
         if (frontHit.collider != null && !colliders.Contains(frontHit.collider))
         {

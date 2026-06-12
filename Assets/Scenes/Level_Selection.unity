@@ -27783,7 +27783,7 @@ MonoBehaviour:
   OnSelectSFX: {fileID: 0}
   skillType: 1
   skillName: 46
-  skillNameText: Wonder Future
+  skillNameText: '''Beyond the Night'''
   skillDescription: Upon 'Juggernaut' activation, <color=yellow>removes all aggro</color>
     from enemies to self. While 'Juggernaut' is active, <color=#5b7ccf>ATK becomes
     0</color>, but renders self to become <color=#b1b1b1>'Invisible'</color> throughout

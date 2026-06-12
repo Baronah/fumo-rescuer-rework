@@ -3263,6 +3263,7 @@ Transform:
   - {fileID: 909066021767371747}
   - {fileID: 6792867911412480326}
   - {fileID: 7576251106449457357}
+  - {fileID: 7788479639795466650}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3764606524801569997
@@ -3468,7 +3469,6 @@ MonoBehaviour:
   Disables:
   - {fileID: 340256481665029591}
   - {fileID: 8018060462294976817}
-  stageManager: {fileID: 0}
   FirstBlackFlash: 1
   StatusBarUI: {fileID: 7080096096012203317}
   UpgradeUIPrefab: {fileID: 5096675565045383991, guid: 5bf989894f600cd40ae54c7e4cea2644, type: 3}
@@ -3533,8 +3533,17 @@ MonoBehaviour:
   UnpausedSprite: {fileID: 21300000, guid: 96af0636a2e0062489482ce82248fbab, type: 3}
   ChallengeModeStatsModifier: 1.1
   DoNotShowSpawnsGraphic: 0
+  EnableLowDetail: 0
   StageCompleteConditionType: 1
   StageEvironmentTypes: 
+  ObstacleCollider: {fileID: 0}
+  Absolutism: 0
+  Statis: 0
+  Gravity: 0
+  Acceleration: 0
+  Hunger: 0
+  Adaption: 0
+  ExtraEnemySpawn: {fileID: 0}
   timeDilation: {fileID: 4742387062851837303}
 --- !u!82 &4139534699653741914
 AudioSource:
@@ -13011,7 +13020,7 @@ Transform:
   m_GameObject: {fileID: 8138116287106014697}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1660, y: 0, z: -110}
+  m_LocalPosition: {x: 2330, y: -2635, z: -110}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13740,6 +13749,82 @@ RectTransform:
   m_AnchoredPosition: {x: 11.659004, y: 19}
   m_SizeDelta: {x: 825.1, y: 436.2266}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8832129503454999908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7788479639795466650}
+  - component: {fileID: 8691226305244273328}
+  - component: {fileID: 436417663687026067}
+  - component: {fileID: 1578240338645385517}
+  m_Layer: 0
+  m_Name: ObjectPoolings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7788479639795466650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832129503454999908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9119001943703513319}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8691226305244273328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832129503454999908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff5cb7f9345c77469a11e29223763ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagePopupPrefab: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
+  initialPoolSize: 30
+--- !u!114 &436417663687026067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832129503454999908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d79f8eb0e00cac4295e9d034cc9b0fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileBase: {fileID: 8325308609239250088, guid: cf24154a7dcbae84daf4eb96071044ae, type: 3}
+  poolSize: 50
+--- !u!114 &1578240338645385517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8832129503454999908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6081926766dec924da04c7a2e482fc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileInfo: {fileID: 1707831507938423826, guid: f80dd11dc4cc0ba4ab073dc632da03aa, type: 3}
+  poolSize: 70
 --- !u!1 &8907986312315634938
 GameObject:
   m_ObjectHideFlags: 0

@@ -289,18 +289,18 @@ MonoBehaviour:
   Name: Bloodthirsty Heir
   Icon: {fileID: 21300000, guid: 34023941c46cc37408c4b83eb4cd8ec0, type: 3}
   mHealth: 60
-  bAtk: 10
+  bAtk: 11
   bDef: 0
   bRes: 30
   defPen: 0
   defIgn: 0
   resPen: 0
   resIgn: 0
-  lifeSteal: 0.9
+  lifeSteal: 1.1
   b_moveSpeed: 90
   b_attackRange: 30
-  b_attackWindupTime: 0.09
-  b_attackInterval: 0.14
+  b_attackWindupTime: 0.11
+  b_attackInterval: 0.16
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 60
@@ -310,7 +310,7 @@ MonoBehaviour:
   ASPD: 100
   moveSpeed: 90
   attackRange: 35
-  attackWindupTime: 0.09
+  attackWindupTime: 0.1
   attackInterval: 0.14
   hpRegenFlat: 0
   hpRegenPercentage: 0
@@ -333,9 +333,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 3695961262839361106}
   AttackAnimation: {fileID: 7400000, guid: 0ecc7133e5b0a254b963f364657db491, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs:
   - {fileID: 7424751633068628821}
   BeingShiftState: 0

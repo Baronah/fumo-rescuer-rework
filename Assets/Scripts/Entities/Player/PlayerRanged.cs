@@ -8,7 +8,6 @@ using static PlayerManager;
 
 public class PlayerRanged : PlayerBase
 {
-    [SerializeField] GameObject ProjectileSkill_2, ProjectileSkill_3, ProjectileSkill_4;
     [SerializeField] private GameObject AttackRangeIndicator, Warning, EffectsParent, SkillEffect, FreezeEffect, FreezeRing, FreezeMaintRing, JuggEffect;
 
     [SerializeField] private Transform SkillPosition;
@@ -618,6 +617,8 @@ public class PlayerRanged : PlayerBase
         float lockInTargetDamageMul = 1.0f;
         int yellowBulletAngle = 90;
 
+        GameObject o2 = null, o3 = null;
+
         while (skillCurrentDuration < SkillDuration)
         {
             SkillBar.value = SkillDuration - skillCurrentDuration;
@@ -687,8 +688,8 @@ public class PlayerRanged : PlayerBase
                             sourcePosition.z
                         );
 
-                        CreateProjectileAndShootToward(
-                            ProjectileSkill_2,
+                        o2 = CreateProjectileAndShootToward(
+                            ProjectilePrefab,
                             new DamageInstance(0, (int)(atk * Skill_DamageMulitplier), 0),
                             sourcePosition,
                             targetPosition,
@@ -697,6 +698,8 @@ public class PlayerRanged : PlayerBase
                             acceleration: speed,
                             lifeSpan: Skill_ProjLifeSpan,
                             targetType: typeof(EnemyBase));
+
+                        o2.GetComponent<SpriteRenderer>().color = new(0, 0.76f, 1f);
                     }
                 }
                 angleOffset += 6;
@@ -712,8 +715,8 @@ public class PlayerRanged : PlayerBase
                         sourcePosition.z
                     );
 
-                    CreateProjectileAndShootToward(
-                        ProjectileSkill_3,
+                    o3 = CreateProjectileAndShootToward(
+                        ProjectilePrefab,
                         new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 2), 0),
                         sourcePosition,
                         targetPosition,
@@ -722,6 +725,7 @@ public class PlayerRanged : PlayerBase
                         acceleration: speed * 2,
                         lifeSpan: Skill_ProjLifeSpan * 0.6f,
                         targetType: typeof(EnemyBase));
+                    o3.GetComponent<SpriteRenderer>().color = Color.yellow;
 
                     angle *= -1;
                     angleInRadians = angle * Mathf.Deg2Rad;
@@ -731,8 +735,8 @@ public class PlayerRanged : PlayerBase
                             sourcePosition.z
                         );
 
-                    CreateProjectileAndShootToward(
-                        ProjectileSkill_3,
+                    o3 = CreateProjectileAndShootToward(
+                        ProjectilePrefab,
                         new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 2), 0),
                         sourcePosition,
                         targetPosition,
@@ -741,6 +745,7 @@ public class PlayerRanged : PlayerBase
                         acceleration: speed * 2,
                         lifeSpan: Skill_ProjLifeSpan * 0.6f,
                         targetType: typeof(EnemyBase));
+                    o3.GetComponent<SpriteRenderer>().color = Color.yellow;
 
                     angle += 180;
                     angleInRadians = angle * Mathf.Deg2Rad;
@@ -750,8 +755,8 @@ public class PlayerRanged : PlayerBase
                         sourcePosition.z
                     );
 
-                    CreateProjectileAndShootToward(
-                        ProjectileSkill_3,
+                    o3 = CreateProjectileAndShootToward(
+                        ProjectilePrefab,
                         new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 2), 0),
                         sourcePosition,
                         targetPosition,
@@ -760,6 +765,7 @@ public class PlayerRanged : PlayerBase
                         acceleration: speed * 2,
                         lifeSpan: Skill_ProjLifeSpan * 0.6f,
                         targetType: typeof(EnemyBase));
+                    o3.GetComponent<SpriteRenderer>().color = Color.yellow;
 
                     angle *= -1;
                     angleInRadians = angle * Mathf.Deg2Rad;
@@ -769,8 +775,8 @@ public class PlayerRanged : PlayerBase
                             sourcePosition.z
                         );
 
-                    CreateProjectileAndShootToward(
-                        ProjectileSkill_3,
+                    o3 = CreateProjectileAndShootToward(
+                        ProjectilePrefab,
                         new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 2), 0),
                         sourcePosition,
                         targetPosition,
@@ -779,6 +785,7 @@ public class PlayerRanged : PlayerBase
                         acceleration: speed * 2,
                         lifeSpan: Skill_ProjLifeSpan * 0.6f,
                         targetType: typeof(EnemyBase));
+                    o3.GetComponent<SpriteRenderer>().color = Color.yellow;
 
                     yellowBulletAngle += 12;
                 }
@@ -812,7 +819,7 @@ public class PlayerRanged : PlayerBase
             && !target.IsAlive()
             && flowerCount < MaxExtraFlowers)
         {
-            StartCoroutine(CreateExtraFlowers(target.transform.position, SkillDuration - skillCurrentDuration));
+            StartCoroutine(CreateExtraFlowers(target.transform.position, FlowerMaxDuration));
             flowerCount++;
         }
     }
@@ -823,16 +830,16 @@ public class PlayerRanged : PlayerBase
 
         float intervalCounter = Skill_AtkInterval;
         float count = 0;
-        duration = Mathf.Clamp(duration, 0.5f, FlowerMaxDuration);
 
         GameObject E_SkillEffect = Instantiate(SkillEffect, position, Quaternion.identity);
         E_SkillEffect.GetComponent<SpriteRenderer>().color = Color.green;
         E_SkillEffect.transform.localScale = new(30, 30, 30);
         E_SkillEffect.SetActive(true);
-        Destroy(E_SkillEffect, duration + 0.2f);
+        Destroy(E_SkillEffect, duration + 0.1f);
 
         yield return new WaitForSeconds(0.2f);
 
+        GameObject o;
         while (count < duration)
         {
             if (intervalCounter >= Skill_AtkInterval)
@@ -856,8 +863,8 @@ public class PlayerRanged : PlayerBase
                         sourcePosition.z
                     );
 
-                    CreateProjectileAndShootToward(
-                        ProjectileSkill_4,
+                    o = CreateProjectileAndShootToward(
+                        ProjectilePrefab,
                         new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 0.7f), 0),
                         sourcePosition,
                         targetPosition,
@@ -866,6 +873,7 @@ public class PlayerRanged : PlayerBase
                         acceleration: speed,
                         lifeSpan: lifeSpan,
                         targetType: typeof(EnemyBase));
+                    o.GetComponent<SpriteRenderer>().color = new(0, 1f, 0.52f);
                 }
                 angleOffset += 6;
             }

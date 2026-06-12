@@ -463,7 +463,7 @@ public class StageManager : MonoBehaviour
     {
         if (CharacterPrefabsStorage.DifficultyLevel == (int) DiffType.Observer)
         {
-            player.mHealth *= 2f;
+            player.mHealth += player.mHealth * 0.5f;
             player.bAtk = (short)(player.bAtk * 1.3f);
         }
     }
@@ -711,7 +711,7 @@ public class StageManager : MonoBehaviour
     Coroutine HDCoroutine = null;
     public void CheckWinWithHeathDeath()
     {
-        HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(Color.white, 0.5f, 1f));
+        HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(Color.white, 0.15f, 0.75f, 1f));
         
         UpdateEnemyCountUI();
         RemainingEnemiesGO.SetActive(true);
@@ -724,7 +724,7 @@ public class StageManager : MonoBehaviour
         FadeInResult();
     }
 
-    IEnumerator ShowOverlayFadeInToColorThenFadeOut(Color toColor, float inDuration, float holdDuration)
+    IEnumerator ShowOverlayFadeInToColorThenFadeOut(Color toColor, float inDuration, float holdDuration, float outDuration)
     {
         Color clearColor = new Color(toColor.r, toColor.g, toColor.b, 0);
         Image screen = TopOverlay.GetComponentInChildren<Image>();
@@ -743,7 +743,7 @@ public class StageManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(holdDuration);
 
         c = 0;
-        d = inDuration;
+        d = outDuration;
         while (c < d)
         {
             screen.color = Color.Lerp(toColor, clearColor, c * 1.0f / d);
@@ -768,7 +768,7 @@ public class StageManager : MonoBehaviour
     public virtual void OnStageEnd(ResultType resultType)
     {
         if (HDCoroutine == null && resultType == ResultType.ENEMIES_DEFEATED) 
-            HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(new Color(0, 1f, 0.63f), 0.35f, 0.25f));
+            HDCoroutine = StartCoroutine(ShowOverlayFadeInToColorThenFadeOut(new Color(0, 1f, 0.63f, 0.8f), 0.5f, 0.5f, 1f));
 
         Cursor.visible = true;
 

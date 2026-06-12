@@ -9,6 +9,21 @@ public class CasterProjectileScript : ProjectileScript
 
     private HashSet<EnvironmentType> contactedEnvironmentType = new();
     
+    Color? InitColor;
+    void ResetProperties()
+    {
+        if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (!trail) trail = GetComponent<TrailRenderer>();
+        if (InitColor == null) InitColor = spriteRenderer.color;
+
+        spriteRenderer.color = (Color)InitColor;
+        trail.enabled = false;
+        contactedEnvironmentType.Clear();
+        bounceCount = 0;
+        appliedDamage = false;
+    }
+
     PlayerManager playerManager => PlayerManager._instance;
     PlayerRanged caster;
     void GetFieldExpert()
@@ -22,18 +37,20 @@ public class CasterProjectileScript : ProjectileScript
             (playerCasterIllusion && playerCasterIllusion.FieldExpert);
     }
 
-    public override void ShootTowards(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)
+    public override void StartShooting(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false)
     {
+        ResetProperties();
         GetFieldExpert();
 
-        base.ShootTowards(targetPosition, projectileType, ProjectileLifespan, useAbsoluteDirection, enemy);
+        base.StartShooting(targetPosition, enemy, projectileType, ProjectileLifespan, useAbsoluteDirection);
     }
 
-    public override void ShootTowards(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false)
+    public override void StartShooting(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)
     {
+        ResetProperties();
         GetFieldExpert();
 
-        base.ShootTowards(targetPosition, enemy, projectileType, ProjectileLifespan, useAbsoluteDirection);
+        base.StartShooting(targetPosition, projectileType, ProjectileLifespan, useAbsoluteDirection, enemy);
     }
 
     short bounceCount = 0;
@@ -71,8 +88,8 @@ public class CasterProjectileScript : ProjectileScript
 
         if (!resetOnHit)
         {
-            gameObject.SetActive(false);
-            Destroy(this.gameObject, 0.5f);
+            trail.enabled = false;
+            ReturnToPool();
         }
     }
 
@@ -146,11 +163,6 @@ public class CasterProjectileScript : ProjectileScript
         }
     }
 
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
     public override void HandleHit(GameObject other)
     {
         if (!allowingUpdate) return;
@@ -163,6 +175,13 @@ public class CasterProjectileScript : ProjectileScript
         }
 
         base.HandleHit(other);
+    }
+
+    public override void ReturnToPool()
+    {
+        allowingUpdate = false;
+        trail.enabled = false;
+        CasterProjectileObjectPooling.Instance.ReturnProjectile(gameObject);
     }
 
     SpriteRenderer spriteRenderer;
@@ -192,8 +211,6 @@ public class CasterProjectileScript : ProjectileScript
         finalColor /= contactedEnvironmentType.Count;
         spriteRenderer.color = finalColor;
 
-        var trail = GetComponent<TrailRenderer>();
-
         Color finalTrailColor = Color.black;
 
         foreach (var envType in contactedEnvironmentType)
@@ -210,6 +227,7 @@ public class CasterProjectileScript : ProjectileScript
 
         finalTrailColor /= contactedEnvironmentType.Count;
 
+        if (!trail) trail = GetComponent<TrailRenderer>();
         trail.startColor = new Color(
             finalTrailColor.r,
             finalTrailColor.g,

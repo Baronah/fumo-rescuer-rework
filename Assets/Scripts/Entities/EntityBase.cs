@@ -100,7 +100,6 @@ public class EntityBase : MonoBehaviour
     [SerializeField] protected GameObject ProjectilePrefab;
     [SerializeField] protected ProjectileType ProjectileType = ProjectileType.CATCH_FIRST_TARGET_OF_TYPE;
     [SerializeField] public float ProjectileSpeed = 1000;
-    [SerializeField] private GameObject DamagePopup;
 
     protected HealthBar healthBar;
     [SerializeField] protected GameObject ccBar;
@@ -1184,10 +1183,9 @@ public class EntityBase : MonoBehaviour
 
     public void DisplayDamage(string msg, Vector3 offset)
     {
-        if (!gameObject || !DamagePopup) return;
+        if (!gameObject) return;
 
-        GameObject popup = Instantiate(DamagePopup, transform.position + offset, Quaternion.identity);
-        popup.GetComponent<DamagePopup>().text.text = msg;
+        DamagePopupObjectPool.Instance.ShowDamagePopup(msg, transform.position + offset);
     }
 
     public virtual bool IsAlive() => health > 0;
@@ -1928,33 +1926,28 @@ public class EntityBase : MonoBehaviour
         CreateProjectileAndShootToward(ProjectilePrefab, damageInstance, target, AttackPosition.position, targetPosition, projectileType, ProjectileSpeed, acceleration);
     }
 
-    public void CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, EntityBase target, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8)
+    private GameObject GetProjectile(GameObject prefab, Vector3 spawnPosition)
     {
-        if (!ProjectilePref) return;
-
-        GameObject projectile = Instantiate(ProjectilePref, spawnPosition, Quaternion.identity);
-        ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
-        if (!projectileScript) return;
-
-        if (StageManager.Absolutism)
+        GameObject projectile;
+        if (this as PlayerRanged || this as PlayerCasterIllusion)
         {
-            lifeSpan = Mathf.Min(15f, lifeSpan * 1.5f);
+            projectile = CasterProjectileObjectPooling.Instance.GetProjectile(spawnPosition);
         }
-
-        projectileScript.ProjectileFirer = this;
-        projectileScript.DamageInstance = damageInstance;
-        projectileScript.TravelSpeed = travelSpeed;
-        projectileScript.Acceleration = acceleration;
-        projectileScript.ShootTowards(preferPosition, target, projectileType, lifeSpan);
+        else
+        {
+            projectile = ProjectileObjectPooling.Instance.GetProjectile(prefab, spawnPosition);
+        }
+        return projectile;
     }
 
-    public void CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8, params Type[] targetType)
+    public virtual GameObject CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, EntityBase target, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8)
     {
-        if (!ProjectilePref) return;
+        if (!ProjectilePref) return null;
 
-        GameObject projectile = Instantiate(ProjectilePref, spawnPosition, Quaternion.identity);
+        GameObject projectile = GetProjectile(ProjectilePref, spawnPosition);
+
         ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
-        if (!projectileScript) return;
+        if (!projectileScript) return null;
 
         if (StageManager.Absolutism)
         {
@@ -1965,7 +1958,34 @@ public class EntityBase : MonoBehaviour
         projectileScript.DamageInstance = damageInstance;
         projectileScript.TravelSpeed = travelSpeed;
         projectileScript.Acceleration = acceleration;
-        projectileScript.ShootTowards(preferPosition, projectileType, lifeSpan, false, targetType);
+
+        projectileScript.StartShooting(preferPosition, target, projectileType, lifeSpan);
+
+        return projectileScript.gameObject;
+    }
+
+    public virtual GameObject CreateProjectileAndShootToward(GameObject ProjectilePref, DamageInstance damageInstance, Vector3 spawnPosition, Vector3 preferPosition, ProjectileScript.ProjectileType projectileType, float travelSpeed = 1000, float acceleration = 0, float lifeSpan = 8, params Type[] targetType)
+    {
+        if (!ProjectilePref) return null;
+
+        GameObject projectile = GetProjectile(ProjectilePref, spawnPosition);
+
+        ProjectileScript projectileScript = projectile.GetComponent<ProjectileScript>();
+        if (!projectileScript) return null;
+
+        if (StageManager.Absolutism)
+        {
+            lifeSpan = Mathf.Min(15f, lifeSpan * 1.5f);
+        }
+
+        projectileScript.ProjectileFirer = this;
+        projectileScript.DamageInstance = damageInstance;
+        projectileScript.TravelSpeed = travelSpeed;
+        projectileScript.Acceleration = acceleration;
+
+        projectileScript.StartShooting(preferPosition, projectileType, lifeSpan, false, targetType);
+
+        return projectileScript.gameObject;
     }
 
     public virtual List<EntityBase> SearchForEntitiesAroundSelf(Type type = null, bool catchInvisibles = false, short take = -1)
