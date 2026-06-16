@@ -30,9 +30,6 @@ public class OneDirectionalPassage : MonoBehaviour
         var rb = collider.attachedRigidbody;
         if (!rb) return;
 
-        Vector2 velocity = rb.velocity;
-        bool allowPass = IsCorrectDirection(velocity, AllowPassingThroughDirection);
-
         Physics2D.IgnoreCollision(selfCollider, collider, true);
     }
 

@@ -248,9 +248,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 93467831234781814}
   AttackAnimation: {fileID: 7400000, guid: dfe83c770ed644242bbe99eb0eaa6ab2, type: 2}
+  FeetCollider: {fileID: 8886099768728976592}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -287,7 +287,7 @@ MonoBehaviour:
   MoveToOverridePositionSpeedMultiplierJump: 0.35
   CanDetectThroughWalls: 0
   IsInsignificant: 0
-  hasDRWhenNotCombat: 0
+  DamageReductionOutsideCombat: 0
 --- !u!212 &463968810666857698 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 974949566670964878, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -296,5 +296,10 @@ SpriteRenderer:
 --- !u!4 &6200387987072938832 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 862419932333251692}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &8886099768728976592 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 862419932333251692}
   m_PrefabAsset: {fileID: 0}

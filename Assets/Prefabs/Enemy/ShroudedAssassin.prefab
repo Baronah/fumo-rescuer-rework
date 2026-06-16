@@ -399,6 +399,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4276608119510497328}
   m_SourcePrefab: {fileID: 100100000, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+--- !u!58 &1078358668986522026 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 9102113005617969430}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2570123632696497706 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -483,10 +488,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 8424772178851792652}
   AttackAnimation: {fileID: 7400000, guid: 36b864448fe6280478c168bbf0a532f7, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 1078358668986522026}
   sfxs:
   - {fileID: 1763570007023390080}
   - {fileID: 6015849564817278638}

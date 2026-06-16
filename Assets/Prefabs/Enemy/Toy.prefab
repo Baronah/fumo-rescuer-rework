@@ -5044,11 +5044,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
-      value: 235
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_MaxValue
-      value: 235
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -5068,6 +5068,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 9155952842754536466}
   m_SourcePrefab: {fileID: 100100000, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+--- !u!58 &1317248758770547007 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 7125227010676382083}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4547015394703324863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -5208,7 +5213,7 @@ MonoBehaviour:
   b_attackInterval: 2.4
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
-  health: 235
+  health: 200
   atk: 40
   def: 25
   res: 30
@@ -5238,10 +5243,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 4359271589128292085, guid: 2f121c35d822a6148966f3f00ca6034e, type: 3}
   ProjectileType: 1
   ProjectileSpeed: 800
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 7519351199644919705}
   AttackAnimation: {fileID: 7400000, guid: ea423b279495f9a459aa0f1d64a074aa, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 1317248758770547007}
   sfxs:
   - {fileID: 1879331722200618134}
   BeingShiftState: 0
@@ -5274,7 +5278,7 @@ MonoBehaviour:
     chase the player if they are outside shrouded zones."
   detectionRange: 475
   b_detectionRange: 475
-  DangerRange_RatioOfAttackRange: 0.7
+  DangerRange_RatioOfAttackRange: 0.8
   MinimumDistanceFromPlayer: 20
   WaitTimes:
   - 2

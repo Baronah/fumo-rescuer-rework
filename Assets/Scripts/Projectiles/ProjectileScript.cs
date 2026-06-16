@@ -20,6 +20,7 @@ public class ProjectileScript : MonoBehaviour
 	public float TravelSpeed = 25f;
     public float Acceleration = 0f;
 
+    protected SpriteRenderer renderer;
     protected TrailRenderer trail;
     protected Vector3 targetDirection;
     protected Collider2D Target = null;
@@ -37,15 +38,22 @@ public class ProjectileScript : MonoBehaviour
 	public ProjectileType projectileType;
     bool DamageScaleWithDistance = false;
 
+    protected virtual void ResetProperties()
+    {
+        if (!renderer) renderer = GetComponent<SpriteRenderer>();
+        if (!trail) trail = GetComponent<TrailRenderer>();
+        TravelTimeCount = 0;
+    }
+
     public virtual void StartShooting(Vector3 targetPosition, EntityBase enemy, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false)
     {
-        if (!trail) trail = GetComponent<TrailRenderer>();
+        ResetProperties();
         ShootTowards(targetPosition, enemy, projectileType, ProjectileLifespan, useAbsoluteDirection);
     }
 
     public virtual void StartShooting(Vector3 targetPosition, ProjectileType projectileType, float ProjectileLifespan, bool useAbsoluteDirection = false, params Type[] enemy)
     {
-        if (!trail) trail = GetComponent<TrailRenderer>();
+        ResetProperties();
         ShootTowards(targetPosition, projectileType, ProjectileLifespan, useAbsoluteDirection, enemy);
     }
 

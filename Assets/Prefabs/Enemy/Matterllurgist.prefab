@@ -5104,9 +5104,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 8325308609239250088, guid: cf24154a7dcbae84daf4eb96071044ae, type: 3}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 446298989067341241}
   AttackAnimation: {fileID: 7400000, guid: 00dd520ee3809c84ca49114685d019b7, type: 2}
+  FeetCollider: {fileID: 8947603830796718879}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -5154,5 +5154,10 @@ GameObject:
 --- !u!4 &5868672906707442847 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 903654197162275747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &8947603830796718879 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 903654197162275747}
   m_PrefabAsset: {fileID: 0}

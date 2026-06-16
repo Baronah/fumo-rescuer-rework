@@ -151,7 +151,7 @@ public class Toy : EnemyBase
             "these kind of wind-up toys were very popular. It gets more lively the harder you wind it up, " +
             "or when it thinks no one else is watching...";
         Skillset =
-            "• Normally does not act, can not be attacked and does not count toward battle progress.\n" +
+            "• Normally does not act and counts as defeated, but can not be attacked.\n" +
             "• Comes into life when inside shrouded areas, performs long-ranged magical attack that lauches several projectiles.\n" +
             "• Will not chase the player if they are outside shrouded zones.";
         TooltipsDescription =

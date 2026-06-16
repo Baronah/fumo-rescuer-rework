@@ -36,7 +36,11 @@ public class ProjectileObjectPooling : MonoBehaviour
             GameObject obj = projectilePool.Dequeue();
             obj.transform.position = position;
 
-            obj.GetComponent<SpriteRenderer>().sprite = prefab.GetComponent<SpriteRenderer>().sprite;
+            SpriteRenderer objRenderer = obj.GetComponent<SpriteRenderer>(), 
+                            prefabRenderer = prefab.GetComponent<SpriteRenderer>();
+            objRenderer.sprite = prefabRenderer.sprite;
+            objRenderer.color = prefabRenderer.color;
+            objRenderer.material = prefabRenderer.sharedMaterial;
             obj.transform.localScale = prefab.transform.localScale;
 
             BoxCollider2D collider = obj.GetComponent<BoxCollider2D>();

@@ -349,11 +349,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
-      value: 160
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_MaxValue
-      value: 160
+      value: 180
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -413,10 +413,10 @@ MonoBehaviour:
   b_attackInterval: 3
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
-  health: 160
+  health: 180
   atk: 50
   def: 30
-  res: 20
+  res: 15
   ASPD: 100
   moveSpeed: 100
   attackRange: 110
@@ -443,10 +443,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 754730279402599387}
   AttackAnimation: {fileID: 7400000, guid: a09a6a5b301f7034a95e77b2c60a63a9, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 8098743059328298365}
   sfxs:
   - {fileID: -5450917385555761551}
   - {fileID: -8733238294579501206}
@@ -704,5 +703,10 @@ Transform:
 --- !u!4 &6717527081346786045 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 54792048885730753}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &8098743059328298365 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 54792048885730753}
   m_PrefabAsset: {fileID: 0}

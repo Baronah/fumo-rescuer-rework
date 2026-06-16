@@ -97,6 +97,7 @@ public static class EnemyStatsLookup
                 break;
 
             case 13:
+                codeWithStatsChange = new() { EnemyCode.HIBERNATOR_KNIGHT };
                 break;
 
             case 14:
@@ -229,6 +230,14 @@ public static class EnemyStatsLookup
                 break;
 
             case 13:
+                if (enemy is HibernatorKnight hk)
+                {
+                    hk.ASPD += 30;
+                    hk.Wake_AtkBuff += 0.5f;
+                    hk.Wake_MspdBuff += 0.5f;
+                    hk.Wake_Buff_Duration = 7f;
+                    hasChanged = true;
+                }
                 break;
 
             case 14:

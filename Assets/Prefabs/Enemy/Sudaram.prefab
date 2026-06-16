@@ -4976,11 +4976,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
-      value: 260
+      value: 280
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_MaxValue
-      value: 260
+      value: 280
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -5042,9 +5042,9 @@ MonoBehaviour:
   b_attackInterval: 3
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
-  health: 260
+  health: 280
   atk: 55
-  def: 40
+  def: 35
   res: 50
   ASPD: 100
   moveSpeed: 150
@@ -5072,10 +5072,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 5318204612815691873, guid: 8edf7dc56859d9b4c8fcc595c3c9616e, type: 3}
   ProjectileType: 1
   ProjectileSpeed: 1350
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 3483630152131767987}
   AttackAnimation: {fileID: 7400000, guid: 3d57bdd9bab37a64fb086ac50f47c812, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 5351828856557727765}
   sfxs:
   - {fileID: 6578555615704739346}
   - {fileID: -760533550074903822}
@@ -5318,6 +5317,11 @@ AudioSource:
 --- !u!212 &3991348675042547751 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 974949566670964878, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 4243421152279204009}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &5351828856557727765 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 4243421152279204009}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &7428814373639913365 stripped

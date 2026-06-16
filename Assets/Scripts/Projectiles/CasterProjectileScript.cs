@@ -10,15 +10,13 @@ public class CasterProjectileScript : ProjectileScript
     private HashSet<EnvironmentType> contactedEnvironmentType = new();
     
     Color? InitColor;
-    void ResetProperties()
+    protected override void ResetProperties()
     {
-        if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
+        base.ResetProperties();
 
-        if (!trail) trail = GetComponent<TrailRenderer>();
-        if (InitColor == null) InitColor = spriteRenderer.color;
+        if (InitColor == null) InitColor = renderer.color;
 
-        spriteRenderer.color = (Color)InitColor;
-        trail.enabled = false;
+        renderer.color = (Color)InitColor;
         contactedEnvironmentType.Clear();
         bounceCount = 0;
         appliedDamage = false;
@@ -184,13 +182,12 @@ public class CasterProjectileScript : ProjectileScript
         CasterProjectileObjectPooling.Instance.ReturnProjectile(gameObject);
     }
 
-    SpriteRenderer spriteRenderer;
     void AddContactedEnvironmental(EnvironmentType environmentType)
     {
         if (!fieldExpertEnabled) return;
         if (contactedEnvironmentType.Contains(environmentType)) return;
         
-        if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
+        if (!renderer) renderer = GetComponent<SpriteRenderer>();
 
         contactedEnvironmentType.Add(environmentType);
 
@@ -209,7 +206,7 @@ public class CasterProjectileScript : ProjectileScript
         }
 
         finalColor /= contactedEnvironmentType.Count;
-        spriteRenderer.color = finalColor;
+        renderer.color = finalColor;
 
         Color finalTrailColor = Color.black;
 

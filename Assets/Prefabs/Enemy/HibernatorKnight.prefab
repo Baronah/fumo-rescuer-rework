@@ -578,11 +578,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
-      value: 400
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_MaxValue
-      value: 400
+      value: 350
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -599,6 +599,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 9101069720136004751}
   m_SourcePrefab: {fileID: 100100000, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+--- !u!58 &1684946870855358614 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 7477110847283181610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4197305293625677590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -648,9 +653,9 @@ MonoBehaviour:
   b_attackInterval: 2.4
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
-  health: 400
+  health: 350
   atk: 75
-  def: 80
+  def: 70
   res: 40
   ASPD: 100
   moveSpeed: 170
@@ -678,10 +683,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 7890296202755098160}
   AttackAnimation: {fileID: 7400000, guid: e6bd9b952bdbf8b44b629bec61f89a35, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 1684946870855358614}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -707,10 +711,9 @@ MonoBehaviour:
     considered rogue. They're often found passed out drunk in dark alleyways, and
     should be avoided as they demonstrate ferociously violent tendencies when woken
     up.
-  Skillset: "\u2022 Normally has increased DEF and RES, disabled under shrouded zones.\n\u2022
-    After staying inside shrouded zones for more than 5 seconds, falls asleep and
-    becomes unable to act.\n\u2022 Upon waking up, has increased ATK and MSPD for
-    a period of time."
+  Skillset: "\u2022 After staying inside shrouded zones for more than 5 seconds:
+    falls asleep, becomes unable to act and loses all DEF and RES.\n\u2022 Upon waking
+    up, has increased ATK and MSPD for a period of time."
   detectionRange: 250
   b_detectionRange: 250
   DangerRange_RatioOfAttackRange: 1

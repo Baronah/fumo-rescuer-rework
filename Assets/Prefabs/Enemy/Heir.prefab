@@ -304,14 +304,14 @@ MonoBehaviour:
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
   health: 60
-  atk: 10
+  atk: 11
   def: 0
   res: 30
   ASPD: 100
   moveSpeed: 90
-  attackRange: 35
-  attackWindupTime: 0.1
-  attackInterval: 0.14
+  attackRange: 30
+  attackWindupTime: 0.11
+  attackInterval: 0.16
   hpRegenFlat: 0
   hpRegenPercentage: 0
   weight: 0
@@ -335,7 +335,7 @@ MonoBehaviour:
   ProjectileSpeed: 1000
   ccBar: {fileID: 3695961262839361106}
   AttackAnimation: {fileID: 7400000, guid: 0ecc7133e5b0a254b963f364657db491, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 5284804804781895924}
   sfxs:
   - {fileID: 7424751633068628821}
   BeingShiftState: 0
@@ -478,6 +478,11 @@ GameObject:
 --- !u!212 &3780482149273082054 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 974949566670964878, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 4175205238220296264}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &5284804804781895924 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 4175205238220296264}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &7208738346378264436 stripped

@@ -4996,11 +4996,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_Value
-      value: 130
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 8775152862550477468, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: m_MaxValue
-      value: 130
+      value: 125
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
@@ -5023,6 +5023,11 @@ PrefabInstance:
 --- !u!4 &869957331305291236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6772246562461740860, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 5902371706342126296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &2400213234052452964 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 5902371706342126296}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6343975242114485112 stripped
@@ -5059,7 +5064,7 @@ MonoBehaviour:
   b_attackInterval: 2
   MIN_PHYSICAL_DMG: 0.05
   MIN_MAGICAL_DMG: 0.1
-  health: 130
+  health: 125
   atk: 35
   def: 5
   res: 0
@@ -5089,10 +5094,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 6580482464572689602}
   AttackAnimation: {fileID: 7400000, guid: bdfcfd76ef9b1f744b1bd42a3e4bedcc, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 2400213234052452964}
   sfxs:
   - {fileID: -3934596599787445615}
   BeingShiftState: 0

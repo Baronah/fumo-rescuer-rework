@@ -5002,6 +5002,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7022819862923136742, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7523077825662678453, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
       propertyPath: Name
       value: Archer
@@ -5110,7 +5114,7 @@ MonoBehaviour:
   MIN_MAGICAL_DMG: 0.1
   health: 100
   atk: 35
-  def: 0
+  def: 5
   res: 0
   ASPD: 100
   moveSpeed: 120
@@ -5138,10 +5142,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 4822836555512480017, guid: dcd47d675780a6148a48c3695dfc6680, type: 3}
   ProjectileType: 1
   ProjectileSpeed: 1250
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 2787112311692162125}
   AttackAnimation: {fileID: 7400000, guid: 3d57bdd9bab37a64fb086ac50f47c812, type: 2}
-  FeetCollider: {fileID: 0}
+  FeetCollider: {fileID: 6678868168295770859}
   sfxs:
   - {fileID: -2903497213624986761}
   BeingShiftState: 0
@@ -5152,7 +5155,7 @@ MonoBehaviour:
   MagicalDodgeChance: 0
   preferredMoveAnimationPlaySpeed: 1
   preferredAttackAnimationSpeed: 1
-  IsComponentsInitialized: 0
+  IsComponentsInitialized: 1
   HasOnStartCoroutine: 1
   IsBeingLevitated: 0
   LevitationEffect: {fileID: 2418862577888199385}
@@ -5283,6 +5286,11 @@ AudioSource:
 --- !u!1 &2787112311692162125 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 773491194806959642, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
+  m_PrefabInstance: {fileID: 3176781312704580183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &6678868168295770859 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 8117222602758807740, guid: f3221dbae6b487b49907a796747ecac4, type: 3}
   m_PrefabInstance: {fileID: 3176781312704580183}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8209476750313219435 stripped

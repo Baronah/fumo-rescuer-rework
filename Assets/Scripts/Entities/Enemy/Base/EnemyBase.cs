@@ -624,9 +624,10 @@ public class EnemyBase : EntityBase
                 float distance = Vector3.Distance(RecentlyScannedPlayer.FeetPosition.position, FeetPosition.position);
                 if (distance > Mathf.Max(100f, detectionRange * 0.25f))
                 {
+                    Vector3 direction = (RecentlyScannedPlayer.FeetPosition.position - FeetPosition.position).normalized;
                     var checkObstacle = Physics2D.Raycast(
-                        FeetPosition.position,
-                        (RecentlyScannedPlayer.FeetPosition.position - FeetPosition.position).normalized,
+                        FeetPosition.position + direction * 30f,
+                        direction,
                         distance - 30f,
                         obstacleLayer);
 
@@ -812,7 +813,7 @@ public class EnemyBase : EntityBase
     {
         if (source as PlayerBase && !SpottedPlayer)
         {
-            var nearbyEnemies = SearchForEntitiesAroundSelf(100, typeof(EnemyBase), true);
+            var nearbyEnemies = SearchForEntitiesAroundSelf(115, typeof(EnemyBase), true);
             nearbyEnemies.Add(this);
 
             foreach (var en in nearbyEnemies)
@@ -826,6 +827,7 @@ public class EnemyBase : EntityBase
 
     protected void MoveTowardTheSourceOfAttack(EntityBase source)
     {
+        if (!IsAlive()) return;
         if (SpottedPlayer) return;
         if (MoveToOverridePosition && OverridePosition == source.FeetPosition.position) return;
 
