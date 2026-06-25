@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[RequireComponent(typeof(Tilemap))]
 public class DarkTile : EnvironmentalTileBase
 {
     [SerializeField] private GameObject DarkZoneEffectPrefab;

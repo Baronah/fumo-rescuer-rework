@@ -492,10 +492,11 @@ MonoBehaviour:
   CanDetectThroughWalls: 0
   IsInsignificant: 1
   DamageReductionOutsideCombat: 0
+  ManagerPrefab: {fileID: 6241458717558242025, guid: e634f5dc24a09d54ba7fd520d4f8cae6, type: 3}
   HealEffect: {fileID: 443374613090984116}
   DefBuffFlat: 15
   ResBuffFlat: 20
-  SelfHpHealingBonus: 0.005
+  SelfHpHealingBonus_PerSecond: 0.005
   HealOnDeathPercentage: 0.35
   DefFlatBuffOnDeathPercentage: 15
 --- !u!1 &6547622674933118992 stripped

@@ -780,6 +780,8 @@ public class PlayerBase : EntityBase
     readonly HashSet<EntityBase> Levitated = new();
     public override void DealDamage(EntityBase target, float pDmg, float mDmg, float tDmg, bool allowWhenDisabled = false, ProjectileScript projectileInfo = null)
     {
+        if (!target.IsAlive()) return;
+
         if (Skills.Contains(SkillTree_Manager.SkillName.BUBBLE_ARTS) && !Levitated.Contains(target))
         {
             mDmg += (int)(atk * 0.1f);

@@ -42,6 +42,7 @@ public class ProjectileScript : MonoBehaviour
     {
         if (!renderer) renderer = GetComponent<SpriteRenderer>();
         if (!trail) trail = GetComponent<TrailRenderer>();
+        trail.Clear();
         TravelTimeCount = 0;
     }
 

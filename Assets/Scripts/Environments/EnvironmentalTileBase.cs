@@ -27,15 +27,19 @@ public class EnvironmentalTileBase : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Interval);
-
-            entitiesWithin.RemoveAll(e => !e || !e.IsAlive());
-            
-            entitiesWithinClone = new(entitiesWithin);
-            entitiesWithinClone.ForEach(e =>
-            {
-                OnEntityStay(e);
-            });
+            ProcessTick();
         }
+    }
+
+    public virtual void ProcessTick()
+    {
+        entitiesWithin.RemoveAll(e => !e || !e.IsAlive());
+
+        entitiesWithinClone = new(entitiesWithin);
+        entitiesWithinClone.ForEach(e =>
+        {
+            OnEntityStay(e);
+        });
     }
 
     public virtual void OnEntityEnter(EntityBase entity)

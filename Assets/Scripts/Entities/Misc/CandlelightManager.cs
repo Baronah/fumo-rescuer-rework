@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class CandleManager : MonoBehaviour
 {
     private static CandleManager instance;
+
     [SerializeField] private DarkTile darkTileReference;
 
     private Tilemap shroudedZonesTiles;

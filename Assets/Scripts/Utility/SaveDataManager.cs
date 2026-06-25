@@ -217,4 +217,40 @@ public class SaveDataManager
 
         return CompletionType.UNCLEARED;
     }
+
+    public static void SaveInventionsUsed()
+    {
+        if (!IsResearchUnlocked) return;
+
+        var skillNames = CharacterPrefabsStorage.Skills.Select(s => s.Key).ToArray();
+        PlayerPrefs.SetString("InventionsUsed", string.Join(" ", skillNames));
+        PlayerPrefs.Save();
+    }
+
+    public static void UnlockAllLevels(int totalLevels, int difficulty = 1)
+    {
+        List<string> CompletedLevels = GetAllCompletedLevels();
+
+        for (int i = 0; i < totalLevels; i++)
+        {
+            string nmPrefix = $"FM-{i:D2}";
+            string cmPrefix = $"FM-{i:D2}_CM";
+
+            string existingNM = CompletedLevels.FirstOrDefault(s =>
+                s.StartsWith(nmPrefix + "_") && !s.Contains("_CM"));
+
+            if (existingNM == null)
+                CompletedLevels.Add($"{nmPrefix}_{difficulty}");
+
+            string existingCM = CompletedLevels.FirstOrDefault(s =>
+                s.StartsWith(cmPrefix + "_"));
+
+            if (existingCM == null)
+                CompletedLevels.Add($"{cmPrefix}_{difficulty}");
+        }
+
+        PlayerPrefs.SetString("CompletedLevels", string.Join(' ', CompletedLevels));
+        PlayerPrefs.Save();
+        Debug.Log($"[SaveDataManager] Unlocked all {totalLevels} levels at difficulty {difficulty}.");
+    }
 }

@@ -54,7 +54,6 @@ public class ProjectileObjectPooling : MonoBehaviour
             TrailRenderer trail = obj.GetComponent<TrailRenderer>();
             if (trail)
             {
-                trail.Clear();
                 TrailRenderer prefabTrail = prefab.GetComponent<TrailRenderer>();
                 trail.enabled = prefabTrail && prefabTrail.enabled;
 

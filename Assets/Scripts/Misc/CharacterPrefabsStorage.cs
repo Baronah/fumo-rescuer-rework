@@ -29,13 +29,7 @@ public class CharacterPrefabsStorage : ScriptableObject
 
     public static void ClearBattleData()
 	{
-		if (SaveDataManager.IsResearchUnlocked)
-		{
-			var skillNames = Skills.Select(s => s.Key).ToArray();
-			PlayerPrefs.SetString("InventionsUsed", string.Join(" ", skillNames));
-			PlayerPrefs.Save();
-		}
-
+		SaveDataManager.SaveInventionsUsed();
 		ClearPrebattleData();
 	}
 

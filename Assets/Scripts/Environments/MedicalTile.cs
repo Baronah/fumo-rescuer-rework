@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -28,13 +27,17 @@ public class MedicalTile : EnvironmentalTileBase
         base.OnStageStart();
     }
 
+    public override void ProcessTick()
+    {
+        if (SaintStatueManager.instance) SaintStatueManager.instance.OnMedicalTileHealingReceive(HealPerTick, Interval, UsePercentageHeal);
+        base.ProcessTick();
+    }
+
     public override void OnEntityStay(EntityBase entity)
     {
         base.OnEntityStay(entity);
         float healAmount = UsePercentageHeal ? entity.mHealth * HealPerTick : HealPerTick;
-        
-        if (entity is SaintStatue ss) ss.OnMedicalTileHealingReceive(healAmount);
-        else entity.Heal(healAmount);
+        if (!(entity as SaintStatue)) entity.Heal(healAmount);
     }
 
     IEnumerator Pulse()

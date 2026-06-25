@@ -808,18 +808,17 @@ public class PlayerRanged : PlayerBase
     short flowerCount = 0;
     [SerializeField] short MaxExtraFlowers = 3;
     [SerializeField] float FlowerMaxDuration = 1.5f;
-    public override void DealDamage(EntityBase target, float pDmg, float mDmg, float tDmg, bool allowWhenDisabled = false, ProjectileScript projectileScript = null)
+    public override void OnEnemyDefeat(EntityBase enemy)
     {
-        if (!gameObject) return;
+        base.OnEnemyDefeat(enemy);
 
-        base.DealDamage(target, pDmg, mDmg, tDmg, allowWhenDisabled);
-        if (IsSkillActive 
-            && Skills.Contains(SkillTree_Manager.SkillName.SPIRAL_PHANTOM) 
+        if (IsSkillActive
+            && Skills.Contains(SkillTree_Manager.SkillName.SPIRAL_PHANTOM)
             && gameObject.activeSelf
-            && !target.IsAlive()
+            && !enemy.IsAlive()
             && flowerCount < MaxExtraFlowers)
         {
-            StartCoroutine(CreateExtraFlowers(target.transform.position, FlowerMaxDuration));
+            StartCoroutine(CreateExtraFlowers(enemy.transform.position, FlowerMaxDuration));
             flowerCount++;
         }
     }
@@ -865,7 +864,7 @@ public class PlayerRanged : PlayerBase
 
                     o = CreateProjectileAndShootToward(
                         ProjectilePrefab,
-                        new DamageInstance(0, (int)(atk * Skill_DamageMulitplier * 0.7f), 0),
+                        new DamageInstance(0, (int)(atk * Skill_DamageMulitplier), 0),
                         sourcePosition,
                         targetPosition,
                         projectileType: ProjectileScript.ProjectileType.CATCH_FIRST_TARGET_OF_TYPE,

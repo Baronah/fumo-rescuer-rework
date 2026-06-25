@@ -863,6 +863,12 @@ public class LevelSelectionScript : MonoBehaviour
         StartCoroutine(ScaleLevelSelection(false));
     }
 
+    [ContextMenu("Unlock all progresses")]
+    public void UnlockAllProgresses()
+    {
+        SaveDataManager.UnlockAllLevels(characterPrefabsStorage.SceneAssetReferences.Length, 1);
+    }
+
     public void Confirm() => StartCoroutine(ConfirmLevelSelection());
 
     public void Quit()

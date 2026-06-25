@@ -13020,7 +13020,7 @@ Transform:
   m_GameObject: {fileID: 8138116287106014697}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2330, y: -2635, z: -110}
+  m_LocalPosition: {x: -1660, y: 0, z: -110}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13810,7 +13810,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileBase: {fileID: 8325308609239250088, guid: cf24154a7dcbae84daf4eb96071044ae, type: 3}
-  poolSize: 50
+  poolInitSize: 50
+  poolExpandSize: 5
 --- !u!114 &1578240338645385517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13824,7 +13825,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileInfo: {fileID: 1707831507938423826, guid: f80dd11dc4cc0ba4ab073dc632da03aa, type: 3}
-  poolSize: 70
+  poolSize: 100
+  poolExpandSize: 5
 --- !u!1 &8907986312315634938
 GameObject:
   m_ObjectHideFlags: 0

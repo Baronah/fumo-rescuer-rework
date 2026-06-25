@@ -535,7 +535,7 @@ public class SkillTree_Manager : MonoBehaviour
         if (ShowIntro)
             StartCoroutine(Intro());
         else
-            OVERLAY.SetActive(false);
+            Outview.PlayQuickFadeOut();
     }
 
     private void OnDisable()
@@ -800,13 +800,43 @@ public class SkillTree_Manager : MonoBehaviour
             $"<color=#A1A1A1>Selected: {selectedCnt}/{maxSkill}</color>";
     }
 
+    bool IsSkillsEqual(Dictionary<SkillName, SkillDataSet> skillsSet, Dictionary<SkillName, SkillDataSet> skillsSave)
+    {
+        if (skillsSet.Count != skillsSave.Count) return false;
+        foreach (var item in skillsSet)
+        {
+            var key = item.Key;
+            if (!skillsSave.ContainsKey(key)) return false;
+        }
+        return true;
+    }
+
+    [SerializeField] GameObject LeaveNotice;
+    public void OnQuitButtonClick()
+    {
+        if (IsSkillsEqual(CharacterPrefabsStorage.Skills, skillSaves))
+        {
+            ForceQuit();
+            return;
+        }
+        LeaveNotice.SetActive(true);
+    }
+
     public void ForceQuit()
     {
         CharacterPrefabsStorage.Skills = skillSaves;
         OnSceneLoad_GetTechs();
         Outview.SetSkills();
 
-        gameObject.SetActive(false);
+        Outview.PlayQuickFadeIn(GetMousePosition(), false);
         OnSelect_Update();
+    }
+
+    public void SaveSkills() => Outview.PlayQuickFadeIn(GetMousePosition(), false);
+
+    Vector2 GetMousePosition()
+    {
+        Vector2 mousePos = Input.mousePosition;
+        return new (mousePos.x / Screen.width, mousePos.y / Screen.height);
     }
 }

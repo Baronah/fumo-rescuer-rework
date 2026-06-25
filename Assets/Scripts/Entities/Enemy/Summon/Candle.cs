@@ -23,6 +23,11 @@ public class Candle : EnemyBase
 
     public override void InitializeComponents()
     {
+        if (!FindAnyObjectByType<CandleManager>())
+        {
+            Instantiate(Manager);
+        }
+
         base.InitializeComponents();
         UpdateManager();
     }
@@ -30,11 +35,6 @@ public class Candle : EnemyBase
     void UpdateManager()
     {
         if (isManagerInitialized) return;
-
-        if (!FindAnyObjectByType<CandleManager>())
-        {
-            Instantiate(Manager);
-        }
 
         darkTileScript = CandleManager.GetDarkTile();
         shroudedZonesTiles = CandleManager.GetShroudedZonesTilemap();

@@ -9,7 +9,23 @@ public class CircularMaskMover : MonoBehaviour
     public Material maskMaterial;
     public float radius = 0f, bgColor = 1f;
 
+    private void Awake()
+    {
+        radius = 2f;
+        SetMaterialAttributes();
+    }
+
+    private void OnEnable()
+    {
+        SetMaterialAttributes();
+    }
+
     void Update()
+    {
+        SetMaterialAttributes();
+    }
+
+    void SetMaterialAttributes()
     {
         if (UseMouseMovement)
         {
@@ -25,7 +41,7 @@ public class CircularMaskMover : MonoBehaviour
         float aspectRatio = (float)Screen.width / Screen.height;
 
         if (!maskMaterial.HasProperty("_MainTex"))
-        { 
+        {
             Debug.LogWarning("Material has no _MainTex property. Shader: " + maskMaterial.shader.name);
         }
 

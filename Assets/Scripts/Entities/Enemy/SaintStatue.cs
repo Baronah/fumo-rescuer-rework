@@ -3,9 +3,19 @@ using UnityEngine;
 
 public class SaintStatue : EnemyBase
 {
+    [SerializeField] GameObject ManagerPrefab;
     [SerializeField] GameObject HealEffect;
-    [SerializeField] private float DefBuffFlat = 25f, ResBuffFlat = 15f, SelfHpHealingBonus = 0.005f;
+    [SerializeField] private float DefBuffFlat = 25f, ResBuffFlat = 15f, SelfHpHealingBonus_PerSecond = 0.005f;
     [SerializeField] private float HealOnDeathPercentage = 0.35f, DefFlatBuffOnDeathPercentage = 15f;
+
+    public override void InitializeComponents()
+    {
+        if (!SaintStatueManager.instance)
+        {
+            Instantiate(ManagerPrefab);
+        }
+        base.InitializeComponents();
+    }
 
     public override void Move()
     {
@@ -59,13 +69,25 @@ public class SaintStatue : EnemyBase
         }
     }
 
-    public void OnMedicalTileHealingReceive(float amount)
+    public float GetBonusHealingAmount(float interval)
+        => mHealth * SelfHpHealingBonus_PerSecond * interval;
+
+    public override void OnEnvironmentalTileEnter(StageManager.EnvironmentType environmentType)
     {
-        EntityManager.Enemies.ForEach(enemy =>
+        if (environmentType == StageManager.EnvironmentType.MEDICAL_TILE)
         {
-            if (!enemy || !enemy.IsAlive() || enemy == this) return;
-            Heal(amount + mHealth * SelfHpHealingBonus, enemy, false, false);
-        });
+            SaintStatueManager.instance.RegisterStatue(this);
+        }
+        base.OnEnvironmentalTileEnter(environmentType);
+    }
+
+    public override void OnEnvironmentalTileExit(StageManager.EnvironmentType environmentType)
+    {
+        if (environmentType == StageManager.EnvironmentType.MEDICAL_TILE)
+        {
+            SaintStatueManager.instance.UnregistStatue(this);
+        }
+        base.OnEnvironmentalTileExit(environmentType);
     }
 
     public override void OnDeath()
@@ -84,6 +106,8 @@ public class SaintStatue : EnemyBase
             enemy.RemoveEffect(DefBuffID);
             enemy.RemoveEffect(ResBuffID);
         });
+
+        SaintStatueManager.instance.UnregistStatue(this);
     }
 
     public override void WriteStats()
