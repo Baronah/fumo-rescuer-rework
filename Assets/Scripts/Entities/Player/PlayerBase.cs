@@ -12,6 +12,8 @@ using SkillType = PlayerManager.SkillType;
 
 public class PlayerBase : EntityBase
 {
+    private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
+    private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
     public bool SettleSwappedInPlayer = false;
     public LayerMask ObstacleLayers;
     public Sprite AttackSprite, SkillSprite, SpecialSprite;
@@ -251,7 +253,7 @@ public class PlayerBase : EntityBase
 
         for (int i = 0; i < loop; i++)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return _waitForSeconds0_5;
             HealingEffectiveness += add;
         }
     }
@@ -275,7 +277,7 @@ public class PlayerBase : EntityBase
                 ApplyEffect(Effect.AffectedStat.MSPD, "DIFFICULT_HANDICAP_MSPD", Strength_Scale50To0 * -1, 9999f, true);
 
             c += 1;
-            yield return new WaitForSeconds(1f);
+            yield return _waitForSeconds1;
         }
     }
 

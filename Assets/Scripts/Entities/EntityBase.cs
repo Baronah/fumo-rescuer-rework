@@ -224,7 +224,7 @@ public class EntityBase : MonoBehaviour
 
     public virtual bool CanFinishAttack => CanAttack && attacking;
 
-    public bool ViewOnlyMode => FindAnyObjectByType<StageManager>() == null;
+    public bool ViewOnlyMode => StageManager._instance == null;
 
     public Vector3 GetMovementDirection()
     {

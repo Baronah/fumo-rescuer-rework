@@ -70,27 +70,27 @@ public class CameraMovement : MonoBehaviour
         yield return null;
     }
 
-    readonly float shakeCooldown = 0.8f;
+    readonly float shakeCooldown = 0.65f;
     float shakeTimer = 0f;
-    public void CallShakeCoroutine(float percentageScale)
+    public void CallShakeCoroutine(float percentageScale, float duration)
     {
         if (shakeTimer < shakeCooldown) return;
-
-        shakeTimer = 0f;
-        StartCoroutine(Shake(percentageScale));
-    }
-
-    public IEnumerator Shake(float percentageScale)
-    {
-        percentageScale = Mathf.Clamp01(percentageScale);
-        if (percentageScale <= shakeStrength) yield break;
+        if (percentageScale <= shakeStrength) return;
 
         shakeStrength = percentageScale;
+        shakeTimer = 0f;
+        shakeStrength = percentageScale;
+        StartCoroutine(Shake(percentageScale, duration));
+    }
+
+    public IEnumerator Shake(float percentageScale, float duration)
+    {
+        duration = duration > 0 ? duration : shakeDuration;
         isShaking = true;
         
         Vector3 originalPosition = transform.position;
         float elapsedTime = 0f, dJump = shakeDuration / 10;
-        while (elapsedTime < shakeDuration)
+        while (elapsedTime < duration)
         {
             float x = Random.Range(-shakeValue.x, shakeValue.x) * shakeMagnitude * percentageScale;
             float y = Random.Range(-shakeValue.y, shakeValue.y) * shakeMagnitude * percentageScale;

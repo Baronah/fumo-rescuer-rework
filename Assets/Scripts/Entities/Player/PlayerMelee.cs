@@ -11,6 +11,7 @@ using static PlayerManager;
 
 public class PlayerMelee : PlayerBase
 {
+    private static readonly int MoveHash = Animator.StringToHash("move");
     [SerializeField] private GameObject IllusionPrefab, AfterimagePrefabs;
     [SerializeField] private float DashSpeed = 3500f;
     [SerializeField] private float DashDuration = 0.5f;
@@ -394,7 +395,7 @@ public class PlayerMelee : PlayerBase
                     }
                 }
 
-                animator.SetFloat("move", movementInputs.magnitude);
+                animator.SetFloat(MoveHash, movementInputs.magnitude);
 
                 SpawnIllusion(extendingDash);
 
@@ -495,6 +496,7 @@ public class PlayerMelee : PlayerBase
             if (BlackflashSfx) BlackflashSfx.Play();
             ApplyEffect(Effect.AffectedStat.ATK, "BLACKFLASH_ATK_BUFF", BL_AtkBuff, BL_BuffDur, true, EffectPersistType.DECAY);
             DisplayDamage("<color=black><size=60>BLACKFLASH!</size></color>", new(0, 55));
+            playerManager.MakeCameraShake(0.6f, 0.4f);
             if (upgradeBL) defPen += 60;
         }
 

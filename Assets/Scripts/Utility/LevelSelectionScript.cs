@@ -808,7 +808,7 @@ public class LevelSelectionScript : MonoBehaviour
     {
         Image image = Overlay.GetComponentInChildren<Image>();
         Overlay.SetActive(true);
-        float c = 0, d = 1;
+        float c = 0, d = 0.67f;
         while (c < d)
         {
             image.color = Color.Lerp(Color.clear, Color.black, c * 1.0f / d);

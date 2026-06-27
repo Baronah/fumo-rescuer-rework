@@ -140,9 +140,10 @@ public class EnemyBase : EntityBase
     {
         base.InitializeComponents();
 
-        PathfindCnt = (short)UnityEngine.Random.Range(0, PathfindCntThreshold);
-        MoveCnt = (short) UnityEngine.Random.Range(0, MoveCntThreshold);
-        ScanPlayerCnt = (short)UnityEngine.Random.Range(0, ScanPlayerCntThreshold);
+        int indexOfSelf = EntityManager.Enemies.IndexOf(this);
+        PathfindCnt = (short)(indexOfSelf % PathfindCntThreshold);
+        MoveCnt = (short)(indexOfSelf % MoveCntThreshold);
+        ScanPlayerCnt = (short)(indexOfSelf % ScanPlayerCntThreshold);
 
         if (!ViewOnlyMode)
         {
@@ -179,7 +180,7 @@ public class EnemyBase : EntityBase
             navAgent.angularSpeed = 0f;
             navAgent.acceleration = 0f;
             navAgent.autoBraking = false;
-            navAgent.avoidancePriority = EntityManager.Enemies.IndexOf(this) % 100;
+            navAgent.avoidancePriority = indexOfSelf % 100;
         }
 
         if (detectionRange <= 0) detectionRange = b_attackRange;

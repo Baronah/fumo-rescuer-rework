@@ -609,12 +609,17 @@ public class PlayerManager : MonoBehaviour
         return dmg;
     }
 
-    public void OnPlayerAttacked(float strength)
+    public void OnPlayerAttacked(float strength, float duration = -1)
     {
         if (strength >= 0.8f) hit_02_sfx.Play();
         else hit_01_sfx.Play();
 
-        if (EnableHitStop) mainCamera.CallShakeCoroutine(strength);
+        MakeCameraShake(strength, duration);
+    }
+
+    public void MakeCameraShake(float strength, float duration = -1)
+    {
+        if (EnableHitStop) mainCamera.CallShakeCoroutine(strength, duration);
     }
 
     public void OnPlayerDeath()

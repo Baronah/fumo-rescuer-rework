@@ -92,7 +92,7 @@ public class SkillTree_Manager : MonoBehaviour
         BEYOND_NIGHT,
         SPIRAL_FIELD_EXPERT,
         TIME_DILATION,
-        BUBBLE_ARTS,    
+        BUBBLE_ARTS,
         HAIR_RIBBON,
         SPIRAL_READ,
         WIND_ANTHEM,
@@ -130,16 +130,16 @@ public class SkillTree_Manager : MonoBehaviour
     Image SkillViewPanelImg;
     [SerializeField] Image[] TechImgs;
 
-    [SerializeField] Button SelectButton, OkButton;
-    [SerializeField] private short MaxSkillCount = 2;   
+    [SerializeField] Button SelectButton, OkButton, ClearBtn;
+    [SerializeField] private short MaxSkillCount = 2;
 
-    [SerializeField] Color 
+    [SerializeField] Color
           IdleColor = new(0.35f, 0.35f, 0.35f),
-          SpecsSkillViewPanelColor = new(0.57f, 0.51f, 0), 
+          SpecsSkillViewPanelColor = new(0.57f, 0.51f, 0),
           SensesSkillViewPanelColor = new(0, 0.59f, 0.65f),
           TechsSkillViewPanelColor = new(0.57f, 0, 0.8f);
 
-    [SerializeField] private string[] SecretKeys = { 
+    [SerializeField] private string[] SecretKeys = {
         "ANGOUNOWALTZ",
         "NOODLES",
     };
@@ -155,6 +155,7 @@ public class SkillTree_Manager : MonoBehaviour
     }
 
     LevelDifficultyModifier levelDifficultyModifier;
+
     public void CheckUnlockStatus()
     {
         if (!levelDifficultyModifier) levelDifficultyModifier = FindFirstObjectByType<LevelDifficultyModifier>();
@@ -164,10 +165,24 @@ public class SkillTree_Manager : MonoBehaviour
              IsTechUnlocked = PlayerPrefs.GetInt("TechsUnlocked", 0) != 0,
              IsSpecsUnlocked = PlayerPrefs.GetInt("SpecsUnlocked", 0) != 0;
 
-        PlayerMaxSkills = 0;
-        if (IsSensesUnlocked) PlayerMaxSkills += 2;
-        if (IsTechUnlocked) PlayerMaxSkills += 2;
+        PlayerMaxSkills = GetPlayerMaxSkills(IsSensesUnlocked, IsTechUnlocked, IsSpecsUnlocked);
 
+        SetBlocksActiveState(IsSensesUnlocked, IsTechUnlocked, IsSpecsUnlocked);
+
+        SetUIMaxSkill();
+    }
+
+    short GetPlayerMaxSkills(bool IsSensesUnlocked, bool IsTechUnlocked, bool IsSpecsUnlocked)
+    {
+        short playerMaxSkills = 0;
+        if (IsSensesUnlocked) playerMaxSkills += 2;
+        if (IsTechUnlocked) playerMaxSkills += 2;
+
+        return playerMaxSkills;
+    }
+
+    void SetBlocksActiveState(bool IsSensesUnlocked, bool IsTechUnlocked, bool IsSpecsUnlocked)
+    {
         SENSES_BLOCK.SetActive(!IsSensesUnlocked);
         TECHS_PRECEDE_BLOCK.SetActive(!IsSensesUnlocked);
 
@@ -185,7 +200,10 @@ public class SkillTree_Manager : MonoBehaviour
         SensesUnlockTxt.text = $"Spend       x{FUMO_COST_SENSE} to unlock this branch \n(+2 slots).";
         TechsUnlockTxt.text = $"Spend       x{FUMO_COST_TECHS} to unlock this branch \n(+2 slot).";
         SpecsUnlockTxt.text = $"Spend          x{FUMO_COST_SPECS} to unlock this branch.";
+    }
 
+    void SetUIMaxSkill()
+    {
         int maxSkill = Mathf.Min(PlayerMaxSkills, MaxSkillCount);
         for (int i = 0; i < maxSkill; i++)
         {
@@ -220,7 +238,7 @@ public class SkillTree_Manager : MonoBehaviour
     {
         int fumo = PlayerPrefs.GetInt("Fumo", 0);
         if (fumo < FUMO_COST_TECHS) return;
-        
+
         fumo -= FUMO_COST_TECHS;
         PlayerPrefs.SetInt("Fumo", fumo);
         PlayerPrefs.SetInt("TechsUnlocked", 1);
@@ -246,7 +264,7 @@ public class SkillTree_Manager : MonoBehaviour
     IEnumerator RemoveSeals(GameObject BlockObject)
     {
         yield return new WaitForSeconds(0.5f);
-        
+
         float duration = 1.5f;
         float elapsedTime = 0f;
         List<Image> seals = BlockObject.GetComponentsInChildren<Image>().Where(i => i.type == Image.Type.Filled).ToList();
@@ -369,9 +387,9 @@ public class SkillTree_Manager : MonoBehaviour
         //intro sequence
         yield return new WaitForSeconds(0.6f);
 
-        float overlayDurationFirstHalf = 2f, 
-              overlayDurationSecondHalf = 0.25f, 
-              firstTimeCoverRatio = 0.35f, 
+        float overlayDurationFirstHalf = 2f,
+              overlayDurationSecondHalf = 0.25f,
+              firstTimeCoverRatio = 0.35f,
               pause = 0.5f,
               elapsed = 0f;
         while (elapsed < overlayDurationFirstHalf)
@@ -445,7 +463,7 @@ public class SkillTree_Manager : MonoBehaviour
         });
 
         yield return new WaitForSeconds(2f);
-        
+
         StartCoroutine(ZoomAndFadeIn(SIDEBAR, 0.4f, 0));
         yield return new WaitForSeconds(0.25f);
 
@@ -542,7 +560,7 @@ public class SkillTree_Manager : MonoBehaviour
     {
         ClearSelectingSkill();
         Outview.SetSkills();
-        
+
         BGM.Stop();
         LevelSelectionScript.BGMSource().Play();
 
@@ -581,7 +599,7 @@ public class SkillTree_Manager : MonoBehaviour
             }
 
             audioSources = GetComponents<AudioSource>();
-            
+
             audioSources[0].volume = PlayerPrefs.GetFloat("BGM", 1f);
             BGM = audioSources[0];
 
@@ -608,33 +626,17 @@ public class SkillTree_Manager : MonoBehaviour
         if (selectingSkill && SkillHighlight.activeSelf)
             SkillHighlight.transform.position = selectingSkill.transform.position;
 
-        OkButton.interactable = AreDictionariesEqual(skillSaves, CharacterPrefabsStorage.Skills) == false && !IsIntroPlaying;
+        OkButton.interactable = IsSkillsEqual(skillSaves, CharacterPrefabsStorage.Skills) == false && !IsIntroPlaying;
+        ClearBtn.interactable = CharacterPrefabsStorage.Skills.Count > 0 && !IsIntroPlaying;
         SelectButton.interactable = selectingSkill && CharacterPrefabsStorage.Skills.Count < MaxSkillCount;
 
         EnterSecretCode();
     }
 
-    bool AreDictionariesEqual<TKey, TValue>(Dictionary<TKey, TValue> dict1, Dictionary<TKey, TValue> dict2)
-    {
-        if (dict1 == null || dict2 == null)
-            return false;
-
-        if (dict1.Count != dict2.Count)
-            return false;
-
-        foreach (var pair in dict1)
-        {
-            if (!dict2.TryGetValue(pair.Key, out TValue value) || !EqualityComparer<TValue>.Default.Equals(pair.Value, value))
-                return false;
-        }
-
-        return true;
-    }
-
     string PlayerInputStr = string.Empty;
     void EnterSecretCode()
     {
-        if (PlayerPrefs.GetInt("SecretCodeRedeemed", 0) != 0) return; 
+        if (PlayerPrefs.GetInt("SecretCodeRedeemed", 0) != 0) return;
 
         foreach (char c in Input.inputString)
         {
@@ -681,7 +683,7 @@ public class SkillTree_Manager : MonoBehaviour
         SkillHighlight.SetActive(false);
 
         skill.ResetMutuallyExclusive();
-        
+
         skillDetailsText.text = defaultSkillDetailsText;
         skillNameText.text = defaultSkillName;
         skillIconImage.sprite = defaultSkillIcon;
@@ -708,7 +710,7 @@ public class SkillTree_Manager : MonoBehaviour
             _ => IdleColor,
         };
 
-        skillDetailsText.text = 
+        skillDetailsText.text =
             (skill.skillDescription + $"\n\n<i><color=#b1b1b1>{skill.favorText}</color></i>").Replace(@"\n", "\n");
         skillNameText.text = skill.skillNameText;
         skillIconImage.sprite = skill.skillIcon;
@@ -798,6 +800,8 @@ public class SkillTree_Manager : MonoBehaviour
             $"<color=#FFF775>Selected: {selectedCnt}/{maxSkill}</color>"
             :
             $"<color=#A1A1A1>Selected: {selectedCnt}/{maxSkill}</color>";
+
+        OkButton.interactable = !IsSkillsEqual(CharacterPrefabsStorage.Skills, skillSaves);
     }
 
     bool IsSkillsEqual(Dictionary<SkillName, SkillDataSet> skillsSet, Dictionary<SkillName, SkillDataSet> skillsSave)
@@ -824,7 +828,7 @@ public class SkillTree_Manager : MonoBehaviour
 
     public void ForceQuit()
     {
-        CharacterPrefabsStorage.Skills = skillSaves;
+        CharacterPrefabsStorage.Skills = new(skillSaves);
         OnSceneLoad_GetTechs();
         Outview.SetSkills();
 
@@ -832,7 +836,11 @@ public class SkillTree_Manager : MonoBehaviour
         OnSelect_Update();
     }
 
-    public void SaveSkills() => Outview.PlayQuickFadeIn(GetMousePosition(), false);
+    public void SaveSkills()
+    {
+        if (audioSources[1]) audioSources[1].Play();
+        skillSaves = new(CharacterPrefabsStorage.Skills);
+    }
 
     Vector2 GetMousePosition()
     {
