@@ -51,12 +51,13 @@ public class Sentinel : EnemyBase
         if (viaAlert) return;
         if (sfxs[0]) sfxs[0].Play();
 
+        string instanceID = gameObject.GetInstanceID().ToString();
         EntityManager.Enemies.ForEach(enemy =>
         {
             if (enemy != this && enemy.IsAlive())
             {
-                enemy.ApplyEffect(Effect.AffectedStat.MSPD, "SENTINEL_ALARM_MSPD_" + gameObject.GetInstanceID(), SpeedBuffOnAlert * 100f, 9999f, true);
-                enemy.ApplyEffect(Effect.AffectedStat.ATK, "SENTINEL_ALARM_ATK_" + gameObject.GetInstanceID(), AtkBuffOnAlert * 100f, 9999f, true);
+                enemy.ApplyEffect(Effect.AffectedStat.MSPD, "SENTINEL_ALARM_MSPD_" + instanceID, SpeedBuffOnAlert * 100f, 9999f, true);
+                enemy.ApplyEffect(Effect.AffectedStat.ATK, "SENTINEL_ALARM_ATK_" + instanceID, AtkBuffOnAlert * 100f, 9999f, true);
             }
         });
     }

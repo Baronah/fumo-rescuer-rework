@@ -333,7 +333,7 @@ public class PlayerManager : MonoBehaviour
     Coroutine SwapCoroutine;
     public void SwapPlayer()
     {
-        if (IsStageStarted && (!CanSwapPlayer || !player || !player.IsAlive())) return;
+        if (IsStageStarted && (!CanSwapPlayer || !activePlayer || !activePlayer.IsAlive())) return;
         if (IsStageStarted)
         {
             if (SwapStacks > 0) SwapStacks--;
@@ -343,47 +343,56 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
-        PlayerType swapToPlayertype;
+        PlayerType swapToPlayertype = GetSwapInPlayerType();
+        Vector3 spawnPosition = IsStageStarted ? activePlayer.transform.position : PlayerSpawnpoint.position;
+
+        SpawnSwapInPlayer(swapToPlayertype, spawnPosition);
+        OnPlayerSwapIn_SetSwapUISprite(swapToPlayertype);
+        SpawnEntranceSmoke(spawnPosition);
+    }
+
+    void SpawnSwapInPlayer(PlayerType playerType, Vector3 position)
+    {
+        if (activePlayer) activePlayer.SetInvulnerable(999f);
+
+        GameObject newPlayerPrefab = CharacterPrefabsStorage.PlayerPrefabs[(int)playerType];
+        GameObject inPlayer = Instantiate(newPlayerPrefab, position, Quaternion.identity);
+        swapSfx.Play();
+
+        if (IsStageStarted && activePlayer)
+        {
+            activePlayer.OnFieldSwapOut(inPlayer.GetComponent<PlayerBase>());
+        }
+    }
+
+    PlayerType GetSwapInPlayerType()
+    {
         if (IsStageStarted)
         {
-            swapToPlayertype = 
+            return
                 player is PlayerMelee
                 ?
                 PlayerType.RANGED
                 :
                 PlayerType.MELEE;
         }
-        else
-        {
-            swapToPlayertype = playerStartType;
-        }
 
-        Vector3 spawnPosition = IsStageStarted ? player.transform.position : PlayerSpawnpoint.position;
+        return playerStartType;
+    }
 
-        GameObject newPlayerPrefab = CharacterPrefabsStorage.PlayerPrefabs[(int) swapToPlayertype];
-        
-        GameObject inPlayer = Instantiate(newPlayerPrefab, spawnPosition, Quaternion.identity);
-        swapSfx.Play();
-
-        if (IsStageStarted && player)
-        {
-            player.OnFieldSwapOut(inPlayer.GetComponent<PlayerBase>());
-        }
-
+    void OnPlayerSwapIn_SetSwapUISprite(PlayerType swapToPlayertype)
+    {
         if (swapToPlayertype == PlayerType.RANGED)
         {
             SwapToPlayer.sprite = MeleeIcon;
             ActivePlayer.sprite = RangedIcon;
         }
         else
-        {             
+        {
             SwapToPlayer.sprite = RangedIcon;
             ActivePlayer.sprite = MeleeIcon;
         }
-
         StartCoroutine(SwapCooldownE(SwapCooldown, swapCooldownTimer, IsStageStarted));
-
-        SpawnEntranceSmoke(spawnPosition);
     }
 
     void SpawnEntranceSmoke(Vector3 spawnPosition)

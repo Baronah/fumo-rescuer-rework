@@ -8,6 +8,10 @@ using static SkillTree_Manager.SkillName;
 
 public class SkillTree_Intro : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds2 = new WaitForSeconds(2f);
+    private static WaitForSeconds _waitForSeconds1_5 = new WaitForSeconds(1.5f);
+    private static WaitForSeconds _waitForSeconds0_2 = new WaitForSeconds(0.2f);
+    private static WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
     [SerializeField] GameObject Overlay;
     [SerializeField] TMP_Text introText, insideGuideText;
     [SerializeField] GameObject CookiePlate, ExtraCookies, HerNote, ExtraStuff;
@@ -172,36 +176,36 @@ public class SkillTree_Intro : MonoBehaviour
 
     IEnumerator Intro()
     {
-        yield return new WaitForSeconds(2f);
+        yield return _waitForSeconds2;
         yield return StartCoroutine(FadeInText
             ("A private place filled with books, crafts, ideas, theories,\nand a bunch of everything else.", TEXT_APPEAR_TYPE.FADE_IN, 3f, 5f));
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds0_1;
         yield return StartCoroutine(FadeInText
             ("Each is a mystery awaiting to be figured out.", TEXT_APPEAR_TYPE.FADE_IN, 1f, 4f));
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds0_1;
         yield return StartCoroutine(FadeInText
             ("For example,\na first prototype of an <color=yellow>\"Attention-holding device\"</color>.",
             TEXT_APPEAR_TYPE.FADE_IN, 1f, 6f));
-        yield return new WaitForSeconds(0.2f);
+        yield return _waitForSeconds0_2;
         yield return StartCoroutine(FadeInText
             ("It's still untested,\njust like most of <color=#00FFD5>her</color> inventions here.",
             TEXT_APPEAR_TYPE.FADE_IN, 0.5f, 6f));
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds0_1;
         yield return StartCoroutine(FadeInText
             ("<color=#00FFD5>She</color> insists that it will work.", TEXT_APPEAR_TYPE.FADE_IN, 0.4f, 3f));
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds0_1;
         yield return StartCoroutine(FadeInText
             ("<color=#f800ff>I</color>, well, doubt that it will.", TEXT_APPEAR_TYPE.FADE_IN, 0.4f, 3f));
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds0_1;
         yield return StartCoroutine(FadeInText
             ("What do <color=yellow>you</color> think?", TEXT_APPEAR_TYPE.FADE_IN, 0.4f, 3f));
-        yield return new WaitForSeconds(2f);
+        yield return _waitForSeconds2;
         yield return StartCoroutine(FadeInText
             ("Welcome to <color=#00FFD5>Mint</color>'s research!", TEXT_APPEAR_TYPE.FADE_IN, 2f, 3f));
-        yield return new WaitForSeconds(0.2f);
+        yield return _waitForSeconds0_2;
         yield return StartCoroutine(FadeInText
             ("There's cookies on the table.", TEXT_APPEAR_TYPE.FADE_IN, 0.5f, 2f));
-        yield return new WaitForSeconds(1.5f);
+        yield return _waitForSeconds1_5;
 
         introText.color = new(0.024f, 0.769f, 0.647f);
         introText.fontStyle = FontStyles.Italic;

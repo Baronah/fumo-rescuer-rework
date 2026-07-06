@@ -10,6 +10,8 @@ using static LevelDifficultyModifier;
 
 public class EnemyBase : EntityBase
 {
+    private static readonly int MoveHash = Animator.StringToHash("move");
+
     public override Type GetGenericType() => typeof(EnemyBase);
 
     public enum EnemyCode
@@ -72,7 +74,6 @@ public class EnemyBase : EntityBase
     /// </summary>
     private NavMeshAgent navAgent;
 
-    // Whether the agent currently has a valid, incomplete path to follow.
     private bool isUsingPathfinding()
     {
         return navAgent && navAgent.hasPath && navAgent.pathStatus != NavMeshPathStatus.PathInvalid;
@@ -103,8 +104,8 @@ public class EnemyBase : EntityBase
     // Stuck detection
     private float stuckTimer = 0f;
     private Vector2 lastPosition = Vector2.zero;
-    private readonly float stuckThreshold = 0.9f;
-    private readonly float stuckMovementThreshold = 15f;
+    private readonly float stuckThreshold = 0.8f;
+    private readonly float stuckMovementThreshold = 10f;
     // -------------------------------------------------------------------------
 
     [Header("Checkpoints System")]
@@ -127,7 +128,7 @@ public class EnemyBase : EntityBase
     Coroutine MovelockoutCoroutine = null;
     TMP_Text DetectSymbol;
 
-    private const short PathfindCntThreshold = 75, ScanPlayerCntThreshold = 25, MoveCntThreshold = 15;
+    private const short PathfindCntThreshold = 60, ScanPlayerCntThreshold = 25, MoveCntThreshold = 15;
     bool FirstPathfindAfterSpawn = true;
 
     private short ScanPlayerCnt = 0, MoveCnt = 0, PathfindCnt = 0;
@@ -403,18 +404,7 @@ public class EnemyBase : EntityBase
 
         hasClearSightToTargetOnThisMoveOppoturnity = hasClearSightToTarget();
 
-        Vector2 currentPos = FeetPosition.position;
-        // Stuck detection
-        if (Vector2.Distance(currentPos, lastPosition) < stuckMovementThreshold)
-        {
-            stuckTimer += Time.fixedDeltaTime * MoveCntThreshold;
-            if (stuckTimer > stuckThreshold) HandleStuckState();
-        }
-        else
-        {
-            stuckTimer = 0f;
-        }
-        lastPosition = currentPos;
+        CheckForStuck();
 
         Vector3 destination = GetCurrentDestination();
         if (destination == StopVector)
@@ -429,11 +419,27 @@ public class EnemyBase : EntityBase
 
         Vector2 direction = destination == StopVector ? Vector3.zero : (destination - selfPosition).normalized;
 
-        Vector2 finalDirection = GetAvoidanceDirection(direction, selfPosition, destination);
+        Vector2 finalDirection = GetAvoidanceDirection(direction);
 
         rb2d.velocity = CalculateMovement(finalDirection);
-        animator.SetFloat("move", 1);
+        animator.SetFloat(MoveHash, 1);
         base.Move();
+    }
+
+    void CheckForStuck()
+    {
+        Vector2 currentPos = FeetPosition.position;
+        // Stuck detection
+        if (Vector2.Distance(currentPos, lastPosition) < stuckMovementThreshold)
+        {
+            stuckTimer += Time.fixedDeltaTime * MoveCntThreshold;
+            if (stuckTimer > stuckThreshold) HandleStuckState();
+        }
+        else
+        {
+            stuckTimer = 0f;
+        }
+        lastPosition = currentPos;
     }
 
     private void HandleStuckState()
@@ -447,8 +453,9 @@ public class EnemyBase : EntityBase
         if (currentIgnoreCoroutine == null)
         {
             currentIgnoreCoroutine = StartCoroutine(TemporarilyDisableHitbox());
-            stuckTimer = (stuckThreshold + terrainIgnoreDuration) * -1;
         }
+        
+        stuckTimer = (stuckThreshold + terrainIgnoreDuration) * -1;
     }
 
     public void StopObstacleIgnore()
@@ -458,32 +465,37 @@ public class EnemyBase : EntityBase
             StopCoroutine(currentIgnoreCoroutine);
         }
 
+        SetObstacleIgnoreState(false);
+
         currentIgnoreCoroutine = null;
-
-        if (StageManager.ObstacleCollider) 
-            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, false);
-
         stuckTimer = -1f;
     }
 
     Coroutine currentIgnoreCoroutine = null;
-    float terrainIgnoreDuration = 2f;
+    readonly float terrainIgnoreDuration = 2f;
     IEnumerator TemporarilyDisableHitbox()
     {
-        yield return new WaitForEndOfFrame();
         yield return null;
 
-        if (StageManager.ObstacleCollider) 
-            Physics2D.IgnoreCollision(FeetCollider, StageManager.ObstacleCollider, true);
+        SetObstacleIgnoreState(true);
 
         float c = 0;
         while (c < terrainIgnoreDuration && IsValidForTerrainIgnore)
         {
-            c += Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            c += Time.deltaTime;
+            yield return null;
         }
 
         StopObstacleIgnore();
+    }
+
+    void SetObstacleIgnoreState(bool ignore)
+    {
+        foreach (Collider2D collider in StageManager.ObstacleCollider)
+        {
+            if (!collider) continue;
+            Physics2D.IgnoreCollision(FeetCollider, collider, ignore);
+        }
     }
 
     protected override bool TriggerHunger()
@@ -492,32 +504,28 @@ public class EnemyBase : EntityBase
     }
 
     bool IsValidForTerrainIgnore
-        => !IsBeingShifted 
-        && !IsStunned 
-        && !IsFrozen 
-        && !IsMovementLocked
-        && rb2d.velocity.magnitude > 0;
+        => !IsBeingShifted
+        && !IsMovementLocked;
 
-    private Vector2 GetAvoidanceDirection(Vector2 originalDirection, Vector3 selfPosition, Vector3 destination)
+    private Vector2 GetAvoidanceDirection(Vector2 InitialDirection)
     {
-        if (hasClearSightToTargetOnThisMoveOppoturnity || !isUsingPathfinding()) return originalDirection;
-        if (originalDirection == Vector2.zero) return Vector2.zero;
+        if (hasClearSightToTargetOnThisMoveOppoturnity || !isUsingPathfinding()) return InitialDirection;
+        if (InitialDirection == Vector2.zero) return Vector2.zero;
 
         Vector2 currentPos = FeetPosition.position;
-        Vector2 finalDirection = originalDirection;
 
-        RaycastHit2D frontHit = Physics2D.Raycast(currentPos, finalDirection, cornerAvoidanceDistance, obstacleLayer);
+        RaycastHit2D frontHit = Physics2D.Raycast(currentPos, InitialDirection, cornerAvoidanceDistance, obstacleLayer);
 
         if (frontHit.collider != null && !colliders.Contains(frontHit.collider))
         {
-            Vector2 avoidanceDir = GetBestAvoidanceDirection(currentPos, finalDirection, frontHit.point);
+            Vector2 avoidanceDir = GetBestAvoidanceDirection(currentPos, InitialDirection, frontHit.point);
             if (avoidanceDir != Vector2.zero)
             {
-                finalDirection = avoidanceDir;
+                return avoidanceDir;
             }
         }
 
-        return finalDirection;
+        return InitialDirection;
     }
 
     private Vector2 GetBestAvoidanceDirection(Vector2 currentPos, Vector2 originalDirection, Vector2 obstaclePoint)

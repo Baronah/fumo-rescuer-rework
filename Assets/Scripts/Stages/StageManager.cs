@@ -106,7 +106,7 @@ public class StageManager : MonoBehaviour
 
     GameObject TopOverlay;
 
-    public Collider2D ObstacleCollider;
+    public Collider2D[] ObstacleCollider;
 
     // Theoria
     public bool Absolutism, Statis, Gravity, Acceleration, Hunger, Adaption;
@@ -139,7 +139,7 @@ public class StageManager : MonoBehaviour
         TopOverlay = GameObject.Find("OnTopOverlay");
         TopOverlay.SetActive(false);
 
-        ObstacleCollider = FindObjectsOfType<TilemapCollider2D>().FirstOrDefault(t => t.gameObject.layer == 8);
+        ObstacleCollider = FindObjectsOfType<TilemapCollider2D>().Where(t => t.gameObject.layer == 8).ToArray();
 
         GameObject TheoryWorld = GameObject.Find("TheoryWorld");
         TheoryWorld.SetActive(CharacterPrefabsStorage.Skills.Any(s => s.Value.skillType == SkillType.THEORIA));

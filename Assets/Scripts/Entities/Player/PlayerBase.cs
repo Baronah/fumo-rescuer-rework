@@ -12,6 +12,7 @@ using SkillType = PlayerManager.SkillType;
 
 public class PlayerBase : EntityBase
 {
+    private static readonly int MoveHash = Animator.StringToHash("move");
     private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
     private static WaitForSeconds _waitForSeconds0_5 = new WaitForSeconds(0.5f);
     public bool SettleSwappedInPlayer = false;
@@ -637,7 +638,7 @@ public class PlayerBase : EntityBase
 
         // Calculate movement magnitude for animator
         float moveMagnitude = Mathf.Abs(movementInputs.x) + Mathf.Abs(movementInputs.y);
-        animator.SetFloat("move", moveMagnitude);
+        animator.SetFloat(MoveHash, moveMagnitude);
 
         base.Move();
     }
