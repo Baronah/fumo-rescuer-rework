@@ -3536,7 +3536,8 @@ MonoBehaviour:
   EnableLowDetail: 0
   StageCompleteConditionType: 1
   StageEvironmentTypes: 
-  ObstacleCollider: {fileID: 0}
+  ObstacleCollider:
+  - {fileID: 0}
   Absolutism: 0
   Statis: 0
   Gravity: 0
@@ -13796,7 +13797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damagePopupPrefab: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
-  initialPoolSize: 30
+  initialPoolSize: 100
 --- !u!114 &436417663687026067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13810,8 +13811,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileBase: {fileID: 8325308609239250088, guid: cf24154a7dcbae84daf4eb96071044ae, type: 3}
-  poolInitSize: 50
-  poolExpandSize: 5
+  poolInitSize: 100
+  poolExpandSize: 50
 --- !u!114 &1578240338645385517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13826,7 +13827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileInfo: {fileID: 1707831507938423826, guid: f80dd11dc4cc0ba4ab073dc632da03aa, type: 3}
   poolSize: 100
-  poolExpandSize: 5
+  poolExpandSize: 50
 --- !u!1 &8907986312315634938
 GameObject:
   m_ObjectHideFlags: 0

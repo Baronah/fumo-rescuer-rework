@@ -103,6 +103,10 @@ public static class EnemyStatsLookup
             case 14:
                 codeWithStatsChange = new() { EnemyCode.SENTINEL };
                 break;
+
+            case 15:
+                codeWithStatsChange = new() { EnemyCode.SAINT_STATUE, EnemyCode.GLOOMPINCER };
+                break;
         }
 
         if (codeWithStatsChange == null) return false;
@@ -244,6 +248,19 @@ public static class EnemyStatsLookup
                 if (enemy as Sentinel)
                 {
                     enemy.b_moveSpeed += 50f;
+                    hasChanged = true;
+                }
+                break;
+
+            case 15:
+                if (enemy as SaintStatue)
+                {
+                    enemy.mHealth = 400;
+                    hasChanged = true;
+                }
+                else if (enemy as Gloompincer)
+                {
+                    enemy.resPen += 20;
                     hasChanged = true;
                 }
                 break;

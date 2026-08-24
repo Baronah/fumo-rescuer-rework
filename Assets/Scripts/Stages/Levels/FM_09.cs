@@ -15,9 +15,16 @@ public class FM_09 : StageManager
 
     FumoScript fumo;
 
+    public override SkillTree_Manager.SkillName[] GetExtraSkills()
+    {
+        if (!fumo) fumo = FindFirstObjectByType<FumoScript>();
+        if (fumo) return new[] { SkillTree_Manager.SkillName.VICTORY_ATK };
+        return base.GetExtraSkills();
+    }
+
     public override void Start()
     {
-        fumo = FindFirstObjectByType<FumoScript>();
+        if (!fumo) fumo = FindFirstObjectByType<FumoScript>();
         EndlessSpawns = new List<EndlessEnemySpawn>(FindObjectsOfType<EndlessEnemySpawn>(true));
         base.Start();
     }
@@ -77,7 +84,7 @@ public class FM_09 : StageManager
         if (fumo && stageTimer >= targetTimer)
         {
             stageTimer = targetTimer;
-            OnPlayerFumoProtected(FindFirstObjectByType<FumoScript>());
+            OnPlayerFumoProtected(fumo);
         }
 
         modifySpawnTimer += Time.deltaTime;

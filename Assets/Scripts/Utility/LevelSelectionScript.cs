@@ -26,7 +26,7 @@ public class LevelSelectionScript : MonoBehaviour
     private Image CMToggleImg => CMToggleButton.GetComponent<Image>();
 
     [SerializeField] private TMP_Text SelectedLvlName, SelectedLvlDescription;
-    [SerializeField] private string[] Descriptions, ChallengeModes, SecretDescriptions;
+    [SerializeField] private string[] Descriptions, AddsOn, ChallengeModes, SecretDescriptions;
     [SerializeField] private StageCompleteCondition[] CompleteCondition;
     [SerializeField] private StageEnvironment[] Environments;
     [SerializeField] private AppearingEnemies[] AppearingEnemies;
@@ -271,47 +271,51 @@ public class LevelSelectionScript : MonoBehaviour
 
     string GetLevelDescription(int index)
     {
-        string description = Descriptions[index];
+        string description;
+        
+        bool secret = SaveDataManager.GetLevelCompletionType(GetLevelNameByIndex(index)) == CompletionType.CHALLENGE_MODE_DIFF_HIGH;
+        if (secret)
+        {
+            description = $"<color=#00FFD5>{SecretDescriptions[index]}</color>";
+            return description.Replace(@"\n", "\n");
+        }
+
+        description = Descriptions[index];
+        if (AddsOn[index] != null && AddsOn[index].Length > 0)
+            description += '\n' + AddsOn[index];
+
         if (enableCM)
         {
             description = $"<size=30><color=red><b>Conditions:</size></b>\n{ChallengeModes[index]}</color>";
         }
         else
         {
-            bool secret = SaveDataManager.GetLevelCompletionType(GetLevelNameByIndex(index)) == CompletionType.CHALLENGE_MODE_DIFF_HIGH;
-            if (secret)
+            string stageCompleteCondition = CompleteCondition[index] switch
             {
-                description = $"<color=#00FFD5>{SecretDescriptions[index]}</color>";
-            }
-            else
+                StageCompleteCondition.ELIMINATE_ALL_ENEMIES => "<color=red><Annihilation></color> Eliminate all enemies to complete the stage.",
+                StageCompleteCondition.RETRIEVE_FUMO => "<color=#00ffb7><Rescue></color> Reach the location of the Fumo to complete the stage.",
+                StageCompleteCondition.SURVIVE_FOR_GIVEN_TIME => "<color=yellow><Survive></color> Survive until the time runs out to complete the stage.",
+                StageCompleteCondition.PROTECT_FUMO => "<color=yellow><Protect></color> Protect the Fumo from enemies until the time runs out to complete the stage.",
+                _ => "Unknown condition"
+            };
+
+            string environmentDescription = string.Empty;
+            foreach (var env in Environments[index].Environments)
             {
-                string stageCompleteCondition = CompleteCondition[index] switch
+                string envDes = env switch
                 {
-                    StageCompleteCondition.ELIMINATE_ALL_ENEMIES => "<color=red><Annihilation></color> Eliminate all enemies to complete the stage.",
-                    StageCompleteCondition.RETRIEVE_FUMO => "<color=#00ffb7><Rescue></color> Reach the location of the Fumo to complete the stage.",
-                    StageCompleteCondition.SURVIVE_FOR_GIVEN_TIME => "<color=yellow><Survive></color> Survive until the time runs out to complete the stage.",
-                    StageCompleteCondition.PROTECT_FUMO => "<color=yellow><Protect></color> Protect the Fumo from enemies until the time runs out to complete the stage.",
-                    _ => "Unknown condition"
+                    EnvironmentType.KEYS => "<color=purple><Key></color> Collect to remove the terrains with corresponding color.",
+                    EnvironmentType.ONE_WAY_PASSAGE => "<color=#d6d930><One-directional Passage></color> Can only be passed through when appoarched from a certain direction.",
+                    EnvironmentType.ORIGINIUM_TILE => "<color=#C40000><Originium Pollution></color> Continuously deals true damage to the player and enemy units standing on it.",
+                    EnvironmentType.HEAT_PUMP_VENT => "<color=#ff9a03><Heatpump Vent></color> Periodically pushes the player and enemies within range toward a certain direction.",
+                    EnvironmentType.MEDICAL_TILE => "<color=green><Medical Tile></color> Continuously heals the player and enemies standing on it.",
+                    EnvironmentType.DARK_ZONE => "<color=black><Shrouded Zone></color> Some areas of the map is covered in darkness. Units standing on those areas have reduced attack and detection range, but can not be detected and targeted by units standing on brighter areas.",
+                    _ => "Unknown environment"
                 };
-
-                string environmentDescription = string.Empty;
-                foreach (var env in Environments[index].Environments)
-                {
-                    string envDes = env switch
-                    {
-                        EnvironmentType.KEYS => "<color=purple><Key></color> Collect to remove the terrains with corresponding color.",
-                        EnvironmentType.ONE_WAY_PASSAGE => "<color=#d6d930><One-directional Passage></color> Can only be passed through when appoarched from a certain direction.",
-                        EnvironmentType.ORIGINIUM_TILE => "<color=#C40000><Originium Pollution></color> Continuously deals true damage to the player and enemy units standing on it.",
-                        EnvironmentType.HEAT_PUMP_VENT => "<color=#ff9a03><Heatpump Vent></color> Periodically pushes the player and enemies within range toward a certain direction.",
-                        EnvironmentType.MEDICAL_TILE => "<color=green><Medical Tile></color> Continuously heals the player and enemies standing on it.",
-                        EnvironmentType.DARK_ZONE => "<color=black><Shrouded Zone></color> Some areas of the map is covered in darkness. Units standing on those areas have reduced attack and detection range, but can not be detected and targeted by units standing on brighter areas.",
-                        _ => "Unknown environment"
-                    };
-                    environmentDescription += $"{envDes}\n";
-                }
-
-                description += $"\n\n<color=#E5E5E5>{stageCompleteCondition}\n{environmentDescription}</color>";
+                environmentDescription += $"{envDes}\n";
             }
+
+            description += $"\n\n<color=#E5E5E5>{stageCompleteCondition}\n{environmentDescription}</color>";
         }
         return description.Replace(@"\n", "\n");
     }

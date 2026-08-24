@@ -10,6 +10,8 @@ public class EnvironmentalTileBase : MonoBehaviour
     protected List<EntityBase> entitiesWithin = new List<EntityBase>();
     List<EntityBase> entitiesWithinClone;
 
+    public virtual float GetValue() => 0;
+
     public virtual EnvironmentType GetEnvironmentType() => EnvironmentType.KEYS;
 
     private void Start()
@@ -71,11 +73,13 @@ public class EnvironmentalTileBase : MonoBehaviour
         {
             pb.ReduceUltimateCooldown(Interval * 0.4f, PlayerBase.CooldownReductionType.FLAT);
         }
-        else if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_STUDY))
+        
+        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_STUDY))
         {
             pb.ApplyEffect(Effect.AffectedStat.ATK, "GEOGOLIST_ATK_BUFF", 50f, 9999f, true);
         }
-        else if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE))
+        
+        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE))
         {
             pb.ApplyEffect(Effect.AffectedStat.MSPD, "GEOGOLIST_MSPD_BUFF", 50f, 9999f, true);
         }

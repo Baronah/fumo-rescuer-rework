@@ -344,9 +344,13 @@ public class PlayerBase : EntityBase
     public virtual void GetSkillTreeEffects()
     {
         var SelectedSkills = CharacterPrefabsStorage.Skills.Keys.ToList();
+        
+        var ExtraSkill = StageManager.GetExtraSkills();
+        if (ExtraSkill != null) SelectedSkills.AddRange(ExtraSkill);
+        
+        SelectedSkills = SelectedSkills.Distinct().ToList();
 
         RockGachaSkill rockGacha = RockPickEffect.GetComponent<RockGachaSkill>();
-
         if (SelectedSkills.Contains(SkillTree_Manager.SkillName.A_NICE_LOOKING_ROCK))
         {
             RockBonusSkill.RemoveAll(s => SelectedSkills.Contains(s));

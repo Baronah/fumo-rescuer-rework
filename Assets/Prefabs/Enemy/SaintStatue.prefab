@@ -486,7 +486,6 @@ MonoBehaviour:
   b_detectionRange: 0
   DangerRange_RatioOfAttackRange: 0
   MinimumDistanceFromPlayer: 20
-  WaitTimes: []
   MoveToOverridePositionSpeedMultiplier: 1
   MoveToOverridePositionSpeedMultiplierJump: 0
   CanDetectThroughWalls: 0

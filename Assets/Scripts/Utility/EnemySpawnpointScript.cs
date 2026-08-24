@@ -48,8 +48,6 @@ public class EnemySpawnpointScript : MonoBehaviour
 
     protected StageManager stageManager;
 
-    public bool UsedByChallengeMode = false;
-
     protected bool Spawned = false;
     public bool IsSpawnpointSpawned => Spawned;
 

@@ -111,7 +111,7 @@ public class CasterProjectileScript : ProjectileScript
                     break;
 
                 case EnvironmentType.MEDICAL_TILE:
-                    value = 0.04f;
+                    value = 0.05f;
                     if (ragingTerrain) value *= 2;
 
                     if (playerManager) playerManager.activePlayer.Heal(playerManager.activePlayer.mHealth * value);
@@ -120,8 +120,8 @@ public class CasterProjectileScript : ProjectileScript
                     break;
 
                 case EnvironmentType.HEAT_PUMP_VENT:
-                    value = 1.5f;
-                    if (ragingTerrain) value *= 2;
+                    value = 2f;
+                    if (ragingTerrain) value += 1f;
 
                     ProjectileFirer.PushEntityFrom(target, ProjectileFirer.GetAttackPosition(), value, 0.1f);
                     break;

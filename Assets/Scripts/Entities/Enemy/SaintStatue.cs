@@ -66,6 +66,8 @@ public class SaintStatue : EnemyBase
                 enemy.ApplyEffect(Effect.AffectedStat.DEF, DefBuffID, DefBuffFlat, 9999f, false);
                 enemy.ApplyEffect(Effect.AffectedStat.RES, ResBuffID, ResBuffFlat, 9999f, false);
             });
+
+            StageManager.OnEnemySpecialAbilityActivate(this);
         }
     }
 
@@ -107,6 +109,7 @@ public class SaintStatue : EnemyBase
             enemy.RemoveEffect(ResBuffID);
         });
 
+        StageManager.OnEnemySpecialAbilityStop(this);
         SaintStatueManager.instance.UnregistStatue(this);
     }
 

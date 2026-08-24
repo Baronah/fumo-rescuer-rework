@@ -10,6 +10,7 @@ public class Gloompincer : EnemyBase
         damageType = DamageType.MAGICAL;
         ApplyEffect(Effect.AffectedStat.MSPD, "GLOOMPINCER_SHROUDED_MSPPD_BUFF", shroudedMspdBuff * 100, 9999f, true);
         ApplyEffect(Effect.AffectedStat.ASPD, "GLOOMPINCER_SHROUDED_ASPD_BUFF", shroudedAspdBuff, 9999f, false);
+        StageManager.OnEnemySpecialAbilityActivate(this);
     }
 
     public void OnShroudedZoneExit()
@@ -17,6 +18,7 @@ public class Gloompincer : EnemyBase
         damageType = DamageType.PHYSICAL;
         RemoveEffect("GLOOMPINCER_SHROUDED_MSPPD_BUFF");
         RemoveEffect("GLOOMPINCER_SHROUDED_ASPD_BUFF");
+        StageManager.OnEnemySpecialAbilityStop(this);
     }
 
     public override void WriteStats()

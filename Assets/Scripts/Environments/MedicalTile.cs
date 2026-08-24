@@ -5,7 +5,13 @@ using UnityEngine.Tilemaps;
 public class MedicalTile : EnvironmentalTileBase
 {
     [SerializeField] private float HealPerTick = 15f;
+    [SerializeField] private float EnemyEffectivenessMultiplier = 1f;
     [SerializeField] private bool UsePercentageHeal = false;
+
+    public override float GetValue()
+    {
+        return HealPerTick * (1.0f / Interval);
+    }
 
     public override StageManager.EnvironmentType GetEnvironmentType()
     {
@@ -29,15 +35,24 @@ public class MedicalTile : EnvironmentalTileBase
 
     public override void ProcessTick()
     {
-        if (SaintStatueManager.instance) SaintStatueManager.instance.OnMedicalTileHealingReceive(HealPerTick, Interval, UsePercentageHeal);
+        if (SaintStatueManager.instance) 
+            SaintStatueManager.instance.OnMedicalTileHealingReceive(HealPerTick * EnemyEffectivenessMultiplier, Interval, UsePercentageHeal);
         base.ProcessTick();
     }
 
     public override void OnEntityStay(EntityBase entity)
     {
         base.OnEntityStay(entity);
-        float healAmount = UsePercentageHeal ? entity.mHealth * HealPerTick : HealPerTick;
+        float healAmount = GetHealAmount(entity);
         if (!(entity as SaintStatue)) entity.Heal(healAmount);
+    }
+
+    public float GetHealAmount(EntityBase entity)
+    {
+        float healAmount = UsePercentageHeal ? entity.mHealth * HealPerTick : HealPerTick;
+        if (entity as EnemyBase) healAmount *= EnemyEffectivenessMultiplier;
+
+        return healAmount;
     }
 
     IEnumerator Pulse()

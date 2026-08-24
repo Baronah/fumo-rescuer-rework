@@ -87,6 +87,7 @@ public class HibernatorKnight : EnemyBase
         {
             ApplyEffect(Effect.AffectedStat.ATK, "HIBERNATOR_WAKE_ATK_BUFF", Wake_AtkBuff * 100f, Wake_Buff_Duration, true);
             ApplyEffect(Effect.AffectedStat.MSPD, "HIBERNATOR_WAKE_MSPD_BUFF", Wake_MspdBuff * 100f, Wake_Buff_Duration, true);
+            StageManager.OnEnemySpecialAbilityActivate(this);
         }
 
         animator.SetBool("sleep", false);

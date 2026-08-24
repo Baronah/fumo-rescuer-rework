@@ -60,6 +60,8 @@ public class Sentinel : EnemyBase
                 enemy.ApplyEffect(Effect.AffectedStat.ATK, "SENTINEL_ALARM_ATK_" + instanceID, AtkBuffOnAlert * 100f, 9999f, true);
             }
         });
+
+        StageManager.OnEnemySpecialAbilityActivate(this);
     }
 
     public override IEnumerator Attack()

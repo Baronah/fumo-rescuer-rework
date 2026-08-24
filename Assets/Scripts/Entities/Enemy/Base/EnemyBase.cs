@@ -10,6 +10,7 @@ using static LevelDifficultyModifier;
 
 public class EnemyBase : EntityBase
 {
+    private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
     private static readonly int MoveHash = Animator.StringToHash("move");
 
     public override Type GetGenericType() => typeof(EnemyBase);
@@ -110,7 +111,7 @@ public class EnemyBase : EntityBase
 
     [Header("Checkpoints System")]
     protected List<Transform> Checkpoints = new();
-    [SerializeField] private List<float> WaitTimes = new();
+    private List<float> WaitTimes = new();
 
     private readonly float OverridePositionCheckRadius = 75f;
     private Vector3 OverridePosition;
@@ -193,9 +194,6 @@ public class EnemyBase : EntityBase
             if (SpotPlayerUponSpawn) ForceSpotPlayer();
 
             IsComponentsInitialized = true;
-
-            if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.HIBERNATE))
-                StartCoroutine(Deforst());
         }
         else
         {
@@ -203,15 +201,21 @@ public class EnemyBase : EntityBase
         }
     }
 
-    IEnumerator Deforst()
+    public void StartDeforst(float duration) => StartCoroutine(Deforst(duration));
+
+    IEnumerator Deforst(float duration)
     {
+        yield return new WaitUntil(() => IsComponentsInitialized);
+
+        ApplyEffect(Effect.AffectedStat.DEF, "ICEAGE_DEF_BUFF", 70f, duration, false);
+        ApplyEffect(Effect.AffectedStat.RES, "ICEAGE_RES_BUFF", 25f, duration, false);
         SetHealth(mHealth * 0.5f);
 
         yield return null;
 
         while (IsFrozen)
         {
-            yield return new WaitForSeconds(1f);
+            yield return _waitForSeconds1;
             Heal(mHealth * 0.02f);
         }
 

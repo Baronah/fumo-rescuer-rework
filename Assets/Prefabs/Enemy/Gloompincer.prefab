@@ -483,7 +483,7 @@ MonoBehaviour:
   defPen: 0
   defIgn: 0
   resPen: 0
-  resIgn: 0
+  resIgn: 10
   lifeSteal: 0
   b_moveSpeed: 185
   b_attackRange: 70

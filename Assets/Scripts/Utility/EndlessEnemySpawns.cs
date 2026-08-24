@@ -10,6 +10,7 @@ public class EndlessEnemySpawn : EnemySpawnpointScript
     [SerializeField] public List<EnemyCode> enemyPrefabs;
 
     [SerializeField] private float GraduallyDecreaseSpawnInterval = 0.5f;
+    [SerializeField] private float MinWaittime = 5f;
 
     public override IEnumerator SpawnEnemy()
     {
@@ -75,7 +76,7 @@ public class EndlessEnemySpawn : EnemySpawnpointScript
             yield return new WaitForSeconds(WaittimeBeforeNextSpawn);
             yield return StartCoroutine(CreateEnemySpawn());
 
-            WaittimeBeforeNextSpawn = Mathf.Max(5f, WaittimeBeforeNextSpawn - GraduallyDecreaseSpawnInterval);
+            WaittimeBeforeNextSpawn = Mathf.Max(MinWaittime, WaittimeBeforeNextSpawn - GraduallyDecreaseSpawnInterval);
         }
     }
 

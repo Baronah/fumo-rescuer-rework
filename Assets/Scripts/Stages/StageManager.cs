@@ -56,8 +56,6 @@ public class StageManager : MonoBehaviour
     [SerializeField] private Button o_QuitBtn, o_RetryBtn;
     [SerializeField] private Sprite PausedSprite, UnpausedSprite;
 
-    CharacterPrefabsStorage characterPrefabsStorage;
-
     protected string LevelName;
     protected AudioSource BGM;
     public AudioSource StageBGM => BGM;
@@ -106,10 +104,10 @@ public class StageManager : MonoBehaviour
 
     GameObject TopOverlay;
 
-    public Collider2D[] ObstacleCollider;
+    [HideInInspector] public Collider2D[] ObstacleCollider;
 
     // Theoria
-    public bool Absolutism, Statis, Gravity, Acceleration, Hunger, Adaption;
+    [HideInInspector] public bool Absolutism, Statis, Gravity, Acceleration, Hunger, Adaption;
     //
 
     [SerializeField] GameObject ExtraEnemySpawn;
@@ -159,7 +157,7 @@ public class StageManager : MonoBehaviour
         }
 
         if (!ExtraEnemySpawn) ExtraEnemySpawn = GameObject.Find("Researcher_ExtraEnemies");
-        if (ExtraEnemySpawn && CharacterPrefabsStorage.DifficultyLevel - 1 < (int) DiffType.ExtraEnemies)
+        if (ExtraEnemySpawn && CharacterPrefabsStorage.DifficultyLevel - 1 < (int)DiffType.ExtraEnemies)
         {
             Destroy(ExtraEnemySpawn);
         }
@@ -180,6 +178,8 @@ public class StageManager : MonoBehaviour
         EnemyTooltipsScript.isAnyTooltipsShowing = false;
         Time.timeScale = 0f;
     }
+
+    public virtual SkillTree_Manager.SkillName[] GetExtraSkills() => null;
 
     void SetGoal()
     {
@@ -443,12 +443,7 @@ public class StageManager : MonoBehaviour
                     float duration = 40f;
                     enemy.mHealth *= 1.5f;
                     enemy.ApplyFreeze(enemy, duration);
-
-                    if (!enemy.IsFreezeImmune)
-                    {
-                        enemy.ApplyEffect(Effect.AffectedStat.DEF, "ICEAGE_DEF_BUFF", 70f, duration, false);
-                        enemy.ApplyEffect(Effect.AffectedStat.RES, "ICEAGE_RES_BUFF", 25f, duration, false);
-                    }
+                    enemy.StartDeforst(duration);
                     break;
 
                 case SkillName.ADAPTION:
@@ -458,6 +453,10 @@ public class StageManager : MonoBehaviour
             }
         }
     }
+
+    public virtual void OnEnemySpecialAbilityActivate(EnemyBase enemy) { }
+
+    public virtual void OnEnemySpecialAbilityStop(EnemyBase enemy) { }
 
     public virtual void OnPlayerSpawn(PlayerBase player)
     {
