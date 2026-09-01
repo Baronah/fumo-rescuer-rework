@@ -17,9 +17,10 @@ public class PlayerMelee : PlayerBase
     [SerializeField] private float DashDuration = 0.5f;
     [SerializeField] private float DashCooldown = 6f;
     [SerializeField] private float Up_DashDamageScale = 1.0f;
+    [SerializeField] private float Up_DashMspdScale = 0.3f;
     [SerializeField] private float Up_DashDeflectHealPercentage = 0.2f;
     [SerializeField] private float Up_DashAfterImagePersistTime = 3f;
-    [SerializeField] private float Up_DashSlowPercentage = 40f, Up_DashSlowDuration = 3f;
+    [SerializeField] private float Up_DashSlowPercentage = 40f, Up_DashSlowDuration = 3f, Up_DashExtendRefundPercentage = 0.35f;
 
     [SerializeField] private float BL_AtkScale = 2.5f, BL_AtkBuff = 100f, BL_BuffDur = 5f;
 
@@ -89,25 +90,29 @@ public class PlayerMelee : PlayerBase
         FUpdateCnt++;
         if (FUpdateCnt >= 5)
         {
-            bool skillActive = IsSkillActive && IsAlive();
-
-            SkillEffect.SetActive(skillActive);
-            
-            SkillEffect_2.SetActive(Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_IGNITE) && skillActive);
-            SkillEffect_2.transform.localScale = DoTEffectScaleBase * (DoTRadius / DoTRadiusBase);
-
-            BlackflashEffect.SetActive(IsAlive() && AtkBuffs.ContainsKey("BLACKFLASH_ATK_BUFF") && AtkBuffs["BLACKFLASH_ATK_BUFF"].IsInEffect);
-            SkillBarObj.SetActive(skillActive);
-            AftershockDmgCounter.gameObject.SetActive(skillActive && Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_AFTERSHOCK) && damageTakenDuringSkill > 0);
-
-            SkillBarObj.transform.localPosition =
-                WindanthemBar.activeSelf ? new Vector3(-0.08f, -3.2f, 0) : new Vector3(-0.08f, -2.3f, 0);
-
-            ccBar.transform.localPosition =
-                SkillBarObj.activeSelf ? SkillBarObj.transform.localPosition + new Vector3(0, -0.9f, 0) : new Vector3(-0.08f, -2.3f, 0);
-
+            UpdateStatusUI();
             FUpdateCnt = 0;
         }
+    }
+
+    void UpdateStatusUI()
+    {
+        bool skillActive = IsSkillActive && IsAlive();
+
+        SkillEffect_2.SetActive(Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_IGNITE) && skillActive);
+        SkillEffect_2.transform.localScale = DoTEffectScaleBase * (DoTRadius / DoTRadiusBase);
+
+        SkillEffect.SetActive(!SkillEffect_2.activeSelf && skillActive);
+
+        BlackflashEffect.SetActive(IsAlive() && AtkBuffs.ContainsKey("BLACKFLASH_ATK_BUFF") && AtkBuffs["BLACKFLASH_ATK_BUFF"].IsInEffect);
+        SkillBarObj.SetActive(skillActive);
+        AftershockDmgCounter.gameObject.SetActive(skillActive && Skills.Contains(SkillTree_Manager.SkillName.JUGGERNAUNT_AFTERSHOCK) && damageTakenDuringSkill > 0);
+
+        SkillBarObj.transform.localPosition =
+            WindanthemBar.activeSelf ? new Vector3(-0.08f, -3.2f, 0) : new Vector3(-0.08f, -2.3f, 0);
+
+        ccBar.transform.localPosition =
+            SkillBarObj.activeSelf ? SkillBarObj.transform.localPosition + new Vector3(0, -0.9f, 0) : new Vector3(-0.08f, -2.3f, 0);
     }
 
     bool CanPull, CanDoT, CanCounterAttack, WindAnthem, BeyondNight, CanExtendSkill, CanAfterShock;
@@ -327,6 +332,7 @@ public class PlayerMelee : PlayerBase
         DashCollider.enabled = true;
 
         SetInvulnerable(0.3f);
+        bool refunded = false;
 
         if (Skills.Contains(SkillTree_Manager.SkillName.DASH_AFTERIMAGES))
         {
@@ -370,7 +376,7 @@ public class PlayerMelee : PlayerBase
             {
                 if (checkForCollision)
                 {
-                    var enemies = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), transform.position, 60f, true);
+                    var enemies = SearchForEntitiesAroundCertainPoint(typeof(EnemyBase), transform.position, 70f, true);
 
                     if (Skills.Contains(SkillTree_Manager.SkillName.DASH_TOUCH))
                     {
@@ -387,6 +393,12 @@ public class PlayerMelee : PlayerBase
                             extendingDash = true;
                             allowDashes = true;
                             EnemyHitByDash.Add(enemyForDashExtend);
+
+                            if (!refunded)
+                            {
+                                ReduceSpecialCooldown(Up_DashExtendRefundPercentage, CooldownReductionType.PERCENTAGE_FULL);
+                                refunded = true;
+                            }
                         }
                     }
                     else if (Skills.Contains(SkillTree_Manager.SkillName.DASH_LETHAL))
@@ -420,14 +432,18 @@ public class PlayerMelee : PlayerBase
         if (EnemyHitByDash.Count > 0) EnemyHitByDash.Clear();
     }
 
+    int GetDashDamage() => (int)(atk * Up_DashDamageScale + moveSpeed * Up_DashMspdScale);
+
     void ProcessDashDamageUpgrade(List<EntityBase> enemies, Vector3 movementInputs, float dashTime = 0.1f)
     {
         foreach (EntityBase enemy in enemies)
         {
             if (!enemy || !enemy.IsAlive() || EnemyHitByDash.Contains(enemy)) continue;
 
-            DealDamage(enemy, (int)(atk * Up_DashDamageScale), 0, 0);
-            PushEntityFrom(enemy, movementInputs, 5f, DashDuration - dashTime, false);
+            int damage = GetDashDamage();
+            ApplyStun(enemy, 1f + dashTime);
+            DealDamage(enemy, damage, 0, 0);
+            PushEntityFrom(enemy, movementInputs, 4.1f + moveSpeed * 0.005f, DashDuration - dashTime, false);
             EnemyHitByDash.Add(enemy);
         }
     }

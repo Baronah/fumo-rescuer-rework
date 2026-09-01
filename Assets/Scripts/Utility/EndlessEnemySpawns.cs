@@ -35,6 +35,8 @@ public class EndlessEnemySpawn : EnemySpawnpointScript
 
             for (int j = 0; j < Quantity; j++)
             {
+                if (EntityManager.Enemies.Count(e => e && e.IsAlive()) >= StageManager._instance.MaxEnemies) continue;
+
                 Transform spawnTransform = SpawnPositions[Mathf.Min(i, maxSpawnPositions - 1)];
 
                 GameObject o = Instantiate(

@@ -399,8 +399,8 @@ public class PlayerBase : EntityBase
                     break;
 
                 case SkillTree_Manager.SkillName.HEAVY_HITTER:
-                    ASPD -= 40;
-                    bAtk += (short)(bAtk * 0.2f);
+                    ASPD -= 25;
+                    bAtk += (short)(bAtk * 0.4f);
                     break;
 
                 case SkillTree_Manager.SkillName.A_NICE_LOOKING_ROCK:
@@ -759,7 +759,7 @@ public class PlayerBase : EntityBase
 
     protected void GetWingedStepMspdBuff()
     {
-        float baseValue = 25f, jumpValue = 20f;
+        float baseValue = 30f, jumpValue = 5f;
         string key = "WINGED_STEPS_A_MSPD_BUFF";
         if (MspdBuffs.ContainsKey(key) && MspdBuffs[key].IsInEffect)
         {
@@ -769,13 +769,13 @@ public class PlayerBase : EntityBase
                 Effect.AffectedStat.MSPD, 
                 key,
                 Mathf.Max(baseValue, newValue), 
-                3, 
+                3f, 
                 true, 
-                EffectPersistType.DECAY);
+                EffectPersistType.PERSIST);
         }
         else
         {
-            ApplyEffect(Effect.AffectedStat.MSPD, key, baseValue, 3, true, EffectPersistType.DECAY);
+            ApplyEffect(Effect.AffectedStat.MSPD, key, baseValue, 3f, true, EffectPersistType.PERSIST);
         }
     }
 
@@ -821,7 +821,8 @@ public class PlayerBase : EntityBase
             ApplyEffect(Effect.AffectedStat.ATK, "VICTORY_ATK_BUFF", strength, duration, true, EffectPersistType.DECAY);
             ApplyEffect(Effect.AffectedStat.MSPD, "VICTORY_MSPD_BUFF", strength, duration, true, EffectPersistType.DECAY);
         }
-        else if (Skills.Contains(SkillTree_Manager.SkillName.VICTORY_REFRESH))
+        
+        if (Skills.Contains(SkillTree_Manager.SkillName.VICTORY_REFRESH))
             ReduceSpecialCooldown(Mathf.Min(1.0f, 0.3f + 0.07f * enemyDefeatCount), CooldownReductionType.PERCENTAGE_FULL);
 
         enemyDefeatCount++;

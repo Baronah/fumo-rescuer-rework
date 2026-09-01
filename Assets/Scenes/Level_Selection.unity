@@ -18296,7 +18296,8 @@ MonoBehaviour:
     <color=yellow>retains its effect</color>, and <color=yellow>resets its duration</color>.
   favorText: The wheel that weaves eternity and infinity, spins the bond between
     you and I.
-  skillDescriptionInShort: '''Juggernaut'' can be transferred to the swap in character.'
+  skillDescriptionInShort: '''Juggernaut'' can be transferred to the swap in character,
+    resetting its duration and effect.'
   mutuallyExclusiveSkills: 150000001600000017000000180000002e000000
   Overlay: {fileID: 0}
 --- !u!114 &807891799
@@ -29434,9 +29435,9 @@ MonoBehaviour:
   SelectedLvlDescription: {fileID: 751680392}
   Descriptions:
   - Everything must lead to a new world.
-  - "Ever since you left,\\nI\u2019ve been standing here,\\nholding our memories
-    in my heart,\\nliving as though searching for something."
-  - '"Mr. Patriot.\nStop making people cry.\nThese brimming eyes can no longer see..."'
+  - Is there a compass of passion in your heart?\nThe needle shakes, spinning round
+    and round.\nIt points toward the future.
+  - '"Mr. Patriot.\nStop making people cry.\nThese brimming eyes can no longer see."'
   - 'She wipes the dust off the old stone, engraved on it are words from an era that
     has long gone:\n"Is just not my gote." '
   - Have no love, no future either.\nHave no heart, no sadness either.\nGot no home
@@ -29459,7 +29460,8 @@ MonoBehaviour:
     the day I burn out.
   - Close my eyes, I try to escape to a world with you.\nBut even in that imaginary
     world, I, too, lost you, along with my everything.
-  - And so it seems, only in dreams...
+  - It's just the moon, shining again tonight, as if searching for something that
+    has long lost.
   AddsOn:
   - 
   - 
@@ -29471,17 +29473,17 @@ MonoBehaviour:
   - <color=yellow>Your units have increased MSPD in this level.</color>\n<color=red>The
     'Sudarim' are immune to damage from Originium Pollutions.</color>
   - 
-  - '<color=yellow>Swap cool-down reduces. Your units have greatly increased attributes.</color>\n\n<color=#00FFD0>Mint
-    Fumo: Grants ''Victory Rewind - Spirit'' if not already selected (ignores mutually
-    exclusive).</color>'
+  - '<color=yellow>Swap cool-down reduces. And your units have greatly increased
+    attributes.</color>\n\n<color=#00FFD0>Mint Fumo: Grants ''Victory Rewind - Spirit''
+    if not already selected (ignores mutually exclusive).</color>'
   - 
   - 
   - 
   - 
   - 
-  - '<color=yellow>Swap cool-down reduces. Your units have greatly increased attributes.</color>\n\n<color=#00FFD0>Mint
-    Fumo: Grants ''Geologist - Explore'' if not already selected (ignores mutually
-    exclusive).</color>'
+  - '<color=yellow>Swap cool-down reduces. And your units have greatly increased
+    attributes.</color>\n\n<color=#00FFD0>Mint Fumo: Grants ''Geologist - Explore''
+    if not already selected (ignores mutually exclusive).</color>'
   ChallengeModes:
   - '''Hounds'' have greatly increased HP and ATK.'
   - Terrains and enemies will differ in places, and more enemies will appear.
@@ -29511,34 +29513,35 @@ MonoBehaviour:
   - '''Saint Statue'' additionally grants increased ASPD and MSPD to all enemies
     while present.'
   SecretDescriptions:
-  - To my beloved Professor,\nI think it should be fairly chilly in Victoria by the
-    time my letter makes it to you? I hope you and everyone else are doing fine.
-  - First, I'd like to thank you for your previous reply. You've helped answer a
-    lot of my doubts for me.
-  - You encouraged me not to give up on my studies, even during my treatment here
-    at Rhodes Island.
-  - Even though being away from Victoria has made a lot of things inconvenient, there's
-    still a replete library here, as well as seniors and veterans to depend on.
-  - My days here have been more fascinating and wonderful than I expected, and I've
-    gained a lot for it.
-  - '"In seeking the truth, I willingly brave all hazard."'
-  - I still know this maxim by heart. No matter how challenging, Professor, I'll
-    never give up.
-  - But I want everyone to be reassured.
-  - I'll pay mind to my own health, and I won't force myself to take on further risks.
-  - I hope Miranda's recovery goes as speedily as possible. If I get the chance,
-    I'll be sure to return and visit her!
-  - Please say hello to her for me!
-  - Thank you for always looking out for me. I'll look out for myself at Rhodes Island,
-    and continue my research...
-  - '"I have it figured out now! No matter what, I''ll continue doing the research
-    I want to do!"'
-  - '"I still have so many things I''m curious about, so many phenomena I want to
-    figure out... I won''t leave anything unfinished no matter the results!"'
-  - '"The sooner I can become more reliable, the better. I''d like nothing more than
-    to be able to help out with everyone."'
-  - '"The sooner I can become more reliable, the better. I''d like nothing more than
-    to be able to help out with everyone."'
+  - The comrade woke me up, and when I opened my eyes, before me was a distant place,
+    the middle of a forest.\n\nWe tried to process what had happened, but nothing
+    really came to mind...
+  - Everything had been a mess earlier - the smoke of the battlefield, the clashing
+    of swords, the sound of Arts being channeled, and people falling one after another...\n\nThen,
+    an Originium bomb exploded right next to me.\n\nI think that was when I was knocked
+    unconscious. I thought I was a goner...
+  - Now here we are.\n\nMe and my comrade, only two of us, suddenly appear in this
+    forest, surrounded by trees and dead silence. We still held on to our weapons,
+    overwhelmed by pure confusion.
+  - 'Suddenly, a tear streamed down my face.\n\nI will never understand what kind
+    of feeling it was: sadness, panic, or relief.'
+  - We had been certain of our deaths. It had been engraved in our minds ever since
+    we stepped onto the battlefield.\n\nIf this really is the afterlife, then so
+    be it.\n\nMaybe I even feel a little happy that I still get to see this beauty
+    one more time, even if this is the last.
+  - Except that, maybe this isn't the afterlife.\n\nEverything still feels so real,
+    our senses work perfectly.\n\nWe try to kick, swing the weapon and cast Arts,
+    all are normal.
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   CompleteCondition: 01000000010000000100000000000000010000000100000000000000010000000000000003000000000000000100000000000000000000000100000003000000
   Environments:
   - Environments: 
@@ -29593,7 +29596,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1840e7b2ed14ee443b04515f932bd888, type: 3}
   - {fileID: 21300000, guid: 7db4ca48c12c6bd46adc278b65b768f6, type: 3}
   - {fileID: 21300000, guid: 22c65ddea5594d34e88a2ad6fb3365c9, type: 3}
-  - {fileID: 21300000, guid: 24333ee76cae4e74ab5f2bf557dac14d, type: 3}
+  - {fileID: 21300000, guid: 5d1c48f62ecb909409d22fdb7d48f454, type: 3}
   FetchingData_1: {fileID: 407492412}
   FetchingData_2: {fileID: 218818598}
   DefaultEnemyIcon: {fileID: 21300000, guid: 450f341a4d8aeec45acb98c71b1a64cb, type: 3}
@@ -32789,13 +32792,14 @@ MonoBehaviour:
   skillName: 12
   skillNameText: Wind's Elegy
   skillDescription: During the duration of 'Evasion', enemies coming into contact
-    with self takes physical damage equal to <color=#ff4545>100% ATK</color> and
-    are <color=#2985FF>pushed</color> alongside with the dash.
+    with self takes physical damage equal to <color=#ff4545>120% ATK + 30% MSPD</color>,
+    stunned for 1 second and are <color=#2985FF>pushed</color> alongside with the
+    dash.
   favorText: At sufficient speed, the air pressure is large enough to cause an impact.
     And if you compress it to minimize the contact surface, just like a wind blade...
     scary, isn't it?
-  skillDescriptionInShort: '''Evasion'' damages collided enemies and pushes them
-    away slightly.'
+  skillDescriptionInShort: '''Evasion'' damages collided enemies, stunning and pushing
+    them away slightly.'
   mutuallyExclusiveSkills: 0b0000000d00000024000000
   Overlay: {fileID: 0}
 --- !u!114 &1247638172
@@ -44728,8 +44732,9 @@ MonoBehaviour:
   skillName: 11
   skillNameText: Gently Weeps
   skillDescription: During the duration of 'Evasion', coming into contact with an
-    enemy <color=#00ffe1>extends</color> the dash and slows the collided enemies
-    for 3 seconds.
+    enemy <color=#00ffe1>extends the dash</color> and slows the collided enemies
+    for <color=yellow>3 seconds</color>. If the dash is extended at least once, the
+    next cool-down is reduced by 35%.
   favorText: She looks quiet and proper at first glance, but in truth she bursts
     with a curious spirit and a lively step.
   skillDescriptionInShort: '''Evasion'' extends upon coming into contact with an
@@ -54115,7 +54120,7 @@ MonoBehaviour:
   skillType: 0
   skillName: 40
   skillNameText: Very Heavy Blade
-  skillDescription: <color=#5b7ccf>ASPD -40</color>, <color=#ff4545>ATK +20%</color>.
+  skillDescription: <color=#5b7ccf>ASPD -25</color>, <color=#ff4545>ATK +40%</color>.
     While not attacking, the next attack gains gradually increased damage, up to
     <color=#ff4545>+250%</color> after 10 seconds (resets upon attacking).
   favorText: Why does she have it?

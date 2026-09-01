@@ -5,8 +5,8 @@ public class SaintStatue : EnemyBase
 {
     [SerializeField] GameObject ManagerPrefab;
     [SerializeField] GameObject HealEffect;
-    [SerializeField] private float DefBuffFlat = 25f, ResBuffFlat = 15f, SelfHpHealingBonus_PerSecond = 0.005f;
-    [SerializeField] private float HealOnDeathPercentage = 0.35f, DefFlatBuffOnDeathPercentage = 15f;
+    public float DefBuffFlat = 15f, ResBuffFlat = 20f, SelfHpHealingBonus_PerSecond = 0.005f;
+    public float HealOnDeathPercentage = 0.35f, DefFlatBuffOnDeathPercentage = 15f;
 
     public override void InitializeComponents()
     {

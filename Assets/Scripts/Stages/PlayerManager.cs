@@ -336,7 +336,11 @@ public class PlayerManager : MonoBehaviour
         if (IsStageStarted && (!CanSwapPlayer || !activePlayer || !activePlayer.IsAlive())) return;
         if (IsStageStarted)
         {
-            if (SwapStacks > 0) SwapStacks--;
+            if (SwapStacks > 0)
+            {
+                swapCooldownTimer = SwapCooldown - 0.2f;
+                SwapStacks--;
+            }
             else
             {
                 SwapOverflowTimer = swapCooldownTimer = 0f;

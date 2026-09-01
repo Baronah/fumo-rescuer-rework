@@ -5904,9 +5904,9 @@ MonoBehaviour:
   ProjectilePrefab: {fileID: 0}
   ProjectileType: 1
   ProjectileSpeed: 1000
-  DamagePopup: {fileID: 7498904281893358320, guid: b09dfacba160b6d47938cf47f8dea3c9, type: 3}
   ccBar: {fileID: 8729259124278131605}
   AttackAnimation: {fileID: 7400000, guid: 38cef02e111cc2741872318b17372723, type: 2}
+  FeetCollider: {fileID: 0}
   sfxs: []
   BeingShiftState: 0
   FreezeTimer: 0
@@ -5955,11 +5955,12 @@ MonoBehaviour:
   DashSpeed: 1700
   DashDuration: 0.08
   DashCooldown: 6
-  Up_DashDamageScale: 1
+  Up_DashDamageScale: 1.2
+  Up_DashMspdScale: 0.3
   Up_DashDeflectHealPercentage: 0.2
   Up_DashAfterImagePersistTime: 3
-  Up_DashSlowPercentage: 40
-  Up_DashSlowDuration: 2.5
+  Up_DashSlowPercentage: 50
+  Up_DashSlowDuration: 3
   BL_AtkScale: 2.5
   BL_AtkBuff: 100
   BL_BuffDur: 7

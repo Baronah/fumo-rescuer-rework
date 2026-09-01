@@ -105,7 +105,7 @@ public static class EnemyStatsLookup
                 break;
 
             case 15:
-                codeWithStatsChange = new() { EnemyCode.SAINT_STATUE, EnemyCode.GLOOMPINCER };
+                codeWithStatsChange = new() { EnemyCode.HIBERNATOR_KNIGHT, EnemyCode.SAINT_STATUE, EnemyCode.GLOOMPINCER };
                 break;
         }
 
@@ -218,6 +218,12 @@ public static class EnemyStatsLookup
                     sud.originiumPollutionDamageMultiplier = 0f;
                     hasChanged = true;
                 }
+                else if (enemy is SaintStatue ss10)
+                {
+                    ss10.DefBuffFlat = 35f;
+                    ss10.ResBuffFlat = 25f;
+                    ss10.HealOnDeathPercentage = 0.65f;
+                }
                 break;
 
             case 11:
@@ -253,9 +259,17 @@ public static class EnemyStatsLookup
                 break;
 
             case 15:
-                if (enemy as SaintStatue)
+                if (enemy is SaintStatue ss15)
                 {
-                    enemy.mHealth = 400;
+                    ss15.mHealth = 400;
+                    ss15.DefBuffFlat = 10f;
+                    ss15.ResBuffFlat = 10f;
+                    ss15.DefFlatBuffOnDeathPercentage = 20f;
+                    hasChanged = true;
+                }
+                else if (enemy as HibernatorKnight)
+                {
+                    enemy.mHealth = 280;
                     hasChanged = true;
                 }
                 else if (enemy as Gloompincer)

@@ -6,7 +6,7 @@ public class TrapezoidImage : Image
 {
     [SerializeField]
     [Range(-1f, 1f)]
-    private float topWidthOffset = 0.5f; // Adjusts how much the top is squeezed
+    private float topWidthOffset = 0.5f;
 
     protected override void OnPopulateMesh(VertexHelper vh)
     {
@@ -22,7 +22,6 @@ public class TrapezoidImage : Image
         float halfHeight = rect.height * 0.5f;
         float topOffset = halfWidth * topWidthOffset;
 
-        // Base vertices for a normal rectangle
         UIVertex vert = UIVertex.simpleVert;
         vert.color = color;
 

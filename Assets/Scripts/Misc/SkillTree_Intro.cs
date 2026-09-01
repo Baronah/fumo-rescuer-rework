@@ -126,9 +126,9 @@ public class SkillTree_Intro : MonoBehaviour
                     EQUIPMENT_RADIO => "Thanks to that radio, we were able to chat to eachother even when you were far away. It was so fun, sadly the battery ran out mid way...",
                     EQUIPMENT_BLADE => "Hehe... sorry, but I couldn't help imaging you wearing those cat paws during battle. It's cute, right?",
                     EQUIPMENT_PROVISIONS => "Exploring is fun and all, but don't forget to treat yourself properly. I already made some soup, it's kind of basic, but help yourself!",
-                    GEOGOLIST_OBSERVE => "Seems like you've taken a liking in geology. Nature is beautiful. Isn't it?",
-                    GEOGOLIST_STUDY => "Seems like you've taken a liking in geology. Nature is powerful. Isn't it?",
-                    GEOGOLIST_EXPLORE => "Seems like you've taken a liking in geology. Nature is exciting. Isn't it?",
+                    GEOLOGIST_OBSERVE => "Seems like you've taken a liking in geology. Nature is beautiful. Isn't it?",
+                    GEOLOGIST_STUDY => "Seems like you've taken a liking in geology. Nature is powerful. Isn't it?",
+                    GEOLOGIST_EXPLORE => "Seems like you've taken a liking in geology. Nature is exciting. Isn't it?",
                     SMOKE_TOXIC => "Don't worry, before leaving, I already sprayed this bug spray everywhere. Now you can rest without worrying about bugs landing on your face anymore!",
                     SMOKE_BLIND => "That pepper spray is very dangerous. If it happens to get caught in your eyes, rinse it off with water immediately! " +
                     "Oh no... how will you even read this if that was really the case... I should have warned you earlier......",

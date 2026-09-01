@@ -19,9 +19,9 @@ public class DarkTile : EnvironmentalTileBase
         tilemap = GetComponent<Tilemap>();
         if (CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.TERRAIN))
         {
-            bool hasGeologist = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOGOLIST_OBSERVE)
-                || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE)
-                || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOGOLIST_STUDY);
+            bool hasGeologist = CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOLOGIST_OBSERVE)
+                || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOLOGIST_EXPLORE)
+                || CharacterPrefabsStorage.Skills.ContainsKey(SkillTree_Manager.SkillName.GEOLOGIST_STUDY);
             float multiplier = hasGeologist ? 1.75f : 1.5f;
             P_VisionReductionPercent *= multiplier;
             E_VisionReductionPercent *= multiplier;

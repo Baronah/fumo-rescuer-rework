@@ -147,7 +147,6 @@ public class LevelSelectionScript : MonoBehaviour
             Nav.transform.Find("Prev").gameObject.SetActive(CurrentPageIndex > 0);
         }
 
-        // Updated regex: now allows optional _CM and required _<difficulty> suffix
         var regex = new Regex(@"^FM-(\d+)(_CM)?_(-?\d+)$");
 
         int startLevelIndex = CurrentPageIndex * MaxPageSize;
@@ -274,7 +273,7 @@ public class LevelSelectionScript : MonoBehaviour
         string description;
         
         bool secret = SaveDataManager.GetLevelCompletionType(GetLevelNameByIndex(index)) == CompletionType.CHALLENGE_MODE_DIFF_HIGH;
-        if (secret)
+        if (secret && !string.IsNullOrEmpty(SecretDescriptions[index]) && !enableCM)
         {
             description = $"<color=#00FFD5>{SecretDescriptions[index]}</color>";
             return description.Replace(@"\n", "\n");

@@ -673,6 +673,8 @@ public class EnemyBase : EntityBase
 
     public virtual void OnFirsttimePlayerSpot(bool viaAlert = false)
     {
+        detectionRange = 99999f;
+        CanDetectThroughWalls = true;
         MoveToOverridePosition = false;
         MoveToOverridePositionJumpCnt = 0;
         FaceToward(SpottedPlayer.transform.position);

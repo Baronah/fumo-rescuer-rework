@@ -16,6 +16,8 @@ public class FM_15 : StageManager
 
     [SerializeField] private float CM_StatueASPDBuff = 12f, CM_StatueMSPDBuff = 10f;
 
+    [SerializeField] private AudioSource darkTileToggleWarning;
+
     FumoScript fumo;
 
     Tilemap darkTile;
@@ -24,7 +26,7 @@ public class FM_15 : StageManager
     public override SkillTree_Manager.SkillName[] GetExtraSkills()
     {
         if (!fumo) fumo = FindFirstObjectByType<FumoScript>();
-        if (fumo) return new[] { SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE };
+        if (fumo) return new[] { SkillTree_Manager.SkillName.GEOLOGIST_EXPLORE };
         return base.GetExtraSkills();
     }
 
@@ -43,6 +45,7 @@ public class FM_15 : StageManager
     void ToggleDarkTile()
     {
         modifyTileTimer = 0f;
+        warningPlayed = false;
         bool makeAppear = !darkTile.gameObject.activeSelf;
         StartCoroutine(DarkTileToggleCoroutine(makeAppear));
     }
@@ -127,6 +130,8 @@ public class FM_15 : StageManager
     }
 
     [SerializeField] float modifySpawnTimer = 0, modifyTileTimer = 0f, enableSpawnTimer = 0f;
+    bool warningPlayed = false;
+    
     public override void Update()
     {
         if (stageTimer >= targetTimer) return;
@@ -155,6 +160,12 @@ public class FM_15 : StageManager
         }
 
         modifyTileTimer += Time.deltaTime;
+        if (!warningPlayed && modifyTileTimer >= modifyTileInterval - 3f)
+        {
+            warningPlayed = true;
+            darkTileToggleWarning.Play();
+        }
+        
         if (modifyTileTimer >= modifyTileInterval)
         {
             ToggleDarkTile();

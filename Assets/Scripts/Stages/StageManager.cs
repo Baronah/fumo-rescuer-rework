@@ -73,6 +73,8 @@ public class StageManager : MonoBehaviour
 
     public bool EnableLowDetail = false;
 
+    public int MaxEnemies = 200;
+
     public enum StageCompleteCondition
     {
         ELIMINATE_ALL_ENEMIES,

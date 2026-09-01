@@ -69,19 +69,19 @@ public class EnvironmentalTileBase : MonoBehaviour
     {
         if (!pb) return;
 
-        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_OBSERVE))
+        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOLOGIST_OBSERVE))
         {
             pb.ReduceUltimateCooldown(Interval * 0.4f, PlayerBase.CooldownReductionType.FLAT);
         }
         
-        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_STUDY))
+        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOLOGIST_STUDY))
         {
-            pb.ApplyEffect(Effect.AffectedStat.ATK, "GEOGOLIST_ATK_BUFF", 50f, 9999f, true);
+            pb.ApplyEffect(Effect.AffectedStat.ATK, "GEOLOGIST_ATK_BUFF", 50f, 9999f, true);
         }
         
-        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE))
+        if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOLOGIST_EXPLORE))
         {
-            pb.ApplyEffect(Effect.AffectedStat.MSPD, "GEOGOLIST_MSPD_BUFF", 50f, 9999f, true);
+            pb.ApplyEffect(Effect.AffectedStat.MSPD, "GEOLOGIST_MSPD_BUFF", 50f, 9999f, true);
         }
     }
 
@@ -89,13 +89,13 @@ public class EnvironmentalTileBase : MonoBehaviour
     {
         entity.RemoveEnvironmentalTilesThisUnitStandingOn(GetEnvironmentType());
         entitiesWithin.Remove(entity);
-        if (entity is PlayerBase pb)
+        if (entity is PlayerBase pb && pb.environmentalTilesStandingOn.Count <= 0)
         {
-            if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_STUDY))
+            if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOLOGIST_STUDY))
             {
                 pb.RemoveEffect("GEOGOLIST_ATK_BUFF");
             }
-            else if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOGOLIST_EXPLORE))
+            else if (pb.Skills.Contains(SkillTree_Manager.SkillName.GEOLOGIST_EXPLORE))
             {
                 pb.RemoveEffect("GEOGOLIST_MSPD_BUFF");
             }
